@@ -4,6 +4,9 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Operation } from "@/lib/db"
 import { DataTable } from "../ui/data-table"
 
+import { ArrowUpDown } from "lucide-react"
+import { Button } from "../ui/button"
+
 const formatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
   currency: "BRL",
@@ -12,14 +15,34 @@ const formatter = new Intl.NumberFormat("pt-BR", {
 export const columns: ColumnDef<Operation>[] = [
   {
     accessorKey: 'id',
-    header: 'ID',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          ID
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({row}) => {
         return <div>{row.getValue("id")}</div>
     }
   },
   {
     accessorKey: 'name',
-    header: 'Nome',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nome
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({row}) => {
         return <div>{row.getValue("name")}</div>
     }
@@ -33,35 +56,85 @@ export const columns: ColumnDef<Operation>[] = [
   },
   {
     accessorKey: 'date',
-    header: 'Data',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Data
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({row}) => {
         return <div>{row.getValue("date").toLocaleDateString()}</div>
     }
   },
   {
     accessorKey: 'valor',
-    header: 'Valor',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Valor
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({row}) => {
         return <div>{formatter.format(row.getValue("valor") / 100)}</div>
     }
   },
   {
     accessorKey: 'is_paid',
-    header: 'Pago?',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Pago?
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({row}) => {
         return <div>{(row.getValue("is_paid") === true ? 'SIM' : 'NÃO')}</div>
     }
   },
   {
     accessorKey: 'is_entrada',
-    header: 'Entrada?',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Entrada?
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({row}) => {
         return <div>{(row.getValue("is_entrada") === true ? 'SIM' : 'NÃO')}</div>
     }
   },
   {
     accessorKey: 'categoria_id',
-    header: 'Categoria',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Categoria
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({row}) => {
         return <div>{row.getValue("categoria_id")}</div>
     }
