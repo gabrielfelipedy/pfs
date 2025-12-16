@@ -81,3 +81,9 @@ export async function getMonthlyBalance() {
   const result = await sql`select saldo from balanco_geral`;
   return result;
 }
+
+export async function getAuth() {
+  const sql = getSql();
+  const result = await sql`select * from authentication`;
+  return result;
+}
