@@ -10,21 +10,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getOperations, Operation } from "@/lib/db";
 
-import { query } from "@/lib/db";
+//import { query } from "@/lib/db";
+
+const formatter = new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL'
+})
 
 export default async function OperationsTable() {
 
-    let data = []
+  let data: Operation[] = []
 
   try {
-    const sqlQuery = "SELECT * FROM operation;";
-    const result = await query(sqlQuery);
+    //const sqlQuery = "SELECT * FROM operation;";
+    //const result = await query(sqlQuery);
 
-    console.log(result.rows);
-    data = result.rows
+    const result = await getOperations()
+    console.log(result);
+    data = result
+
   } catch (error) {
-    console.log("Database Query Failed");
+    console.error("Database Query Failed", error);
   }
 
   return (
@@ -34,22 +42,19 @@ export default async function OperationsTable() {
       </TableCaption>
       <TableHeader>
         <TableRow>
-          {/* Update Table Headers to match the database columns */}
           <TableHead className="w-[100px]">ID</TableHead>
           <TableHead>Nome</TableHead>
           <TableHead className="text-right">Valor</TableHead>{" "}
-          {/* Placeholder column */}
         </TableRow>
       </TableHeader>
       <TableBody>
-        {/* Map over the 'categories' array which now holds the DB data */}
         {data.length > 0 ? (
           data.map((operation) => (
             // Ensure you use a stable unique key (like category.id)
             <TableRow key={operation.id}>
               <TableCell className="font-medium">{operation.id}</TableCell>
               <TableCell>{operation.name}</TableCell>
-              <TableCell className="text-right">{operation.valor}</TableCell>
+              <TableCell className="text-right">{formatter.format(operation.valor / 100)}</TableCell>
             </TableRow>
           ))
         ) : (
@@ -60,13 +65,6 @@ export default async function OperationsTable() {
           </TableRow>
         )}
       </TableBody>
-      {/* You can remove or modify the TableFooter as it's not relevant for this data */}
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total Categories</TableCell>
-          <TableCell className="text-right">{data.length}</TableCell>
-        </TableRow>
-      </TableFooter>
     </Table>
   );
 }
