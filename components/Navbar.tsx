@@ -10,20 +10,16 @@ const Navbar = ({linksClassName}: Props) => {
     <div className='w-full bg-slate-200 py-8'>
 
         <div className={`${linksClassName} flex gap-10`}>
-        <Link href={'#'}>
+        <Link className='font-bold' href={'/'}>
             Início
         </Link>
 
-        <Link href={'#'}>
+        <Link href={'/entradas'}>
             Entradas
         </Link>
 
-        <Link href={'#'}>
+        <Link href={'/saidas'}>
             Saídas
-        </Link>
-
-        <Link href={'#'}>
-            Previsões
         </Link>
         </div>
     </div>

@@ -3,6 +3,8 @@
 import DataTablePage from "@/components/data-table/DataTablePage";
 import Costs from "@/components/costs/costs";
 import CostsResume from "@/components/costs/costs-resume";
+import EarningResumes from "@/components/earnings/earnings-resume";
+import Balance from "@/components/balance/balance";
 
 export default function Home() {
   return (
@@ -10,16 +12,18 @@ export default function Home() {
       <h1 className="text-[4rem] font-bold">Dashboard</h1>
       <p className="text-slate-500 text-2xl">Visão geral das finanças</p>
 
+      <div className="mt-8">
+        <Balance />
 
-      <div>
+        <div className="border-2 rounded-lg mt-8">
+          <EarningResumes />
+          <CostsResume />
+        </div>
+        <div className="mt-20">
+          <p className="font-bold">Lista de gastos geral</p>
 
-        <CostsResume />
-
-      <div className="mt-20">
-        <p className="font-bold">Lista de gastos geral</p>
-
-        <DataTablePage />
-      </div>
+          <DataTablePage />
+        </div>
       </div>
     </section>
   );
