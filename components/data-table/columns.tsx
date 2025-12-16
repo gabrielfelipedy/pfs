@@ -65,7 +65,13 @@ export const columns: ColumnDef<Operation>[] = [
       )
     },
     cell: ({row}) => {
-        return <div>{row.getValue("date").toLocaleDateString()}</div>
+        const dateValue = row.getValue("date") as Date;
+
+        if(dateValue instanceof Date && !isNaN(dateValue.getTime())) {
+            return <div>{dateValue.toLocaleDateString()}</div>
+        }
+
+        return <div>Invalid Date</div>;
     }
   },
   {
@@ -82,7 +88,9 @@ export const columns: ColumnDef<Operation>[] = [
       )
     },
     cell: ({row}) => {
-        return <div>{formatter.format(row.getValue("valor") / 100)}</div>
+        const valor = row.getValue("valor") as number;
+
+        return <div>{formatter.format(valor / 100)}</div>
     }
   },
   {
