@@ -4,7 +4,7 @@ import { neon } from "@neondatabase/serverless";
 
 function getSql()
 {
-  const sql = neon(process.env.DB_URL!)
+  const sql = neon(process.env.DATABASE_URL!)
   return sql
 }
 
