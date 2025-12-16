@@ -1,23 +1,26 @@
-// lib/db.ts (or lib/db.js)
+"use server";
 
-import { Pool, QueryResult } from 'pg'
+import { neon } from "@neondatabase/serverless";
 
-const connectionString = process.env.DATABASE_URL
-
-if (!connectionString) {
-  throw new Error('DATABASE_URL is not set in environment variables.');
+function getSql()
+{
+  const sql = neon(process.env.DB_URL!)
+  return sql
 }
 
-const pool = new Pool({
-    connectionString
-})
+export type Operation = {
+  id: number;
+  name: string;
+  description: string;
+  date: string;
+  valor: number;
+  is_paid: boolean;
+  is_entrada: boolean;
+  category_id: number;
+}
 
-// --- FIX HERE: Add 'async' and 'return' ---
-// Also, add 'params' (second argument) to enable secure parameterized queries later.
-
-export const query = async <T>(text: string, params?: any[]): Promise<QueryResult<T>> => {
-  // 1. You MUST return the result of the pool.query() call.
-  // 2. The pool.query() method is asynchronous, so we await it here.
-  // 3. We also include the optional 'params' argument for security.
-  return await pool.query(text, params);
+export async function getOperations() {
+  const sql = getSql()
+  const results = await sql`SELECT * FROM operation`;
+  return results as Operation[]
 }
