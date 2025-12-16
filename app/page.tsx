@@ -1,8 +1,7 @@
 //import Image from "next/image";
-import OperationDataTable from "@/components/data-table/columns";
-import Navbar from "../components/Navbar";
-import OperationsTable from "@/components/OperationsTable";
+
 import DataTablePage from "@/components/data-table/DataTablePage";
+import Costs from "@/components/costs/costs";
 
 export default function Home() {
   return (
@@ -10,10 +9,16 @@ export default function Home() {
       <h1 className="text-4xl font-bold">Dashboard</h1>
       <p className="text-slate-500">Visão geral das finanças</p>
 
-      <div className="grid grid-cols-2 grid-rows-2 gap-4 mt-20">
-        <div className="row-span-2">Gastos diários</div>
-        <div>Gastos da Semana</div>
-        <div className="col-start-2 row-start-2">Gastos do Mês</div>
+      <div className="grid grid-cols-2 grid-rows-2 gap-4 mt-20 border-2 rounded-lg p-4">
+        <div className="row-span-2">
+          <Costs title="Gastos Diários" currencyValue={30} currencyTextClassName="text-[5rem]" />
+        </div>
+        <div className="text-center">
+          <Costs title="Gastos da semana" currencyValue={100} currencyTextClassName="text-4xl" />
+        </div>
+        <div className="col-start-2 row-start-2 text-center">
+          <Costs title="Gastos do mês" currencyValue={370} currencyTextClassName="text-4xl" />
+        </div>
       </div>
 
       <div className="mt-20">

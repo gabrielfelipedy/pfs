@@ -6,11 +6,8 @@ import { DataTable } from "../ui/data-table"
 
 import { ArrowUpDown } from "lucide-react"
 import { Button } from "../ui/button"
+import { formatter } from "@/lib/utils"
 
-const formatter = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-});
 
 export const columns: ColumnDef<Operation>[] = [
   {
