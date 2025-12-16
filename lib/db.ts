@@ -24,6 +24,12 @@ export async function getOperations() {
   return results as Operation[];
 }
 
+export async function getSaidas() {
+  const sql = getSql();
+  const results = await sql`SELECT * FROM saidas`;
+  return results as Operation[];
+}
+
 export async function getDailyCosts() {
   const sql = getSql();
   const results = await sql`SELECT 
