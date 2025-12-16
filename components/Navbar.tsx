@@ -1,9 +1,15 @@
 import Link from 'next/link'
 import React from 'react'
 
-const Navbar = () => {
+interface Props {
+    linksClassName: string;
+}
+
+const Navbar = ({linksClassName}: Props) => {
   return (
-    <div className='w-full bg-slate-200 flex p-8 gap-10'>
+    <div className='w-full bg-slate-200 py-8'>
+
+        <div className={`${linksClassName} flex gap-10`}>
         <Link href={'#'}>
             Início
         </Link>
@@ -19,6 +25,7 @@ const Navbar = () => {
         <Link href={'#'}>
             Previsões
         </Link>
+        </div>
     </div>
   )
 }

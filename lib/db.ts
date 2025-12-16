@@ -12,7 +12,7 @@ export type Operation = {
   id: number;
   name: string;
   description: string;
-  date: string;
+  date: Date;
   valor: number;
   is_paid: boolean;
   is_entrada: boolean;
