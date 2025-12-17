@@ -80,27 +80,27 @@ export default function CreateSaidaDialog() {
               Preencha os campos de acordo com as informações
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 mt-10">
-            <div className="grid gap-3">
+          <div className="flex flex-col md:grid gap-4 mt-10">
+            <div className="md:grid gap-3">
               <Label htmlFor="name">Nome</Label>
-              <Input id="name" name="name" />
+              <Input className="mt-4" id="name" name="name" />
               {!state?.success && (
                 <p className="text-sm text-red-500">
                   {state?.errors?.name || ""}
                 </p>
               )}
             </div>
-            <div className="grid gap-3">
+            <div className="md:grid gap-3">
               <Label htmlFor="description">Descrição</Label>
-              <Input id="description" name="description" />
+              <Input className="mt-4" id="description" name="description" />
               {!state?.success && (
                 <p className="text-sm text-red-500">
                   {state?.errors?.description || ""}
                 </p>
               )}
             </div>
-            <div className="grid gap-3">
-              <div className="flex justify-between gap-4">
+            <div className="md:grid gap-3">
+              <div className="flex flex-col md:flex-row justify-between gap-4">
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="date" className="px-1">
                     Data
@@ -115,7 +115,7 @@ export default function CreateSaidaDialog() {
                       <Button
                         variant="outline"
                         id="date"
-                        className="w-48 justify-between font-normal"
+                        className="md:w-48 justify-between font-normal"
                       >
                         {date ? date.toLocaleDateString() : "Selecione a data"}
                         <ChevronDownIcon />
@@ -166,7 +166,7 @@ export default function CreateSaidaDialog() {
           </div>
 
           <div className="grid gap-3 mt-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-row items-center justify-between items-center">
               <div className="flex flex-col gap-3">
                 <Label htmlFor="valor">Valor</Label>
                 {/* <Input className="max-w-[150px]" id="valor" name="valor" /> */}
@@ -177,7 +177,7 @@ export default function CreateSaidaDialog() {
                   value={formatter.format(rawValor / 100)}
                   onChange={handleValorChange}
                   onSelect={handleSelect}
-                  className="max-w-[150px] text-right"
+                  className="max-w-28 md:max-w-[150px] text-right"
                 />
 
                 {/* 2. DATA INPUT: Hidden, has the "name", sends the raw integer */}

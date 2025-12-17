@@ -29,33 +29,43 @@ import {
 import { SaidaActionState, updateSaida } from "./actions";
 import { toast } from "sonner";
 import { Operation } from "@/lib/db";
+import { formatter } from "@/lib/utils";
 
 interface Props {
   operation: Operation;
 }
 
-export default function UpdateSaidaDialog({operation}: Props) {
-
+export default function UpdateSaidaDialog({ operation }: Props) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(new Date(operation.date));
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [state, updateSaidaAction, pending] = useActionState<SaidaActionState | undefined, FormData>(
-    updateSaida,
-    undefined
-  );
+  const [rawValor, setRawValor] = useState<number>(operation.valor);
+  const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setRawValor(Number(value));
+  };
+  const handleSelect = (e: React.SyntheticEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    const len = input.value.length;
+    input.setSelectionRange(len, len);
+  };
+
+  const [state, updateSaidaAction, pending] = useActionState<
+    SaidaActionState | undefined,
+    FormData
+  >(updateSaida, undefined);
 
   useEffect(() => {
     if (state && state.success) {
-      console.log('Action successful, closing dialog.');
+      console.log("Action successful, closing dialog.");
       toast.success(state.message);
       setTimeout(() => {
-      setDialogOpen(false);
-    }, 0);
-    }
-    else{
-      if(state && state.message){
+        setDialogOpen(false);
+      }, 0);
+    } else {
+      if (state && state.message) {
         toast.error(state.message);
       }
     }
@@ -64,39 +74,49 @@ export default function UpdateSaidaDialog({operation}: Props) {
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline"><Pencil /></Button>
+        <Button variant="outline">
+          <Pencil />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form action={updateSaidaAction}>
           <DialogHeader>
             <DialogTitle>Edtar gasto</DialogTitle>
-            <DialogDescription>
-              Realize as alterações
-            </DialogDescription>
+            <DialogDescription>Realize as alterações</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 mt-10">
-            <div className="grid gap-3">
+          <div className="flex flex-col md:grid gap-4 mt-10">
+            <div className="md:grid gap-3">
               <input type="hidden" name="id" value={operation.id} />
 
               <Label htmlFor="name">Nome</Label>
-              <Input id="name" name="name" defaultValue={operation.name} />
+              <Input
+                className="mt-4"
+                id="name"
+                name="name"
+                defaultValue={operation.name}
+              />
               {!state?.success && (
                 <p className="text-sm text-red-500">
-                  {state?.errors?.name || ''}
+                  {state?.errors?.name || ""}
                 </p>
               )}
             </div>
-            <div className="grid gap-3">
+            <div className="md:grid gap-3">
               <Label htmlFor="description">Descrição</Label>
-              <Input id="description" name="description" defaultValue={operation.description} />
+              <Input
+                className="mt-4"
+                id="description"
+                name="description"
+                defaultValue={operation.description}
+              />
               {!state?.success && (
                 <p className="text-sm text-red-500">
-                  {state?.errors?.description || ''}
+                  {state?.errors?.description || ""}
                 </p>
               )}
             </div>
-            <div className="grid gap-3">
-              <div className="flex justify-between gap-4">
+            <div className="md:grid gap-3">
+              <div className="flex flex-col md:flex-row justify-between gap-4">
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="date" className="px-1">
                     Data
@@ -111,7 +131,7 @@ export default function UpdateSaidaDialog({operation}: Props) {
                       <Button
                         variant="outline"
                         id="date"
-                        className="w-48 justify-between font-normal"
+                        className="md:w-48 justify-between font-normal"
                       >
                         {date ? date.toLocaleDateString() : "Selecione a data"}
                         <ChevronDownIcon />
@@ -134,10 +154,10 @@ export default function UpdateSaidaDialog({operation}: Props) {
                   </Popover>
                 </div>
                 {!state?.success && (
-                <p className="text-sm text-red-500">
-                  {state?.errors?.date || ''}
-                </p>
-              )}
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.date || ""}
+                  </p>
+                )}
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="time" className="px-1">
                     Hora
@@ -145,7 +165,10 @@ export default function UpdateSaidaDialog({operation}: Props) {
                   <Input
                     type="time"
                     name="time"
-                    defaultValue={new Date(operation.date).toLocaleTimeString('pt-BR', { hour12: false })}
+                    defaultValue={new Date(operation.date).toLocaleTimeString(
+                      "pt-BR",
+                      { hour12: false }
+                    )}
                     id="time"
                     step="1"
                     className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
@@ -159,30 +182,53 @@ export default function UpdateSaidaDialog({operation}: Props) {
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-3">
                 <Label htmlFor="valor">Valor</Label>
-                <Input className="max-w-[150px]" id="valor" name="valor" defaultValue={operation.valor} />
+                {/* <Input className="max-w-[150px]" id="valor" name="valor" /> */}
+
+                <Input
+                  id="valor_display"
+                  type="text"
+                  value={formatter.format(rawValor / 100)}
+                  onChange={handleValorChange}
+                  onSelect={handleSelect}
+                  className="max-w-28 md:max-w-[150px] text-right"
+                />
+
+                {/* 2. DATA INPUT: Hidden, has the "name", sends the raw integer */}
+                <input
+                  type="hidden"
+                  name="valor"
+                  value={rawValor}
+                />
+
                 {!state?.success && (
-                <p className="text-sm text-red-500">
-                  {state?.errors?.valor || ''}
-                </p>
-              )}
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.valor || ""}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
                 <Label htmlFor="is_paid">Pago</Label>
-                <NativeSelect name="is_paid" defaultValue={operation.is_paid ? "true" : "false"}>
+                <NativeSelect
+                  name="is_paid"
+                  defaultValue={operation.is_paid ? "true" : "false"}
+                >
                   <NativeSelectOption value="true">Sim</NativeSelectOption>
                   <NativeSelectOption value="false">Não</NativeSelectOption>
                 </NativeSelect>
                 {!state?.success && (
-                <p className="text-sm text-red-500">
-                  {state?.errors?.is_paid || ''}
-                </p>
-              )}
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.is_paid || ""}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
                 <Label htmlFor="categoria_id">Categoria</Label>
-                <NativeSelect name="categoria_id" defaultValue={operation.categoria_id}>
+                <NativeSelect
+                  name="categoria_id"
+                  defaultValue={operation.categoria_id}
+                >
                   <NativeSelectOption value="1">1</NativeSelectOption>
                   <NativeSelectOption value="2">2</NativeSelectOption>
                   <NativeSelectOption value="3">3</NativeSelectOption>
@@ -192,10 +238,10 @@ export default function UpdateSaidaDialog({operation}: Props) {
                   <NativeSelectOption value="7">7</NativeSelectOption>
                 </NativeSelect>
                 {!state?.success && (
-                <p className="text-sm text-red-500">
-                  {state?.errors?.categoria_id || ''}
-                </p>
-              )}
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.categoria_id || ""}
+                  </p>
+                )}
               </div>
             </div>
           </div>
