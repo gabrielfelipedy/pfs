@@ -7,6 +7,7 @@ import { DataTable } from "../ui/data-table"
 import { ArrowUpDown } from "lucide-react"
 import { Button } from "../ui/button"
 import { formatter } from "@/lib/utils"
+import UpdateSaidaDialog from "@/app/saidas/updateSaidaDialog"
 
 
 export const columns: ColumnDef<Operation>[] = [
@@ -125,6 +126,13 @@ export const columns: ColumnDef<Operation>[] = [
     },
     cell: ({row}) => {
         return <div>{row.getValue("categoria_id")}</div>
+    }
+  },
+  {
+    accessorKey: 'actions',
+    header: 'Ações',
+    cell: ({row}) => {
+        return <div className="flex gap-4"><UpdateSaidaDialog operation={row.original} /><Button variant="destructive">Deletar</Button></div>
     }
   }
 ]

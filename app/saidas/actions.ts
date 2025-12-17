@@ -76,3 +76,49 @@ export async function createSaida(prevState: any, formData: FormData) {
 
   return { success: true, message: 'Record created successfully' };
 }
+
+export async function updateSaida(prevState: any, formData: FormData) {
+  /* const date = formData.get("date");
+  const time = formData.get("time");
+
+  const timestamp = replaceUTCTime(
+      date as string,
+      utcMinus3ToUtc(time as string)
+  );
+
+  console.log(timestamp);
+
+
+  const validationResult = SaidaSchema.safeParse({
+    name: formData.get("name"),
+    description: formData.get("description"),
+    date: timestamp,
+    valor: Number(formData.get("valor")),
+    is_paid: formData.get("is_paid") == "true" ? true : false,
+    categoria_id: Number(formData.get("categoria_id")),
+  });
+
+  if (!validationResult.success) {
+    return {
+      errors: validationResult.error.flatten().fieldErrors,
+    };
+  }
+
+  console.log(validationResult.data);
+  const result =await createDbRecordSaida(validationResult.data as unknown as Operation);
+
+  if(!result){
+
+    return {
+      errors: {
+        name: ["Error creating record"],
+      },
+
+      message: 'Error creating record'
+    };
+  }
+
+  return { success: true, message: 'Record created successfully' }; */
+
+  console.log("Update Saida - To be implemented");
+}
