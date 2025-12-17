@@ -1,7 +1,9 @@
 "use server";
 
-import { createDbRecordSaida, Operation } from "@/lib/db";
+import { createDbRecordSaida, deleteDbOperation, Operation, updateDbRecordSaida } from "@/lib/db";
 import { SaidaSchema } from "@/lib/definitions";
+import { revalidatePath } from "next/cache";
+import { toast } from "sonner";
 
 export type SaidaActionState =
   | {
@@ -102,11 +104,14 @@ export async function createSaida(prevState: SaidaActionState | undefined, formD
     };
   }
 
+  revalidatePath("/saidas");
   return { success: true, message: "Record created successfully" };
 }
 
 export async function updateSaida(prevState: SaidaActionState | undefined, formData: FormData): Promise<SaidaActionState> {
-  /* const date = formData.get("date");
+
+  const id = formData.get("id");
+  const date = formData.get("date");
   const time = formData.get("time");
 
   const timestamp = replaceUTCTime(
@@ -118,6 +123,7 @@ export async function updateSaida(prevState: SaidaActionState | undefined, formD
 
 
   const validationResult = SaidaSchema.safeParse({
+    id: Number(id),
     name: formData.get("name"),
     description: formData.get("description"),
     date: timestamp,
@@ -128,27 +134,57 @@ export async function updateSaida(prevState: SaidaActionState | undefined, formD
 
   if (!validationResult.success) {
     return {
+      success: false,
       errors: validationResult.error.flatten().fieldErrors,
     };
   }
 
   console.log(validationResult.data);
-  const result =await createDbRecordSaida(validationResult.data as unknown as Operation);
+  const result =await updateDbRecordSaida(validationResult.data as unknown as Operation);
 
   if(!result){
 
     return {
+      success: false,
       errors: {
-        name: ["Error creating record"],
+        name: ["Error updating record"],
       },
 
-      message: 'Error creating record'
+      message: 'Error updating record'
     };
   }
 
-  return { success: true, message: 'Record created successfully' }; */
+  revalidatePath("/saidas");
+  return { success: true, message: 'Record updated successfully' };
+}
 
-  console.log("Update Saida - To be implemented");
+export async function deleteOperation(prevState: SaidaActionState | undefined, formData: FormData): Promise<SaidaActionState> {
+  const id = Number(formData.get("id"));
 
-  return { success: true, message: "Record updated successfully" };
+  if(!id){
+    return {
+      success: false,
+      errors: {
+        name: ["Invalid ID"],
+      },
+
+      message: 'Invalid ID'
+    };
+  }
+
+  const result = await deleteDbOperation(id);
+
+  if(!result){
+    return {
+      success: false,
+      errors: {
+        name: ["Error deleting record"],
+      },
+
+      message: 'Error deleting record'
+    };
+  }
+
+  revalidatePath("/saidas");
+  return { success: true, message: 'Record deleted successfully' };
 }

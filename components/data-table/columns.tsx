@@ -1,18 +1,20 @@
-"use client"
+"use client";
 
-import { ColumnDef } from "@tanstack/react-table"
-import { Operation } from "@/lib/db"
-import { DataTable } from "../ui/data-table"
+import { ColumnDef } from "@tanstack/react-table";
+import { Operation } from "@/lib/db";
+import { DataTable } from "../ui/data-table";
 
-import { ArrowUpDown } from "lucide-react"
-import { Button } from "../ui/button"
-import { formatter } from "@/lib/utils"
-import UpdateSaidaDialog from "@/app/saidas/updateSaidaDialog"
-
+import { ArrowUpDown } from "lucide-react";
+import { Button } from "../ui/button";
+import { formatter } from "@/lib/utils";
+import UpdateSaidaDialog from "@/app/saidas/updateSaidaDialog";
+import { deleteOperation } from "@/app/saidas/actions";
+import { toast } from "sonner";
+import ConfirmDeleteDialog from "@/app/saidas/confirmDeleteDialog";
 
 export const columns: ColumnDef<Operation>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
@@ -22,14 +24,14 @@ export const columns: ColumnDef<Operation>[] = [
           Nome
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
-    cell: ({row}) => {
-        return <div>{row.getValue("name")}</div>
-    }
+    cell: ({ row }) => {
+      return <div>{row.getValue("name")}</div>;
+    },
   },
   {
-    accessorKey: 'date',
+    accessorKey: "date",
     header: ({ column }) => {
       return (
         <Button
@@ -39,20 +41,20 @@ export const columns: ColumnDef<Operation>[] = [
           Data
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
-    cell: ({row}) => {
-        const dateValue = row.getValue("date") as Date;
+    cell: ({ row }) => {
+      const dateValue = row.getValue("date") as Date;
 
-        if(dateValue instanceof Date && !isNaN(dateValue.getTime())) {
-            return <div>{dateValue.toLocaleDateString()}</div>
-        }
+      if (dateValue instanceof Date && !isNaN(dateValue.getTime())) {
+        return <div>{dateValue.toLocaleDateString()}</div>;
+      }
 
-        return <div>Invalid Date</div>;
-    }
+      return <div>Invalid Date</div>;
+    },
   },
   {
-    accessorKey: 'valor',
+    accessorKey: "valor",
     header: ({ column }) => {
       return (
         <Button
@@ -62,16 +64,16 @@ export const columns: ColumnDef<Operation>[] = [
           Valor
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
-    cell: ({row}) => {
-        const valor = row.getValue("valor") as number;
+    cell: ({ row }) => {
+      const valor = row.getValue("valor") as number;
 
-        return <div>{formatter.format(valor / 100)}</div>
-    }
+      return <div>{formatter.format(valor / 100)}</div>;
+    },
   },
   {
-    accessorKey: 'is_paid',
+    accessorKey: "is_paid",
     header: ({ column }) => {
       return (
         <Button
@@ -81,14 +83,14 @@ export const columns: ColumnDef<Operation>[] = [
           Pago?
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
-    cell: ({row}) => {
-        return <div>{(row.getValue("is_paid") === true ? 'SIM' : 'NÃO')}</div>
-    }
+    cell: ({ row }) => {
+      return <div>{row.getValue("is_paid") === true ? "SIM" : "NÃO"}</div>;
+    },
   },
   {
-    accessorKey: 'is_entrada',
+    accessorKey: "is_entrada",
     header: ({ column }) => {
       return (
         <Button
@@ -98,14 +100,14 @@ export const columns: ColumnDef<Operation>[] = [
           Entrada?
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
-    cell: ({row}) => {
-        return <div>{(row.getValue("is_entrada") === true ? 'SIM' : 'NÃO')}</div>
-    }
+    cell: ({ row }) => {
+      return <div>{row.getValue("is_entrada") === true ? "SIM" : "NÃO"}</div>;
+    },
   },
   {
-    accessorKey: 'categoria_id',
+    accessorKey: "categoria_id",
     header: ({ column }) => {
       return (
         <Button
@@ -115,27 +117,32 @@ export const columns: ColumnDef<Operation>[] = [
           Categoria
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
-    cell: ({row}) => {
-        return <div>{row.getValue("categoria_id")}</div>
-    }
+    cell: ({ row }) => {
+      return <div>{row.getValue("categoria_id")}</div>;
+    },
   },
   {
-    accessorKey: 'actions',
-    header: 'Ações',
-    cell: ({row}) => {
-        return <div className="flex gap-4">{/* <UpdateSaidaDialog operation={row.original} /> */}<Button variant="destructive">Deletar</Button></div>
-    }
-  }
-]
+    accessorKey: "actions",
+    header: "Ações",
+    cell: ({ row }) => {
+      return (
+        <div className="flex gap-4">
+          <UpdateSaidaDialog operation={row.original} />
+          <ConfirmDeleteDialog id={row.original.id} />
+        </div>
+      );
+    },
+  },
+];
 
 interface Props {
-    operations: Operation[];
+  operations: Operation[];
 }
 
-export default function OperationDataTable({operations}: Props){
-    return <DataTable columns={columns} data={operations} />
+export default function OperationDataTable({ operations }: Props) {
+  return <DataTable columns={columns} data={operations} />;
 }
 
 /* export type Operation = {

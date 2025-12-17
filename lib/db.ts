@@ -18,10 +18,29 @@ export type Operation = {
   categoria_id: number;
 };
 
+export type Categoria = {
+  id?: number;
+  name: string;
+  description: string;
+  is_entrada: boolean;
+};
+
 export async function getOperations() {
   const sql = getSql();
   const results = await sql`SELECT * FROM operation`;
   return results as Operation[];
+}
+
+export async function getCategorias() {
+  const sql = getSql();
+  const results = await sql`SELECT * FROM categoria`;
+  return results as Categoria[];
+}
+
+export async function deleteDbOperation(id: number) {
+  const sql = getSql();
+  const result = await sql`DELETE FROM operation WHERE id = ${id} RETURNING *`;
+  return result as Operation[];
 }
 
 export async function getSaidas() {
@@ -103,6 +122,25 @@ export async function createDbRecordSaida(saida: Operation) {
     (name, description, date, valor, is_paid, is_entrada, categoria_id) 
     VALUES 
     (${saida.name}, ${saida.description}, ${saida.date}, ${saida.valor}, ${saida.is_paid}, FALSE, ${saida.categoria_id}) RETURNING *`;
+  return result;
+}
+
+export async function updateDbRecordSaida(saida: Operation) {
+
+  if(!saida.id){
+    throw new Error("ID is required for updating a record");
+  }
+
+  const sql = getSql();
+  const result = await sql`UPDATE saidas 
+    SET 
+    name = ${saida.name},
+    description = ${saida.description},
+    date = ${saida.date},
+    valor = ${saida.valor},
+    is_paid = ${saida.is_paid},
+    categoria_id = ${saida.categoria_id} 
+    WHERE id = ${saida.id} RETURNING *`;
   return result;
 }
 
