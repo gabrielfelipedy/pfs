@@ -125,7 +125,7 @@ export const columns: ColumnDef<Operation>[] = [
     accessorKey: 'actions',
     header: 'Ações',
     cell: ({row}) => {
-        return <div className="flex gap-4"><UpdateSaidaDialog operation={row.original} /><Button variant="destructive">Deletar</Button></div>
+        return <div className="flex gap-4">{/* <UpdateSaidaDialog operation={row.original} /> */}<Button variant="destructive">Deletar</Button></div>
     }
   }
 ]
