@@ -25,10 +25,38 @@ export type Categoria = {
   is_entrada: boolean;
 };
 
+export type ChartData = {
+  dia: string;
+  valor_total: number;
+}
+
+export type DataProportion = {
+  type: string;
+  value: number;
+}
+
 export async function getOperations() {
   const sql = getSql();
   const results = await sql`SELECT * FROM operation`;
   return results as Operation[];
+}
+
+export async function getMonthlySaidasEvolution() {
+  const sql = getSql();
+  const results = await sql`SELECT * FROM total_saidas_mes_byday`;
+  return results as ChartData[];
+}
+
+export async function getSaidaProportion() {
+  const sql = getSql();
+
+  try {
+  const results = await sql`SELECT * FROM balanco_saidas`;
+  return results;
+  } catch(error)
+  {
+    return [];
+  }
 }
 
 export async function getCategorias() {

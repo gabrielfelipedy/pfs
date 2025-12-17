@@ -20,10 +20,10 @@ export default function RootLayout({
         className={`antialiased`}
       >
         <nav>
-          <Navbar linksClassName="px-20" />
+          <Navbar linksClassName="px-6 md:px-20" />
         </nav>
 
-        <main className=" px-20">
+        <main className="px-6 md:px-20">
         {children}
         <Toaster />
         </main>

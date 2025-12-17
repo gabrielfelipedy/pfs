@@ -8,9 +8,9 @@ import Balance from "@/components/balance/balance";
 
 export default function Home() {
   return (
-    <section className="mt-20">
-      <h1 className="text-[4rem] font-bold">Dashboard</h1>
-      <p className="text-slate-500 text-2xl">Visão geral das finanças</p>
+    <section className="mt-4 md:mt-20">
+      <h1 className="text-[2.2rem] md:text-[4rem] font-bold">Dashboard</h1>
+      <p className="text-slate-500 text-xl md:text-2xl">Visão geral das finanças</p>
 
       <div className="mt-8">
         <Balance />

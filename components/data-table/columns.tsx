@@ -8,8 +8,6 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
 import { formatter } from "@/lib/utils";
 import UpdateSaidaDialog from "@/app/saidas/updateSaidaDialog";
-import { deleteOperation } from "@/app/saidas/actions";
-import { toast } from "sonner";
 import ConfirmDeleteDialog from "@/app/saidas/confirmDeleteDialog";
 
 export const columns: ColumnDef<Operation>[] = [
