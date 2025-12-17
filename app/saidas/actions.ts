@@ -4,6 +4,10 @@ import { createDbRecordSaida, Operation } from "@/lib/db";
 import { SaidaSchema } from "@/lib/definitions";
 
 function utcMinus3ToUtc(time: string): string {
+  if (!time || typeof time !== "string") {
+    throw new Error("Invalid time format");
+  }
+
   const [h, m, s] = time.split(":").map(Number);
 
   // Create date in UTC-3
@@ -12,10 +16,7 @@ function utcMinus3ToUtc(time: string): string {
   return date.toISOString().substring(11, 19);
 }
 
-function replaceUTCTime(
-  utcTimestamp: string,
-  time: string
-): string {
+function replaceUTCTime(utcTimestamp: string, time: string): string {
   const date = new Date(utcTimestamp);
 
   if (isNaN(date.getTime())) {
@@ -33,17 +34,23 @@ function replaceUTCTime(
   return date.toISOString();
 }
 
-export async function createSaida(prevState: any, formData: FormData) {
+export async function createSaida(prevState: unknown, formData: FormData) {
   const date = formData.get("date");
   const time = formData.get("time");
 
-  const timestamp = replaceUTCTime(
-      date as string,
-      utcMinus3ToUtc(time as string)
-  );
+  let timestamp: string;
+  try {
+    timestamp = replaceUTCTime(date as string, utcMinus3ToUtc(time as string));
+  } catch (error) {
+    return {
+      success: false,
+      errors: {
+        date: ["Invalid date or time format"],
+      },
+    };
+  }
 
   console.log(timestamp);
-
 
   const validationResult = SaidaSchema.safeParse({
     name: formData.get("name"),
@@ -56,28 +63,31 @@ export async function createSaida(prevState: any, formData: FormData) {
 
   if (!validationResult.success) {
     return {
+      success: false,
       errors: validationResult.error.flatten().fieldErrors,
     };
   }
 
   console.log(validationResult.data);
-  const result =await createDbRecordSaida(validationResult.data as unknown as Operation);
+  const result = await createDbRecordSaida(
+    validationResult.data as unknown as Operation
+  );
 
-  if(!result){
-
+  if (!result) {
     return {
+      success: false,
       errors: {
         name: ["Error creating record"],
       },
 
-      message: 'Error creating record'
+      message: "Error creating record",
     };
   }
 
-  return { success: true, message: 'Record created successfully' };
+  return { success: true, message: "Record created successfully" };
 }
 
-export async function updateSaida(prevState: any, formData: FormData) {
+export async function updateSaida(prevState: unknown, formData: FormData) {
   /* const date = formData.get("date");
   const time = formData.get("time");
 
@@ -121,4 +131,6 @@ export async function updateSaida(prevState: any, formData: FormData) {
   return { success: true, message: 'Record created successfully' }; */
 
   console.log("Update Saida - To be implemented");
+
+  return { success: true, message: "Record updated successfully" };
 }

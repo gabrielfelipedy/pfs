@@ -42,7 +42,7 @@ export default function CreateSaidaDialog() {
   );
 
   React.useEffect(() => {
-    if (state && !state.errors) {
+    if (state && state.success) {
       console.log('Action successful, closing dialog.');
       toast.success(state.message);
       setDialogOpen(false);
@@ -71,16 +71,18 @@ export default function CreateSaidaDialog() {
             <div className="grid gap-3">
               <Label htmlFor="name">Nome</Label>
               <Input id="name" name="name" />
-              {state?.errors?.name && (
-                <p className="text-sm text-red-500">{state.errors.name}</p>
+              {!state?.success && (
+                <p className="text-sm text-red-500">
+                  {state?.errors?.name || ''}
+                </p>
               )}
             </div>
             <div className="grid gap-3">
               <Label htmlFor="description">Descrição</Label>
               <Input id="description" name="description" />
-              {state?.errors?.description && (
+              {!state?.success && (
                 <p className="text-sm text-red-500">
-                  {state.errors.description}
+                  {state?.errors?.description || ''}
                 </p>
               )}
             </div>
@@ -122,9 +124,11 @@ export default function CreateSaidaDialog() {
                     </PopoverContent>
                   </Popover>
                 </div>
-                {state?.errors?.date && (
-                  <p className="text-sm text-red-500">{state.errors.date}</p>
-                )}
+                {!state?.success && (
+                <p className="text-sm text-red-500">
+                  {state?.errors?.date || ''}
+                </p>
+              )}
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="time" className="px-1">
                     Hora
@@ -146,9 +150,11 @@ export default function CreateSaidaDialog() {
               <div className="flex flex-col gap-3">
                 <Label htmlFor="valor">Valor</Label>
                 <Input className="max-w-[150px]" id="valor" name="valor" />
-                {state?.errors?.valor && (
-                  <p className="text-sm text-red-500">{state.errors.valor}</p>
-                )}
+                {!state?.success && (
+                <p className="text-sm text-red-500">
+                  {state?.errors?.valor || ''}
+                </p>
+              )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -157,9 +163,11 @@ export default function CreateSaidaDialog() {
                   <NativeSelectOption value="true">Sim</NativeSelectOption>
                   <NativeSelectOption value="false">Não</NativeSelectOption>
                 </NativeSelect>
-                {state?.errors?.is_paid && (
-                  <p className="text-sm text-red-500">{state.errors.is_paid}</p>
-                )}
+                {!state?.success && (
+                <p className="text-sm text-red-500">
+                  {state?.errors?.is_paid || ''}
+                </p>
+              )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -173,11 +181,11 @@ export default function CreateSaidaDialog() {
                   <NativeSelectOption value="6">6</NativeSelectOption>
                   <NativeSelectOption value="7">7</NativeSelectOption>
                 </NativeSelect>
-                {state?.errors?.categoria_id && (
-                  <p className="text-sm text-red-500">
-                    {state.errors.categoria_id}
-                  </p>
-                )}
+                {!state?.success && (
+                <p className="text-sm text-red-500">
+                  {state?.errors?.categoria_id || ''}
+                </p>
+              )}
               </div>
             </div>
           </div>

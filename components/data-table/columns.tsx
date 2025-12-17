@@ -29,13 +29,6 @@ export const columns: ColumnDef<Operation>[] = [
     }
   },
   {
-    accessorKey: 'description',
-    header: 'Descrição',
-    cell: ({row}) => {
-        return <div>{row.getValue("description")}</div>
-    }
-  },
-  {
     accessorKey: 'date',
     header: ({ column }) => {
       return (

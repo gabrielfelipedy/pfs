@@ -6,7 +6,7 @@ export const LoginFormSchema = z.object({
 });
 
 export const SaidaSchema = z.object({
-  name: z.string().trim(),
+  name: z.string().min(1, { message: "Name cannot be empty" }).trim(),
   description: z.string(),
   date:  z.iso.datetime({ offset: true }),
   valor: z.number().min(0, { message: "Valor must be a positive number" }),

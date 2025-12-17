@@ -6,7 +6,6 @@ import { ChevronDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -35,18 +34,6 @@ interface Props {
   operation: Operation;
 }
 
-interface ActionState {
-  errors?: {
-    name?: string[];
-    description?: string[];
-    date?: string[];
-    valor?: string[];
-    is_paid?: string[];
-    categoria_id?: string[];
-  };
-  message?: string | null;
-}
-
 export default function UpdateSaidaDialog({operation}: Props) {
 
   const [open, setOpen] = useState(false);
@@ -54,13 +41,13 @@ export default function UpdateSaidaDialog({operation}: Props) {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [state, updateSaidaAction, pending] = useActionState<ActionState | undefined, FormData>(
+  const [state, updateSaidaAction, pending] = useActionState(
     updateSaida,
     undefined
   );
 
   useEffect(() => {
-    if (state && !state.errors) {
+    if (state && state.success) {
       console.log('Action successful, closing dialog.');
       toast.success(state.message);
       setDialogOpen(false);
