@@ -44,7 +44,7 @@ interface Props {
 
 export default function GenericLineChart({ data }: Props) {
   return (
-    <Card>
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Evolução dos gastos do mês</CardTitle>
         <CardDescription>Período atual</CardDescription>

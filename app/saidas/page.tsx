@@ -9,10 +9,12 @@ const Saidas = () => {
       <h1 className="text-[3rem] font-bold mt-10">Saídas</h1>
       <p className="text-xl text-slate-600">Todos os registros de saídas</p>
 
-      <MonthlySaidas />
-
       <div className="mt-10">
         <CreateSaidaDialog />
+      </div>
+
+      <div className="mt-8">
+      <MonthlySaidas />
       </div>
 
       <div className="mt-10">
