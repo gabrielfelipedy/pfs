@@ -8,19 +8,25 @@ function getSql() {
 }
 
 export type Operation = {
-  id: number;
+  id?: number;
   name: string;
   description: string;
   date: Date;
   valor: number;
   is_paid: boolean;
   is_entrada: boolean;
-  category_id: number;
+  categoria_id: number;
 };
 
 export async function getOperations() {
   const sql = getSql();
   const results = await sql`SELECT * FROM operation`;
+  return results as Operation[];
+}
+
+export async function getSaidas() {
+  const sql = getSql();
+  const results = await sql`SELECT * FROM saidas ORDER BY date DESC`;
   return results as Operation[];
 }
 
@@ -85,5 +91,29 @@ export async function getMonthlyBalance() {
 export async function getAuth() {
   const sql = getSql();
   const result = await sql`select * from authentication`;
+  return result;
+}
+
+export async function createDbRecordSaida(saida: Operation) {
+
+  // console.log(`INSERTO INTO operation (name, description, date, valor, is_paid, is_entrada, categoria_id) VALUES (${saida.name}, ${saida.description}, ${saida.date}, ${saida.valor}, ${saida.is_paid}, FALSE, ${saida.categoria_id})`)
+
+  const sql = getSql();
+  const result = await sql`INSERT INTO saidas 
+    (name, description, date, valor, is_paid, is_entrada, categoria_id) 
+    VALUES 
+    (${saida.name}, ${saida.description}, ${saida.date}, ${saida.valor}, ${saida.is_paid}, FALSE, ${saida.categoria_id}) RETURNING *`;
+  return result;
+}
+
+export async function createDbRecordEntrada(saida: Operation) {
+
+  // console.log(`INSERTO INTO operation (name, description, date, valor, is_paid, is_entrada, categoria_id) VALUES (${saida.name}, ${saida.description}, ${saida.date}, ${saida.valor}, ${saida.is_paid}, FALSE, ${saida.categoria_id})`)
+
+  const sql = getSql();
+  const result = await sql`INSERT INTO saidas 
+    (name, description, date, valor, is_paid, is_entrada, categoria_id) 
+    VALUES 
+    (${saida.name}, ${saida.description}, ${saida.date}, ${saida.valor}, ${saida.is_paid}, TRUE, ${saida.categoria_id}) RETURNING *`;
   return result;
 }

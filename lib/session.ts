@@ -11,7 +11,6 @@ type SessionPayload = {
     expiresAt: Date;
 }
 
-
 export async function encrypt(payload: SessionPayload)
 {
     return new SignJWT(payload)

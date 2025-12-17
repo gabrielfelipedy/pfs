@@ -7,26 +7,10 @@ import { DataTable } from "../ui/data-table"
 import { ArrowUpDown } from "lucide-react"
 import { Button } from "../ui/button"
 import { formatter } from "@/lib/utils"
+import UpdateSaidaDialog from "@/app/saidas/updateSaidaDialog"
 
 
 export const columns: ColumnDef<Operation>[] = [
-  {
-    accessorKey: 'id',
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          ID
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-    cell: ({row}) => {
-        return <div>{row.getValue("id")}</div>
-    }
-  },
   {
     accessorKey: 'name',
     header: ({ column }) => {
@@ -42,13 +26,6 @@ export const columns: ColumnDef<Operation>[] = [
     },
     cell: ({row}) => {
         return <div>{row.getValue("name")}</div>
-    }
-  },
-  {
-    accessorKey: 'description',
-    header: 'Descrição',
-    cell: ({row}) => {
-        return <div>{row.getValue("description")}</div>
     }
   },
   {
@@ -142,6 +119,13 @@ export const columns: ColumnDef<Operation>[] = [
     },
     cell: ({row}) => {
         return <div>{row.getValue("categoria_id")}</div>
+    }
+  },
+  {
+    accessorKey: 'actions',
+    header: 'Ações',
+    cell: ({row}) => {
+        return <div className="flex gap-4">{/* <UpdateSaidaDialog operation={row.original} /> */}<Button variant="destructive">Deletar</Button></div>
     }
   }
 ]
