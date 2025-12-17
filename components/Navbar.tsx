@@ -7,7 +7,7 @@ interface Props {
 
 const Navbar = ({linksClassName}: Props) => {
   return (
-    <div className='w-full bg-slate-200 py-8'>
+    <div className='w-full bg-slate-200 py-8 flex justify-center'>
 
         <div className={`${linksClassName} flex gap-10`}>
         <Link className='font-bold' href={'/'}>
