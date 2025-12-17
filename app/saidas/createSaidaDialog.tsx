@@ -28,6 +28,7 @@ import {
   NativeSelectOption,
 } from "@/components/ui/native-select";
 import { createSaida } from "./actions";
+import { toast } from "sonner";
 
 export default function CreateSaidaDialog() {
   const [open, setOpen] = React.useState(false);
@@ -43,7 +44,13 @@ export default function CreateSaidaDialog() {
   React.useEffect(() => {
     if (state && !state.errors) {
       console.log('Action successful, closing dialog.');
+      toast.success(state.message);
       setDialogOpen(false);
+    }
+    else{
+      if(state && state.message){
+        toast.error(state.message);
+      }
     }
   }, [state]);
 

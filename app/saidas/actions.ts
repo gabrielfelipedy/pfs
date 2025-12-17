@@ -61,7 +61,18 @@ export async function createSaida(prevState: any, formData: FormData) {
   }
 
   console.log(validationResult.data);
-  await createDbRecordSaida(validationResult.data as unknown as Operation);
+  const result =await createDbRecordSaida(validationResult.data as unknown as Operation);
 
-  return { success: true };
+  if(!result){
+
+    return {
+      errors: {
+        name: ["Error creating record"],
+      },
+
+      message: 'Error creating record'
+    };
+  }
+
+  return { success: true, message: 'Record created successfully' };
 }

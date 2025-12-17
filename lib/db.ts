@@ -26,7 +26,7 @@ export async function getOperations() {
 
 export async function getSaidas() {
   const sql = getSql();
-  const results = await sql`SELECT * FROM saidas`;
+  const results = await sql`SELECT * FROM saidas ORDER BY date DESC`;
   return results as Operation[];
 }
 
