@@ -24,6 +24,12 @@ export async function getOperations() {
   return results as Operation[];
 }
 
+export async function deleteDbOperation(id: number) {
+  const sql = getSql();
+  const result = await sql`DELETE FROM operation WHERE id = ${id} RETURNING *`;
+  return result as Operation[];
+}
+
 export async function getSaidas() {
   const sql = getSql();
   const results = await sql`SELECT * FROM saidas ORDER BY date DESC`;

@@ -1,7 +1,9 @@
 "use server";
 
-import { createDbRecordSaida, Operation } from "@/lib/db";
+import { createDbRecordSaida, deleteDbOperation, Operation } from "@/lib/db";
 import { SaidaSchema } from "@/lib/definitions";
+import { revalidatePath } from "next/cache";
+import { toast } from "sonner";
 
 export type SaidaActionState =
   | {
@@ -151,4 +153,20 @@ export async function updateSaida(prevState: SaidaActionState | undefined, formD
   console.log("Update Saida - To be implemented");
 
   return { success: true, message: "Record updated successfully" };
+}
+
+export async function deleteOperation(id: number | undefined) {
+  //console.log(id)
+
+  if(!id){
+    throw new Error("Invalid ID");
+  }
+
+  const result = await deleteDbOperation(id);
+
+  if(!result){
+    throw new Error("Error deleting record");
+  }
+
+  revalidatePath("/saidas");
 }
