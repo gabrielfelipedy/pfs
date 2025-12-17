@@ -27,7 +27,7 @@ import {
   NativeSelect,
   NativeSelectOption,
 } from "@/components/ui/native-select";
-import { createSaida } from "./actions";
+import { createSaida, SaidaActionState } from "./actions";
 import { toast } from "sonner";
 
 export default function CreateSaidaDialog() {
@@ -36,7 +36,7 @@ export default function CreateSaidaDialog() {
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
-  const [state, createSaidaAction, pending] = React.useActionState(
+  const [state, createSaidaAction, pending] = React.useActionState<SaidaActionState | undefined, FormData>(
     createSaida,
     undefined
   );

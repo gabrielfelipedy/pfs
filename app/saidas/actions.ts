@@ -3,6 +3,24 @@
 import { createDbRecordSaida, Operation } from "@/lib/db";
 import { SaidaSchema } from "@/lib/definitions";
 
+export type SaidaActionState =
+  | {
+      success: true;
+      message: string;
+    }
+  | {
+      success: false;
+      message?: string;
+      errors: {
+        name?: string[];
+        description?: string[];
+        date?: string[];
+        valor?: string[];
+        is_paid?: string[];
+        categoria_id?: string[];
+      };
+    };
+
 function utcMinus3ToUtc(time: string): string {
   if (!time || typeof time !== "string") {
     throw new Error("Invalid time format");
@@ -34,7 +52,7 @@ function replaceUTCTime(utcTimestamp: string, time: string): string {
   return date.toISOString();
 }
 
-export async function createSaida(prevState: unknown, formData: FormData) {
+export async function createSaida(prevState: SaidaActionState | undefined, formData: FormData): Promise<SaidaActionState> {
   const date = formData.get("date");
   const time = formData.get("time");
 
