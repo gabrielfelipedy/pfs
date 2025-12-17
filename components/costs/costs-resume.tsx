@@ -1,6 +1,7 @@
 import React from 'react'
 import Costs from './costs'
-import { getDailyCosts, getMonthlyCosts, getWeeklyCosts, Operation } from '@/lib/db';
+import { getDailyCosts, getMonthlyCosts, getWeeklyCosts } from '@/lib/db';
+import { Operation } from '@/lib/definitions';
 
 const CostsResume = async () => {
 

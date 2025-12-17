@@ -1,10 +1,9 @@
-import { getSaidas, Operation } from "@/lib/db";
-import React from "react";
+import { getSaidas } from "@/lib/db";
 import OperationDataTable from "./columns";
+import { Operation } from "@/lib/definitions";
 
 export default async function DataTableSaidas() {
   const data: Operation[] = await getSaidas();
-  //console.log(data)
 
   return (
     <>

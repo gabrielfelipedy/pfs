@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Operation } from "@/lib/db";
 import { DataTable } from "../ui/data-table";
 
 import { ArrowUpDown } from "lucide-react";
@@ -10,7 +9,8 @@ import { formatter } from "@/lib/utils";
 import { Pencil } from "lucide-react";
 import ConfirmDeleteDialog from "@/app/saidas/confirmDeleteDialog";
 import FormDialog from "@/app/saidas/FormDialog";
-import { updateSaida } from "@/app/saidas/actions";
+import { Operation } from "@/lib/definitions";
+import { updateSaida } from "@/actions/saida-actions";
 
 export const columns: ColumnDef<Operation>[] = [
   {
@@ -130,7 +130,8 @@ export const columns: ColumnDef<Operation>[] = [
       return (
         <div className="flex gap-4">
           <FormDialog
-          openDialogText={<Pencil />}
+            openDialogText={<Pencil />}
+            buttonVariation='outline'
             dialogTitle="Atualizar Gasto"
             dialogDescription="Atualize as informações do gasto"
             buttonText="Atualizar"

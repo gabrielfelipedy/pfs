@@ -1,13 +1,11 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Pie, PieChart, Cell } from "recharts";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -19,7 +17,7 @@ import {
   type ChartConfig,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { DataProportion } from "@/lib/db";
+import { DataProportion } from "@/lib/definitions";
 
 export const description = "A simple pie chart";
 
@@ -72,7 +70,7 @@ export default function GenericPieChart({ data }: Props) {
       <CardContent className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto w-full max-h-[500px]"
+          className="mx-auto w-full max-h-125"
         >
           <PieChart>
             <ChartTooltip

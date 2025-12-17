@@ -26,27 +26,29 @@ import {
   NativeSelect,
   NativeSelectOption,
 } from "@/components/ui/native-select";
-import { SaidaActionState } from "./actions";
+
 import { toast } from "sonner";
-import { Operation } from "@/lib/db";
 import { formatter } from "@/lib/utils";
+import { Operation, OperationActionState } from "@/lib/definitions";
 
 // Defines the props for the FormDialog component
 
 interface Props {
   openDialogText: string | ReactNode;
+  buttonVariation?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined;
   dialogTitle: string;
   dialogDescription: string;
   buttonText: string;
   operation: Operation | undefined;
   actionFunction: (
-    prevState: SaidaActionState | undefined,
+    prevState: OperationActionState | undefined,
     formData: FormData
-  ) => Promise<SaidaActionState>;
+  ) => Promise<OperationActionState>;
 }
 
 export default function FormDialog({
   openDialogText,
+  buttonVariation,
   dialogTitle,
   dialogDescription,
   buttonText,
@@ -78,7 +80,7 @@ export default function FormDialog({
   //defines the action to be used based on whether operation is defined
 
   const [state, formAction, pending] = useActionState<
-    SaidaActionState | undefined,
+    OperationActionState | undefined,
     FormData
   >(actionFunction, undefined);
 
@@ -101,7 +103,7 @@ export default function FormDialog({
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button>{openDialogText}</Button>
+        <Button variant={buttonVariation}>{openDialogText}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-106.25">
         <form action={formAction}>

@@ -1,14 +1,14 @@
 import React from "react";
 import GenericLineChart from "./genericLineChart";
 import {
-  getMonthlySaidasEvolution,
-  getSaidaProportion,
+  getEntradasProportion,
+  getMonthlyEntradasEvolution
 } from "@/lib/db";
 import GenericPieChart from "./genericPieChart";
 import { DataProportion } from "@/lib/definitions";
 
-const MonthlySaidas = async () => {
-  const data = await getMonthlySaidasEvolution();
+const MonthlyEntradas = async () => {
+  const data = await getMonthlyEntradasEvolution();
 
   const transformedData = data.map((item) => ({
     ...item,
@@ -19,7 +19,7 @@ const MonthlySaidas = async () => {
 
   try {
 
-  const saidaProportion = await getSaidaProportion();
+  const saidaProportion = await getEntradasProportion();
 
   transformedSaidaProportion = Object.entries(saidaProportion[0])
     .filter(([key]) => key !== "soma_total")
@@ -36,14 +36,14 @@ const MonthlySaidas = async () => {
     console.error("Error fetching saida proportion:", error);
   }
 
-  //console.log(transformedSaidaProportion);
-
   return (
     <div className="flex flex-col lg:flex-row gap-4 w-full justify-between">
-      <GenericLineChart title="Evolução de gastos" description="Evolução"  data={transformedData} />
+      <GenericLineChart title="Evolução de entradas"
+      description="Evolução dos meus ganhos ao longo do mês" 
+      data={transformedData} />
       <GenericPieChart data={transformedSaidaProportion} />
     </div>
   );
 };
 
-export default MonthlySaidas;
+export default MonthlyEntradas;

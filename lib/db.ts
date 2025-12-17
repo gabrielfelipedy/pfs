@@ -1,39 +1,12 @@
 "use server";
 
 import { neon } from "@neondatabase/serverless";
+import { ChartData, Operation } from "./definitions";
 
 function getSql() {
   const sql = neon(process.env.DATABASE_URL!);
   return sql;
 }
-
-export type Operation = {
-  id?: number;
-  name: string;
-  description: string;
-  date: Date;
-  valor: number;
-  is_paid: boolean;
-  is_entrada: boolean;
-  categoria_id: number;
-};
-
-export type Categoria = {
-  id?: number;
-  name: string;
-  description: string;
-  is_entrada: boolean;
-};
-
-export type ChartData = {
-  dia: string;
-  valor_total: number;
-};
-
-export type DataProportion = {
-  type: string;
-  value: number;
-};
 
 export async function getOperations() {
   const sql = getSql();
@@ -230,6 +203,18 @@ export async function updateDbRecordSaida(saida: Operation) {
   return result;
 }
 
+// ********** ENTRADA OPERATIONS ***********
+
+export async function getEntradas() {
+  const sql = getSql();
+  try {
+    const results = await sql`SELECT * FROM entradas ORDER BY date DESC`;
+    return results as Operation[];
+  } catch (error) {
+    return [];
+  }
+}
+
 export async function createDbRecordEntrada(saida: Operation) {
   
   const sql = getSql();
@@ -238,4 +223,26 @@ export async function createDbRecordEntrada(saida: Operation) {
     VALUES 
     (${saida.name}, ${saida.description}, ${saida.date}, ${saida.valor}, ${saida.is_paid}, TRUE, ${saida.categoria_id}) RETURNING *`;
   return result;
+}
+
+export async function getMonthlyEntradasEvolution() {
+  const sql = getSql();
+
+  try {
+    const results = await sql`SELECT * FROM total_entradas_mes_byday`;
+    return results as ChartData[];
+  } catch (error) {
+    return [];
+  }
+}
+
+export async function getEntradasProportion() {
+  const sql = getSql();
+
+  try {
+    const results = await sql`SELECT * FROM balanco_entradas`;
+    return results;
+  } catch (error) {
+    return [];
+  }
 }

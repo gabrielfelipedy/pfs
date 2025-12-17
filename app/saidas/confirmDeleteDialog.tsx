@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState, useEffect } from "react";
-import { Trash } from 'lucide-react';
+import { Trash } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,34 +15,31 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { deleteOperation, SaidaActionState } from "./actions";
+import { deleteOperation } from "../../lib/actions";
 import { toast } from "sonner";
-
+import { OperationActionState } from "@/lib/definitions";
 
 interface Props {
   id: number | undefined;
 }
 
-export default function ConfirmDeleteDialog({id}: Props) {
-
-
+export default function ConfirmDeleteDialog({ id }: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [state, deleteOperationAction, pending] = useActionState<SaidaActionState | undefined, FormData>(
-    deleteOperation,
-    undefined
-  );
+  const [state, deleteOperationAction, pending] = useActionState<
+    OperationActionState | undefined,
+    FormData
+  >(deleteOperation, undefined);
 
   useEffect(() => {
     if (state && state.success) {
-      console.log('Action successful, closing dialog.');
+      console.log("Action successful, closing dialog.");
       toast.success(state.message);
       setTimeout(() => {
-      setDialogOpen(false);
-    }, 0);
-    }
-    else{
-      if(state && state.message){
+        setDialogOpen(false);
+      }, 0);
+    } else {
+      if (state && state.message) {
         toast.error(state.message);
       }
     }
@@ -51,23 +48,24 @@ export default function ConfirmDeleteDialog({id}: Props) {
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive"><Trash /></Button>
+        <Button variant="destructive">
+          <Trash />
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <form action={deleteOperationAction}>
           <DialogHeader>
             <DialogTitle>Você tem certeza?</DialogTitle>
-            <DialogDescription>
-              Confirme a deleção
-            </DialogDescription>
+            <DialogDescription>Confirme a deleção</DialogDescription>
           </DialogHeader>
 
           <input type="hidden" name="id" value={id} />
 
-          
           <DialogFooter className="mt-12">
             <DialogClose asChild>
-              <Button className="w-1/2" variant="outline">Cancelar</Button>
+              <Button className="w-1/2" variant="outline">
+                Cancelar
+              </Button>
             </DialogClose>
 
             <Button variant="destructive" className="w-1/2" disabled={pending}>

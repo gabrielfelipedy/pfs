@@ -1,10 +1,15 @@
 import DataTableSaidas from "@/components/data-table/DataTableSaidas";
 import MonthlySaidas from "./monthlySaidas";
 import FormDialog from "./FormDialog";
-import { createSaida } from "./actions";
+import { createSaida } from "@/actions/saida-actions";
+import { Operation } from "@/lib/definitions";
+import { getSaidas } from "@/lib/db";
+import OperationDataTable from "@/components/data-table/columns";
 
-const Saidas = () => {
-  
+const Saidas = async () => {
+
+  const data: Operation[] = await getSaidas();
+
   return (
     <div>
       <h1 className="text-[3rem] font-bold mt-10">Saídas</h1>
@@ -12,22 +17,22 @@ const Saidas = () => {
 
       <div className="mt-10">
         {/* <CreateSaidaDialog /> */}
-        <FormDialog 
-        openDialogText="Adicionar Gasto"
-        dialogTitle="Adicionar Gasto"
-        dialogDescription="Preencha as informações do gasto"
-        buttonText="Adicionar"
-        operation={undefined}
-        actionFunction={createSaida}
+        <FormDialog
+          openDialogText="Adicionar Gasto"
+          dialogTitle="Adicionar Gasto"
+          dialogDescription="Preencha as informações do gasto"
+          buttonText="Adicionar"
+          operation={undefined}
+          actionFunction={createSaida}
         />
       </div>
 
       <div className="mt-8">
-      <MonthlySaidas />
+        <MonthlySaidas />
       </div>
 
       <div className="mt-10">
-        <DataTableSaidas />
+        <OperationDataTable operations={data} />
       </div>
     </div>
   );
