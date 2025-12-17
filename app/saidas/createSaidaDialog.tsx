@@ -32,25 +32,24 @@ import { toast } from "sonner";
 
 export default function CreateSaidaDialog() {
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [date, setDate] = useState<Date | undefined>(new Date());
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [state, createSaidaAction, pending] = useActionState<SaidaActionState | undefined, FormData>(
-    createSaida,
-    undefined
-  );
+  const [state, createSaidaAction, pending] = useActionState<
+    SaidaActionState | undefined,
+    FormData
+  >(createSaida, undefined);
 
   useEffect(() => {
     if (state && state.success) {
-      console.log('Action successful, closing dialog.');
+      console.log("Action successful, closing dialog.");
       toast.success(state.message);
       setTimeout(() => {
-      setDialogOpen(false);
-    }, 0);
-    }
-    else{
-      if(state && state.message){
+        setDialogOpen(false);
+      }, 0);
+    } else {
+      if (state && state.message) {
         toast.error(state.message);
       }
     }
@@ -75,7 +74,7 @@ export default function CreateSaidaDialog() {
               <Input id="name" name="name" />
               {!state?.success && (
                 <p className="text-sm text-red-500">
-                  {state?.errors?.name || ''}
+                  {state?.errors?.name || ""}
                 </p>
               )}
             </div>
@@ -84,7 +83,7 @@ export default function CreateSaidaDialog() {
               <Input id="description" name="description" />
               {!state?.success && (
                 <p className="text-sm text-red-500">
-                  {state?.errors?.description || ''}
+                  {state?.errors?.description || ""}
                 </p>
               )}
             </div>
@@ -127,10 +126,10 @@ export default function CreateSaidaDialog() {
                   </Popover>
                 </div>
                 {!state?.success && (
-                <p className="text-sm text-red-500">
-                  {state?.errors?.date || ''}
-                </p>
-              )}
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.date || ""}
+                  </p>
+                )}
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="time" className="px-1">
                     Hora
@@ -140,6 +139,15 @@ export default function CreateSaidaDialog() {
                     name="time"
                     id="time"
                     step="1"
+                    defaultValue={new Date().toLocaleTimeString(
+                      "pt-BR",
+                      {
+                        timeZone: "America/Sao_Paulo",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false,
+                      }
+                    )}
                     className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                   />
                 </div>
@@ -153,10 +161,10 @@ export default function CreateSaidaDialog() {
                 <Label htmlFor="valor">Valor</Label>
                 <Input className="max-w-[150px]" id="valor" name="valor" />
                 {!state?.success && (
-                <p className="text-sm text-red-500">
-                  {state?.errors?.valor || ''}
-                </p>
-              )}
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.valor || ""}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -166,10 +174,10 @@ export default function CreateSaidaDialog() {
                   <NativeSelectOption value="false">Não</NativeSelectOption>
                 </NativeSelect>
                 {!state?.success && (
-                <p className="text-sm text-red-500">
-                  {state?.errors?.is_paid || ''}
-                </p>
-              )}
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.is_paid || ""}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -184,10 +192,10 @@ export default function CreateSaidaDialog() {
                   <NativeSelectOption value="7">7</NativeSelectOption>
                 </NativeSelect>
                 {!state?.success && (
-                <p className="text-sm text-red-500">
-                  {state?.errors?.categoria_id || ''}
-                </p>
-              )}
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.categoria_id || ""}
+                  </p>
+                )}
               </div>
             </div>
           </div>
