@@ -18,10 +18,23 @@ export type Operation = {
   categoria_id: number;
 };
 
+export type Categoria = {
+  id?: number;
+  name: string;
+  description: string;
+  is_entrada: boolean;
+};
+
 export async function getOperations() {
   const sql = getSql();
   const results = await sql`SELECT * FROM operation`;
   return results as Operation[];
+}
+
+export async function getCategorias() {
+  const sql = getSql();
+  const results = await sql`SELECT * FROM categoria`;
+  return results as Categoria[];
 }
 
 export async function deleteDbOperation(id: number) {
