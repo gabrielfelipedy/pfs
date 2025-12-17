@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useActionState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -35,19 +35,31 @@ interface Props {
   operation: Operation;
 }
 
+interface ActionState {
+  errors?: {
+    name?: string[];
+    description?: string[];
+    date?: string[];
+    valor?: string[];
+    is_paid?: string[];
+    categoria_id?: string[];
+  };
+  message?: string | null;
+}
+
 export default function UpdateSaidaDialog({operation}: Props) {
 
-  const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(new Date(operation.date));
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(new Date(operation.date));
 
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [state, updateSaidaAction, pending] = React.useActionState(
+  const [state, updateSaidaAction, pending] = useActionState<ActionState, FormData>(
     updateSaida,
-    undefined
+    { errors: {} }
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (state && !state.errors) {
       console.log('Action successful, closing dialog.');
       toast.success(state.message);
