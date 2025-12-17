@@ -54,9 +54,9 @@ export default function UpdateSaidaDialog({operation}: Props) {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [state, updateSaidaAction, pending] = useActionState<ActionState, FormData>(
+  const [state, updateSaidaAction, pending] = useActionState<ActionState | undefined, FormData>(
     updateSaida,
-    { errors: {} }
+    undefined
   );
 
   useEffect(() => {
