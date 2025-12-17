@@ -76,6 +76,8 @@ export default function UpdateSaidaDialog({operation}: Props) {
           </DialogHeader>
           <div className="grid gap-4 mt-10">
             <div className="grid gap-3">
+              <input type="hidden" name="id" value={operation.id} />
+
               <Label htmlFor="name">Nome</Label>
               <Input id="name" name="name" defaultValue={operation.name} />
               {!state?.success && (
@@ -200,7 +202,7 @@ export default function UpdateSaidaDialog({operation}: Props) {
 
           <DialogFooter className="mt-12">
             <Button className="w-full" disabled={pending}>
-              {pending ? "Validando" : "Adicionar"}
+              {pending ? "Validando" : "Atualizar"}
             </Button>
           </DialogFooter>
         </form>

@@ -128,7 +128,7 @@ export const columns: ColumnDef<Operation>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex gap-4">
-          {/* <UpdateSaidaDialog operation={row.original} /> */}
+          <UpdateSaidaDialog operation={row.original} />
           <Button
             variant="destructive"
             onClick={async () => {

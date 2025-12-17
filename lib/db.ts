@@ -112,6 +112,25 @@ export async function createDbRecordSaida(saida: Operation) {
   return result;
 }
 
+export async function updateDbRecordSaida(saida: Operation) {
+
+  if(!saida.id){
+    throw new Error("ID is required for updating a record");
+  }
+
+  const sql = getSql();
+  const result = await sql`UPDATE saidas 
+    SET 
+    name = ${saida.name},
+    description = ${saida.description},
+    date = ${saida.date},
+    valor = ${saida.valor},
+    is_paid = ${saida.is_paid},
+    categoria_id = ${saida.categoria_id} 
+    WHERE id = ${saida.id} RETURNING *`;
+  return result;
+}
+
 export async function createDbRecordEntrada(saida: Operation) {
 
   // console.log(`INSERTO INTO operation (name, description, date, valor, is_paid, is_entrada, categoria_id) VALUES (${saida.name}, ${saida.description}, ${saida.date}, ${saida.valor}, ${saida.is_paid}, FALSE, ${saida.categoria_id})`)
