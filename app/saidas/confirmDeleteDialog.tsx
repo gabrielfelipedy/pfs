@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState, useEffect } from "react";
-import { ChevronDownIcon } from "lucide-react";
+import { Trash } from 'lucide-react';
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { deleteOperation, SaidaActionState, updateSaida } from "./actions";
+import { deleteOperation, SaidaActionState } from "./actions";
 import { toast } from "sonner";
 
 
@@ -51,7 +51,7 @@ export default function ConfirmDeleteDialog({id}: Props) {
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive">Deletar</Button>
+        <Button variant="destructive"><Trash /></Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form action={deleteOperationAction}>

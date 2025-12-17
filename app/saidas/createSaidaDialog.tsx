@@ -29,12 +29,24 @@ import {
 } from "@/components/ui/native-select";
 import { createSaida, SaidaActionState } from "./actions";
 import { toast } from "sonner";
+import { formatter } from "@/lib/utils";
 
 export default function CreateSaidaDialog() {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const [rawValor, setRawValor] = useState<number>(0);
+  const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setRawValor(Number(value));
+  };
+  const handleSelect = (e: React.SyntheticEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    const len = input.value.length;
+    input.setSelectionRange(len, len);
+  };
 
   const [state, createSaidaAction, pending] = useActionState<
     SaidaActionState | undefined,
@@ -125,11 +137,7 @@ export default function CreateSaidaDialog() {
                     </PopoverContent>
                   </Popover>
                 </div>
-                {!state?.success && (
-                  <p className="text-sm text-red-500">
-                    {state?.errors?.date || ""}
-                  </p>
-                )}
+                
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="time" className="px-1">
                     Hora
@@ -139,19 +147,21 @@ export default function CreateSaidaDialog() {
                     name="time"
                     id="time"
                     step="1"
-                    defaultValue={new Date().toLocaleTimeString(
-                      "pt-BR",
-                      {
-                        timeZone: "America/Sao_Paulo",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: false,
-                      }
-                    )}
+                    defaultValue={new Date().toLocaleTimeString("pt-BR", {
+                      timeZone: "America/Sao_Paulo",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                    })}
                     className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                   />
                 </div>
               </div>
+              {!state?.success && (
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.date || ""}
+                  </p>
+                )}
             </div>
           </div>
 
@@ -159,7 +169,20 @@ export default function CreateSaidaDialog() {
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-3">
                 <Label htmlFor="valor">Valor</Label>
-                <Input className="max-w-[150px]" id="valor" name="valor" />
+                {/* <Input className="max-w-[150px]" id="valor" name="valor" /> */}
+
+                <Input
+                  id="valor_display"
+                  type="text"
+                  value={formatter.format(rawValor / 100)}
+                  onChange={handleValorChange}
+                  onSelect={handleSelect}
+                  className="max-w-[150px] text-right"
+                />
+
+                {/* 2. DATA INPUT: Hidden, has the "name", sends the raw integer */}
+                <input type="hidden" name="valor" value={rawValor} />
+
                 {!state?.success && (
                   <p className="text-sm text-red-500">
                     {state?.errors?.valor || ""}

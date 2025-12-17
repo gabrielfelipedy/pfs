@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState, useEffect } from "react";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, Pencil } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -64,7 +64,7 @@ export default function UpdateSaidaDialog({operation}: Props) {
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Editar</Button>
+        <Button variant="outline"><Pencil /></Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form action={updateSaidaAction}>
