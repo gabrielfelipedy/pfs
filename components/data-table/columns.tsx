@@ -7,8 +7,10 @@ import { DataTable } from "../ui/data-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
 import { formatter } from "@/lib/utils";
-import UpdateSaidaDialog from "@/app/saidas/updateSaidaDialog";
+import { Pencil } from "lucide-react";
 import ConfirmDeleteDialog from "@/app/saidas/confirmDeleteDialog";
+import FormDialog from "@/app/saidas/FormDialog";
+import { updateSaida } from "@/app/saidas/actions";
 
 export const columns: ColumnDef<Operation>[] = [
   {
@@ -127,7 +129,15 @@ export const columns: ColumnDef<Operation>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex gap-4">
-          <UpdateSaidaDialog operation={row.original} />
+          <FormDialog
+          openDialogText={<Pencil />}
+            dialogTitle="Atualizar Gasto"
+            dialogDescription="Atualize as informações do gasto"
+            buttonText="Atualizar"
+            operation={undefined}
+            actionFunction={updateSaida}
+          />
+          {/* <UpdateSaidaDialog operation={row.original} /> */}
           <ConfirmDeleteDialog id={row.original.id} />
         </div>
       );
