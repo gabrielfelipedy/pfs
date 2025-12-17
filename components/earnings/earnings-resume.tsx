@@ -11,7 +11,7 @@ const EarningResumes = async () => {
     <div className='p-4'>
         <p>Ganhos mensais</p>
 
-        <h1 className='text-[5rem] font-bold'>{formatter.format(total[0].total / 100)}</h1>
+        <h1 className='text-[2.2rem] md:text-[5rem] font-bold text-green-600'>{formatter.format(total[0].total / 100)}</h1>
     </div>
   )
 }

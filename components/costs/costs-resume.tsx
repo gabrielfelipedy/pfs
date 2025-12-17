@@ -15,15 +15,15 @@ const CostsResume = async () => {
 
   
   return (
-    <div className="grid grid-cols-2 grid-rows-2 gap-4 mt-4 p-4">
-        <div className="row-span-2">
-          <Costs title="Gastos Diários" currencyValue={dailysum/100} currencyTextClassName="text-[5rem]" />
+    <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 grid-rows-3 gap-4 mt-4 p-4">
+        <div className="md:row-span-2">
+          <Costs title="Gastos Diários" currencyValue={dailysum/100} currencyTextClassName="text-[2.2rem] md:text-[5rem]" />
         </div>
-        <div className="text-right">
-          <Costs title="Gastos da semana" currencyValue={weeklysum/100} currencyTextClassName="text-4xl text-slate-500" />
+        <div className="md:text-right">
+          <Costs title="Gastos da semana" currencyValue={weeklysum/100} currencyTextClassName="text-[2.2rem] md:text-4xl text-slate-500" />
         </div>
-        <div className="col-start-2 row-start-2 text-right">
-          <Costs title="Gastos do mês" currencyValue={monthlysum/100} currencyTextClassName="text-4xl text-slate-500" />
+        <div className="md:col-start-2 md:row-start-2 md:text-right">
+          <Costs title="Gastos do mês" currencyValue={monthlysum/100} currencyTextClassName="text-[2.2rem] md:text-4xl text-slate-500" />
         </div>
       </div>
   )
