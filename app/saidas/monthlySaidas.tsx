@@ -23,7 +23,7 @@ const MonthlySaidas = async () => {
   console.log(transformedSaidaProportion);
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 border-2 w-full justify-between">
+    <div className="flex flex-col lg:flex-row gap-4 w-full justify-between">
       <GenericLineChart data={transformedData} />
       <GenericPieChart data={transformedSaidaProportion} />
     </div>
