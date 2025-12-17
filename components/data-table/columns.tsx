@@ -10,6 +10,7 @@ import { formatter } from "@/lib/utils";
 import UpdateSaidaDialog from "@/app/saidas/updateSaidaDialog";
 import { deleteOperation } from "@/app/saidas/actions";
 import { toast } from "sonner";
+import ConfirmDeleteDialog from "@/app/saidas/confirmDeleteDialog";
 
 export const columns: ColumnDef<Operation>[] = [
   {
@@ -129,19 +130,7 @@ export const columns: ColumnDef<Operation>[] = [
       return (
         <div className="flex gap-4">
           <UpdateSaidaDialog operation={row.original} />
-          <Button
-            variant="destructive"
-            onClick={async () => {
-              try {
-                await deleteOperation(row.original.id);
-                toast.success("Deleted successfully");
-              } catch (error) {
-                toast.error("Error on deleting");
-              }
-            }}
-          >
-            Deletar
-          </Button>
+          <ConfirmDeleteDialog id={row.original.id} />
         </div>
       );
     },
