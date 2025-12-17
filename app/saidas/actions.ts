@@ -105,7 +105,7 @@ export async function createSaida(prevState: SaidaActionState | undefined, formD
   return { success: true, message: "Record created successfully" };
 }
 
-export async function updateSaida(prevState: unknown, formData: FormData) {
+export async function updateSaida(prevState: SaidaActionState | undefined, formData: FormData): Promise<SaidaActionState> {
   /* const date = formData.get("date");
   const time = formData.get("time");
 

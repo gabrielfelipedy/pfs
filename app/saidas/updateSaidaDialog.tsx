@@ -26,7 +26,7 @@ import {
   NativeSelect,
   NativeSelectOption,
 } from "@/components/ui/native-select";
-import { updateSaida } from "./actions";
+import { SaidaActionState, updateSaida } from "./actions";
 import { toast } from "sonner";
 import { Operation } from "@/lib/db";
 
@@ -41,7 +41,7 @@ export default function UpdateSaidaDialog({operation}: Props) {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [state, updateSaidaAction, pending] = useActionState(
+  const [state, updateSaidaAction, pending] = useActionState<SaidaActionState | undefined, FormData>(
     updateSaida,
     undefined
   );
@@ -50,7 +50,9 @@ export default function UpdateSaidaDialog({operation}: Props) {
     if (state && state.success) {
       console.log('Action successful, closing dialog.');
       toast.success(state.message);
+      setTimeout(() => {
       setDialogOpen(false);
+    }, 0);
     }
     else{
       if(state && state.message){
@@ -76,16 +78,18 @@ export default function UpdateSaidaDialog({operation}: Props) {
             <div className="grid gap-3">
               <Label htmlFor="name">Nome</Label>
               <Input id="name" name="name" defaultValue={operation.name} />
-              {state?.errors?.name && (
-                <p className="text-sm text-red-500">{state.errors.name}</p>
+              {!state?.success && (
+                <p className="text-sm text-red-500">
+                  {state?.errors?.name || ''}
+                </p>
               )}
             </div>
             <div className="grid gap-3">
               <Label htmlFor="description">Descrição</Label>
               <Input id="description" name="description" defaultValue={operation.description} />
-              {state?.errors?.description && (
+              {!state?.success && (
                 <p className="text-sm text-red-500">
-                  {state.errors.description}
+                  {state?.errors?.description || ''}
                 </p>
               )}
             </div>
@@ -127,9 +131,11 @@ export default function UpdateSaidaDialog({operation}: Props) {
                     </PopoverContent>
                   </Popover>
                 </div>
-                {state?.errors?.date && (
-                  <p className="text-sm text-red-500">{state.errors.date}</p>
-                )}
+                {!state?.success && (
+                <p className="text-sm text-red-500">
+                  {state?.errors?.date || ''}
+                </p>
+              )}
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="time" className="px-1">
                     Hora
@@ -152,9 +158,11 @@ export default function UpdateSaidaDialog({operation}: Props) {
               <div className="flex flex-col gap-3">
                 <Label htmlFor="valor">Valor</Label>
                 <Input className="max-w-[150px]" id="valor" name="valor" defaultValue={operation.valor} />
-                {state?.errors?.valor && (
-                  <p className="text-sm text-red-500">{state.errors.valor}</p>
-                )}
+                {!state?.success && (
+                <p className="text-sm text-red-500">
+                  {state?.errors?.valor || ''}
+                </p>
+              )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -163,9 +171,11 @@ export default function UpdateSaidaDialog({operation}: Props) {
                   <NativeSelectOption value="true">Sim</NativeSelectOption>
                   <NativeSelectOption value="false">Não</NativeSelectOption>
                 </NativeSelect>
-                {state?.errors?.is_paid && (
-                  <p className="text-sm text-red-500">{state.errors.is_paid}</p>
-                )}
+                {!state?.success && (
+                <p className="text-sm text-red-500">
+                  {state?.errors?.is_paid || ''}
+                </p>
+              )}
               </div>
 
               <div className="flex flex-col gap-2">
@@ -179,11 +189,11 @@ export default function UpdateSaidaDialog({operation}: Props) {
                   <NativeSelectOption value="6">6</NativeSelectOption>
                   <NativeSelectOption value="7">7</NativeSelectOption>
                 </NativeSelect>
-                {state?.errors?.categoria_id && (
-                  <p className="text-sm text-red-500">
-                    {state.errors.categoria_id}
-                  </p>
-                )}
+                {!state?.success && (
+                <p className="text-sm text-red-500">
+                  {state?.errors?.categoria_id || ''}
+                </p>
+              )}
               </div>
             </div>
           </div>

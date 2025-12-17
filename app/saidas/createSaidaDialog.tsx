@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -31,21 +31,23 @@ import { createSaida, SaidaActionState } from "./actions";
 import { toast } from "sonner";
 
 export default function CreateSaidaDialog() {
-  const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(undefined);
 
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [state, createSaidaAction, pending] = React.useActionState<SaidaActionState | undefined, FormData>(
+  const [state, createSaidaAction, pending] = useActionState<SaidaActionState | undefined, FormData>(
     createSaida,
     undefined
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (state && state.success) {
       console.log('Action successful, closing dialog.');
       toast.success(state.message);
+      setTimeout(() => {
       setDialogOpen(false);
+    }, 0);
     }
     else{
       if(state && state.message){
