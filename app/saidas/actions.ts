@@ -1,19 +1,56 @@
 "use server";
 
+import { createDbRecordSaida, Operation } from "@/lib/db";
 import { SaidaSchema } from "@/lib/definitions";
+
+function utcMinus3ToUtc(time: string): string {
+  const [h, m, s] = time.split(":").map(Number);
+
+  // Create date in UTC-3
+  const date = new Date(Date.UTC(1970, 0, 1, h + 3, m, s));
+
+  return date.toISOString().substring(11, 19);
+}
+
+function replaceUTCTime(
+  utcTimestamp: string,
+  time: string
+): string {
+  const date = new Date(utcTimestamp);
+
+  if (isNaN(date.getTime())) {
+    throw new Error("Invalid UTC timestamp");
+  }
+
+  const [hour, minute, second = 0] = time.split(":").map(Number);
+
+  if ([hour, minute, second].some(Number.isNaN)) {
+    throw new Error("Invalid time format");
+  }
+
+  date.setUTCHours(hour, minute, second, 0);
+
+  return date.toISOString();
+}
 
 export async function createSaida(prevState: any, formData: FormData) {
   const date = formData.get("date");
   const time = formData.get("time");
 
-  console.log({ date, time });
+  const timestamp = replaceUTCTime(
+      date as string,
+      utcMinus3ToUtc(time as string)
+  );
+
+  console.log(timestamp);
+
 
   const validationResult = SaidaSchema.safeParse({
     name: formData.get("name"),
     description: formData.get("description"),
-    date: formData.get("date"),
+    date: timestamp,
     valor: Number(formData.get("valor")),
-    is_paid: formData.get("is_paid") === "on" ? true : false,
+    is_paid: formData.get("is_paid") == "true" ? true : false,
     categoria_id: Number(formData.get("categoria_id")),
   });
 
@@ -24,4 +61,7 @@ export async function createSaida(prevState: any, formData: FormData) {
   }
 
   console.log(validationResult.data);
+  await createDbRecordSaida(validationResult.data as unknown as Operation);
+
+  return { success: true };
 }

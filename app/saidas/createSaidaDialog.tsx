@@ -42,6 +42,7 @@ export default function CreateSaidaDialog() {
 
   React.useEffect(() => {
     if (state && !state.errors) {
+      console.log('Action successful, closing dialog.');
       setDialogOpen(false);
     }
   }, [state]);
@@ -59,10 +60,10 @@ export default function CreateSaidaDialog() {
               Preencha os campos de acordo com as informações
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4">
+          <div className="grid gap-4 mt-10">
             <div className="grid gap-3">
               <Label htmlFor="name">Nome</Label>
-              <Input id="name" name="name" defaultValue="Uber trabalho" />
+              <Input id="name" name="name" />
               {state?.errors?.name && (
                 <p className="text-sm text-red-500">{state.errors.name}</p>
               )}
@@ -92,7 +93,7 @@ export default function CreateSaidaDialog() {
                       <Button
                         variant="outline"
                         id="date"
-                        className="w-32 justify-between font-normal"
+                        className="w-48 justify-between font-normal"
                       >
                         {date ? date.toLocaleDateString() : "Selecione a data"}
                         <ChevronDownIcon />
@@ -126,7 +127,6 @@ export default function CreateSaidaDialog() {
                     name="time"
                     id="time"
                     step="1"
-                    defaultValue="10:30:00"
                     className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                   />
                 </div>
@@ -134,7 +134,7 @@ export default function CreateSaidaDialog() {
             </div>
           </div>
 
-          <div className="grid gap-3">
+          <div className="grid gap-3 mt-4">
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-3">
                 <Label htmlFor="valor">Valor</Label>
@@ -176,7 +176,7 @@ export default function CreateSaidaDialog() {
           </div>
 
           <DialogFooter className="mt-12">
-            <Button className="max-w-46" disabled={pending}>
+            <Button className="w-full" disabled={pending}>
               {pending ? "Validando" : "Adicionar"}
             </Button>
           </DialogFooter>
