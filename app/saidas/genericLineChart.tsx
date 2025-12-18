@@ -1,13 +1,11 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
-import { CartesianGrid, LabelList, Line, LineChart, XAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -17,37 +15,32 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { ChartData } from "@/lib/db";
+
 import { formatter } from "@/lib/utils";
+import { ChartData } from "@/lib/definitions";
 
 export const description = "A line chart with a label";
 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
 
 const chartConfig = {
-  valor_total: {
-    label: "Valor Total",
+  total_value: {
+    label: "Valor",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
 
 interface Props {
+  title: string;
+  description: string;
   data: ChartData[];
 }
 
-export default function GenericLineChart({ data }: Props) {
+export default function GenericLineChart({ title, description, data }: Props) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Evolução dos gastos do mês</CardTitle>
-        <CardDescription>Período atual</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -62,7 +55,7 @@ export default function GenericLineChart({ data }: Props) {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="dia"
+              dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
@@ -94,12 +87,12 @@ export default function GenericLineChart({ data }: Props) {
             />
           
             <Line
-              dataKey="valor_total"
+              dataKey="total_value"
               type="natural"
-              stroke="var(--color-valor_total)"
+              stroke="var(--color-total_value)"
               strokeWidth={2}
               dot={{
-                fill: "var(--color-valor_total)",
+                fill: "var(--color-total_value)",
               }}
               activeDot={{
                 r: 6,

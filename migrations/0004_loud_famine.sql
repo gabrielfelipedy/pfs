@@ -1,0 +1,4 @@
+DROP VIEW `vw_expenses`;--> statement-breakpoint
+DROP VIEW `vw_incomes`;--> statement-breakpoint
+CREATE VIEW `vw_expense` AS select "id", "name", "description", "value", "date", "is_paid", "is_income", "category_id", "created_at", "updated_at" from "operation" where "operation"."is_income" = 0;--> statement-breakpoint
+CREATE VIEW `vw_income` AS select "id", "name", "description", "value", "date", "is_paid", "is_income", "category_id", "created_at", "updated_at" from "operation" where "operation"."is_income" = 1;

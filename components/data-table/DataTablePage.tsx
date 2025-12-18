@@ -1,10 +1,18 @@
-import { getOperations, Operation } from "@/lib/db";
-import React from "react";
+//import { createExpenseBalanceView, createIncomeBalanceView } from "@/db/queries/views";
 import OperationDataTable from "./columns";
+import { getOperations } from "@/db/queries/operation";
 
 export default async function DataTablePage() {
-  const data: Operation[] = await getOperations();
-  //console.log(data)
+  let data;
+
+  try {
+    const result = await getOperations();
+    data = result;
+    //await createExpenseBalanceView()
+    //await createIncomeBalanceView()
+  } catch (error) {
+    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+  }
 
   return (
     <>

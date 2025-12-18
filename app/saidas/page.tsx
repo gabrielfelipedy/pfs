@@ -1,24 +1,47 @@
-import CreateSaidaDialog from "@/app/saidas/createSaidaDialog";
-import DataTableSaidas from "@/components/data-table/DataTableSaidas";
 import MonthlySaidas from "./monthlySaidas";
+import FormDialog from "./FormDialog";
+import { createSaida } from "@/actions/saida-actions";
+import { Operation } from "@/lib/definitions";
+import OperationDataTable from "@/components/data-table/columns";
+import { getExpenses } from "@/db/queries/expense";
 
-const Saidas = () => {
+const Saidas = async () => {
+
+  let data: Operation[]
   
+  try{
+    const result = await getExpenses();
+    data = result
+  }
+  catch(error)
+  {
+    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+  }
+  //console.log(data)
+
   return (
     <div>
       <h1 className="text-[3rem] font-bold mt-10">Saídas</h1>
       <p className="text-xl text-slate-600">Todos os registros de saídas</p>
 
       <div className="mt-10">
-        <CreateSaidaDialog />
+        {/* <CreateSaidaDialog /> */}
+        <FormDialog
+          openDialogText="Adicionar Gasto"
+          dialogTitle="Adicionar Gasto"
+          dialogDescription="Preencha as informações do gasto"
+          buttonText="Adicionar"
+          operation={undefined}
+          actionFunction={createSaida}
+        />
       </div>
 
       <div className="mt-8">
-      <MonthlySaidas />
+        <MonthlySaidas />
       </div>
 
       <div className="mt-10">
-        <DataTableSaidas />
+        <OperationDataTable operations={data} />
       </div>
     </div>
   );

@@ -3,12 +3,14 @@
 import React, { useActionState } from "react";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
-import { login } from "./actions";
+import { login, LoginActionState } from "./actions";
 import { Label } from "@/components/ui/label";
 
-
 const Login = () => {
-  const [state, loginAction, pending] = useActionState(login, undefined);
+  const [state, loginAction, pending] = useActionState<
+    LoginActionState | undefined,
+    FormData
+  >(login, undefined);
 
   return (
     <div className="flex flex-col justify-center items-center h-screen w-full">
@@ -20,12 +22,22 @@ const Login = () => {
       >
         <Label htmlFor="name">Username</Label>
         <Input className="mt-4" name="username" />
-        {state?.errors?.username && <p className="text-sm text-red-500">{state.errors.username}</p>}
+
+        {!state?.success && (
+          <p className="text-sm text-red-500">
+            {state?.errors?.username || ""}
+          </p>
+        )}
+
         <Label className="mt-4" htmlFor="name">
           Password
         </Label>
         <Input type="password" className="mt-4" name="password" />
-        {state?.errors?.password && <p className="text-sm text-red-500">{state.errors.password}</p>}
+        {!state?.success && (
+          <p className="text-sm text-red-500">
+            {state?.errors?.password || ""}
+          </p>
+        )}
 
         <Button className="mt-6 w-full" disabled={pending}>
           {pending ? "Validando" : "Login"}

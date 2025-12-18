@@ -1,14 +1,16 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Operation } from "@/lib/db";
 import { DataTable } from "../ui/data-table";
 
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
 import { formatter } from "@/lib/utils";
-import UpdateSaidaDialog from "@/app/saidas/updateSaidaDialog";
+import { Pencil } from "lucide-react";
 import ConfirmDeleteDialog from "@/app/saidas/confirmDeleteDialog";
+import FormDialog from "@/app/saidas/FormDialog";
+import { Operation } from "@/lib/definitions";
+import { updateSaida } from "@/actions/saida-actions";
 
 export const columns: ColumnDef<Operation>[] = [
   {
@@ -42,17 +44,17 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      const dateValue = row.getValue("date") as Date;
+      const dateValue = row.getValue("date") as string;
 
-      if (dateValue instanceof Date && !isNaN(dateValue.getTime())) {
-        return <div>{dateValue.toLocaleDateString()}</div>;
+      try {
+        return <div>{new Date(dateValue).toLocaleDateString()}</div>;
+      } catch (error) {
+        return <div>Invalid Date</div>;
       }
-
-      return <div>Invalid Date</div>;
     },
   },
   {
-    accessorKey: "valor",
+    accessorKey: "value",
     header: ({ column }) => {
       return (
         <Button
@@ -65,7 +67,7 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      const valor = row.getValue("valor") as number;
+      const valor = row.getValue("value") as number;
 
       return <div>{formatter.format(valor / 100)}</div>;
     },
@@ -88,7 +90,7 @@ export const columns: ColumnDef<Operation>[] = [
     },
   },
   {
-    accessorKey: "is_entrada",
+    accessorKey: "is_income",
     header: ({ column }) => {
       return (
         <Button
@@ -101,11 +103,11 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.getValue("is_entrada") === true ? "SIM" : "NÃO"}</div>;
+      return <div>{row.getValue("is_income") == true ? "SIM" : "NÃO"}</div>;
     },
   },
   {
-    accessorKey: "categoria_id",
+    accessorKey: "category_id",
     header: ({ column }) => {
       return (
         <Button
@@ -118,7 +120,7 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.getValue("categoria_id")}</div>;
+      return <div>{row.getValue("category_id")}</div>;
     },
   },
   {
@@ -127,7 +129,16 @@ export const columns: ColumnDef<Operation>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex gap-4">
-          <UpdateSaidaDialog operation={row.original} />
+          <FormDialog
+            openDialogText={<Pencil />}
+            buttonVariation="outline"
+            dialogTitle="Atualizar Gasto"
+            dialogDescription="Atualize as informações do gasto"
+            buttonText="Atualizar"
+            operation={row.original}
+            actionFunction={updateSaida}
+          />
+          {/* <UpdateSaidaDialog operation={row.original} /> */}
           <ConfirmDeleteDialog id={row.original.id} />
         </div>
       );
