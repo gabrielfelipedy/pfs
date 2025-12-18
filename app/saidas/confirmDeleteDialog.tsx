@@ -15,9 +15,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { deleteOperation } from "../../lib/actions";
 import { toast } from "sonner";
 import { OperationActionState } from "@/lib/definitions";
+import { deleteOperationAction } from "@/actions/operation-actions";
 
 interface Props {
   id: number | undefined;
@@ -26,10 +26,10 @@ interface Props {
 export default function ConfirmDeleteDialog({ id }: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [state, deleteOperationAction, pending] = useActionState<
+  const [state, deleteOperationAc, pending] = useActionState<
     OperationActionState | undefined,
     FormData
-  >(deleteOperation, undefined);
+  >(deleteOperationAction, undefined);
 
   useEffect(() => {
     if (state && state.success) {
@@ -53,7 +53,7 @@ export default function ConfirmDeleteDialog({ id }: Props) {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-106.25">
-        <form action={deleteOperationAction}>
+        <form action={deleteOperationAc}>
           <DialogHeader>
             <DialogTitle>Você tem certeza?</DialogTitle>
             <DialogDescription>Confirme a deleção</DialogDescription>

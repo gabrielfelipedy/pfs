@@ -8,6 +8,8 @@ function getSql() {
   return sql;
 }
 
+// ***** CHART FUNCTIONS
+
 export async function getMonthlySaidasEvolution() {
   const sql = getSql();
 
@@ -30,6 +32,8 @@ export async function getSaidaProportion() {
   }
 }
 
+// **** DESTRUCTIVE
+
 export async function deleteDbOperation(id: number) {
   const sql = getSql();
 
@@ -43,28 +47,13 @@ export async function deleteDbOperation(id: number) {
 }
 
 
+// ** AUTHENTICATION
+
 export async function getAuth() {
   const sql = getSql();
 
   try {
   const result = await sql`select * from authentication`;
-  return result;
-  }
-  catch(error)
-  {
-    return []
-  }
-}
-
-export async function createDbRecordSaida(saida: Operation) {
- 
-  const sql = getSql();
-
-  try {
-  const result = await sql`INSERT INTO saidas 
-    (name, description, date, valor, is_paid, is_income, categoria_id) 
-    VALUES 
-    (${saida.name}, ${saida.description}, ${saida.date}, ${saida.value}, ${saida.is_paid}, FALSE, ${saida.category_id}) RETURNING *`;
   return result;
   }
   catch(error)

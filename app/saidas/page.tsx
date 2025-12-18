@@ -8,7 +8,7 @@ import { getExpenses } from "@/db/queries/expense";
 const Saidas = async () => {
 
   const data: Operation[] = await getExpenses();
-  console.log(data)
+  //console.log(data)
 
   return (
     <div>

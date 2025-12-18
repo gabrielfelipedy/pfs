@@ -1,9 +1,10 @@
+import { desc } from "drizzle-orm"
 import { db } from ".."
-import { expenseView, totalExpensesByDay, totalExpensesByMonth, totalExpensesByWeek } from "../schema"
+import { expenseView, InsertOperation, operationTable, totalExpensesByDay, totalExpensesByMonth, totalExpensesByWeek } from "../schema"
 
 export async function getExpenses()
 {
-    return db.select().from(expenseView)
+    return db.select().from(expenseView).orderBy(desc(expenseView.date))
 }
 
 export async function getDailyExpenses() {
@@ -18,4 +19,11 @@ export async function getWeeklyExpenses()
 export async function getMonthlyExpenses()
 {
     return db.select().from(totalExpensesByMonth)
+}
+
+// ******** INSERTION CODES *********
+
+export async function insertExpense(expense: InsertOperation) {
+ 
+  return db.insert(operationTable).values(expense)
 }

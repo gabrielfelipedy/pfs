@@ -27,9 +27,10 @@ export async function createEntrada(prevState: OperationActionState | undefined,
     name: formData.get("name"),
     description: formData.get("description"),
     date: timestamp,
-    valor: Number(formData.get("valor")),
+    value: Number(formData.get("value")),
     is_paid: formData.get("is_paid") == "true" ? true : false,
-    categoria_id: Number(formData.get("categoria_id")),
+    is_income: true,
+    category_id: Number(formData.get("categoria_id")),
   });
 
   if (!validationResult.success) {

@@ -214,7 +214,7 @@ export default function FormDialog({
           <div className="grid gap-3 mt-4">
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-3">
-                <Label htmlFor="valor">Valor</Label>
+                <Label htmlFor="value">Valor</Label>
                 {/* <Input className="max-w-[150px]" id="valor" name="valor" /> */}
 
                 <Input
@@ -226,11 +226,11 @@ export default function FormDialog({
                   className="max-w-28 md:max-w-37.5 text-right"
                 />
                 {/* 2. DATA INPUT: Hidden, has the "name", sends the raw integer */}
-                <input type="hidden" name="valor" value={rawValor} />
+                <input type="hidden" name="value" value={rawValor} />
 
                 {!state?.success && (
                   <p className="text-sm text-red-500">
-                    {state?.errors?.valor || ""}
+                    {state?.errors?.value || ""}
                   </p>
                 )}
               </div>
@@ -269,7 +269,7 @@ export default function FormDialog({
                 </NativeSelect>
                 {!state?.success && (
                   <p className="text-sm text-red-500">
-                    {state?.errors?.categoria_id || ""}
+                    {state?.errors?.category_id || ""}
                   </p>
                 )}
               </div>

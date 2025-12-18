@@ -1,6 +1,7 @@
 "use server"
 
-import { createDbRecordSaida, updateDbRecordSaida } from "@/lib/db";
+import { insertExpense } from "@/db/queries/expense";
+import { updateDbRecordSaida } from "@/lib/db";
 import { Operation, OperationActionState, OperationSchema } from "@/lib/definitions";
 import { replaceUTCTime, utcMinus3ToUtc } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
@@ -27,9 +28,10 @@ export async function createSaida(prevState: OperationActionState | undefined, f
     name: formData.get("name"),
     description: formData.get("description"),
     date: timestamp,
-    valor: Number(formData.get("valor")),
+    value: Number(formData.get("value")),
     is_paid: formData.get("is_paid") == "true" ? true : false,
-    categoria_id: Number(formData.get("categoria_id")),
+    is_income: false,
+    category_id: Number(formData.get("categoria_id")),
   });
 
   if (!validationResult.success) {
@@ -40,8 +42,8 @@ export async function createSaida(prevState: OperationActionState | undefined, f
   }
 
   console.log(validationResult.data);
-  const result = await createDbRecordSaida(
-    validationResult.data as unknown as Operation
+  const result = await insertExpense(
+    validationResult.data
   );
 
   if (!result) {
@@ -80,7 +82,8 @@ export async function updateSaida(prevState: OperationActionState | undefined, f
     date: timestamp,
     valor: Number(formData.get("valor")),
     is_paid: formData.get("is_paid") == "true" ? true : false,
-    categoria_id: Number(formData.get("categoria_id")),
+    is_income: false,
+    category_id: Number(formData.get("categoria_id")),
   });
 
   if (!validationResult.success) {
