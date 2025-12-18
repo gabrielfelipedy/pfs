@@ -8,7 +8,16 @@ import MonthlyEntradas from "../saidas/monthlyEntradas";
 
 const Entradas = async () => {
 
-  const data: Operation[] = await getEntradas();
+  let data: Operation[]
+    
+    try{
+      const result = await getEntradas();
+      data = result
+    }
+    catch(error)
+    {
+      return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    }
 
   return (
     <div>

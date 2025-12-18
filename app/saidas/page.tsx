@@ -7,7 +7,16 @@ import { getExpenses } from "@/db/queries/expense";
 
 const Saidas = async () => {
 
-  const data: Operation[] = await getExpenses();
+  let data: Operation[]
+  
+  try{
+    const result = await getExpenses();
+    data = result
+  }
+  catch(error)
+  {
+    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+  }
   //console.log(data)
 
   return (
