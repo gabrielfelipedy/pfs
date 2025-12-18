@@ -1,8 +1,8 @@
 "use server";
 
 import { deleteOperation } from "@/db/queries/operation";
-import { OperationActionState } from "@/lib/definitions";
 import { revalidatePath } from "next/cache";
+import { OperationActionState } from "./definitions";
 
 export async function deleteOperationAction(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
   const id = Number(formData.get("id"));

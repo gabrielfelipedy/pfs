@@ -20,14 +20,3 @@ export async function getMonthlyExpenses()
 {
     return db.select().from(totalExpensesByMonth)
 }
-
-// ******** INSERTION CODES *********
-
-export async function insertExpense(expense: InsertOperation) {
- 
-  return db.insert(operationTable).values(expense)
-}
-
-export async function updateExpense(id: SelectOperation['id'], expense: Partial<Omit<SelectOperation, 'id'>>) {
-  return db.update(operationTable).set(expense).where(eq(operationTable.id, id))
-}

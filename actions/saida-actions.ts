@@ -1,9 +1,9 @@
 "use server"
 
-import { insertExpense, updateExpense } from "@/db/queries/expense";
-import { Operation, OperationActionState, OperationSchema } from "@/lib/definitions";
+import { insertOperation, updateOperation } from "@/db/queries/operation";
 import { replaceUTCTime, utcMinus3ToUtc } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
+import { OperationActionState, OperationSchema } from "./definitions";
 
 export async function createSaida(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
   const date = formData.get("date");
@@ -41,7 +41,7 @@ export async function createSaida(prevState: OperationActionState | undefined, f
   }
 
   console.log(validationResult.data);
-  const result = await insertExpense(
+  const result = await insertOperation(
     validationResult.data
   );
 
@@ -59,6 +59,11 @@ export async function createSaida(prevState: OperationActionState | undefined, f
   revalidatePath("/saidas");
   return { success: true, message: "Saída criada com sucesso" };
 }
+
+
+// **************** UPDATE ***************
+
+
 
 export async function updateSaida(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
 
@@ -93,7 +98,7 @@ export async function updateSaida(prevState: OperationActionState | undefined, f
   }
 
   console.log(validationResult.data);
-  const result = await updateExpense(Number(id), validationResult.data)
+  const result = await updateOperation(Number(id), validationResult.data)
 
   if(!result){
 

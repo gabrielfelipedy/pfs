@@ -1,9 +1,9 @@
 import FormDialog from "../saidas/FormDialog";
 import { createEntrada } from "@/actions/entrada-actions";
-import { getEntradas } from "@/lib/db";
 import { Operation } from "@/lib/definitions";
 import OperationDataTable from "@/components/data-table/columns";
 import MonthlyEntradas from "../saidas/monthlyEntradas";
+import { getIncomes } from "@/db/queries/income";
 
 
 const Entradas = async () => {
@@ -11,7 +11,7 @@ const Entradas = async () => {
   let data: Operation[]
     
     try{
-      const result = await getEntradas();
+      const result = await getIncomes();
       data = result
     }
     catch(error)

@@ -56,23 +56,3 @@ export async function getEntradasProportion() {
 
 
 // ********** ENTRADA OPERATIONS ***********
-
-export async function getEntradas() {
-  const sql = getSql();
-  try {
-    const results = await sql`SELECT * FROM entradas ORDER BY date DESC`;
-    return results as Operation[];
-  } catch (error) {
-    return [];
-  }
-}
-
-export async function createDbRecordEntrada(saida: Operation) {
-  
-  const sql = getSql();
-  const result = await sql`INSERT INTO saidas 
-    (name, description, date, valor, is_paid, is_income, categoria_id) 
-    VALUES 
-    (${saida.name}, ${saida.description}, ${saida.date}, ${saida.value}, ${saida.is_paid}, TRUE, ${saida.category_id}) RETURNING *`;
-  return result;
-}

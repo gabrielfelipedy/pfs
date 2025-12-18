@@ -29,7 +29,8 @@ import {
 
 import { toast } from "sonner";
 import { formatter } from "@/lib/utils";
-import { Operation, OperationActionState } from "@/lib/definitions";
+import { Operation } from "@/lib/definitions";
+import { OperationActionState } from "@/actions/definitions";
 
 // Defines the props for the FormDialog component
 
