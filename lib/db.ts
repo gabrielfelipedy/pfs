@@ -8,17 +8,6 @@ function getSql() {
   return sql;
 }
 
-export async function getOperations() {
-  const sql = getSql();
-
-  try {
-    const results = await sql`SELECT * FROM operation`;
-    return results as Operation[];
-  } catch (error) {
-    return [];
-  }
-}
-
 export async function getMonthlySaidasEvolution() {
   const sql = getSql();
 
@@ -174,9 +163,9 @@ export async function createDbRecordSaida(saida: Operation) {
 
   try {
   const result = await sql`INSERT INTO saidas 
-    (name, description, date, valor, is_paid, is_entrada, categoria_id) 
+    (name, description, date, valor, is_paid, is_income, categoria_id) 
     VALUES 
-    (${saida.name}, ${saida.description}, ${saida.date}, ${saida.valor}, ${saida.is_paid}, FALSE, ${saida.categoria_id}) RETURNING *`;
+    (${saida.name}, ${saida.description}, ${saida.date}, ${saida.value}, ${saida.is_paid}, FALSE, ${saida.category_id}) RETURNING *`;
   return result;
   }
   catch(error)
@@ -191,14 +180,14 @@ export async function updateDbRecordSaida(saida: Operation) {
   }
 
   const sql = getSql();
-  const result = await sql`UPDATE saidas 
+  const result = await sql`UPDATE operation 
     SET 
     name = ${saida.name},
     description = ${saida.description},
     date = ${saida.date},
-    valor = ${saida.valor},
+    valor = ${saida.value},
     is_paid = ${saida.is_paid},
-    categoria_id = ${saida.categoria_id} 
+    category_id = ${saida.category_id} 
     WHERE id = ${saida.id} RETURNING *`;
   return result;
 }
@@ -219,9 +208,9 @@ export async function createDbRecordEntrada(saida: Operation) {
   
   const sql = getSql();
   const result = await sql`INSERT INTO saidas 
-    (name, description, date, valor, is_paid, is_entrada, categoria_id) 
+    (name, description, date, valor, is_paid, is_income, categoria_id) 
     VALUES 
-    (${saida.name}, ${saida.description}, ${saida.date}, ${saida.valor}, ${saida.is_paid}, TRUE, ${saida.categoria_id}) RETURNING *`;
+    (${saida.name}, ${saida.description}, ${saida.date}, ${saida.value}, ${saida.is_paid}, TRUE, ${saida.category_id}) RETURNING *`;
   return result;
 }
 
