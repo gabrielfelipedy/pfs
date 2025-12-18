@@ -32,21 +32,28 @@ export async function getSaidaProportion() {
   }
 }
 
-
-// ** AUTHENTICATION
-
-export async function getAuth() {
+export async function getMonthlyEntradasEvolution() {
   const sql = getSql();
 
   try {
-  const result = await sql`select * from authentication`;
-  return result;
-  }
-  catch(error)
-  {
-    return []
+    const results = await sql`SELECT * FROM total_entradas_mes_byday`;
+    return results as ChartData[];
+  } catch (error) {
+    return [];
   }
 }
+
+export async function getEntradasProportion() {
+  const sql = getSql();
+
+  try {
+    const results = await sql`SELECT * FROM balanco_entradas`;
+    return results;
+  } catch (error) {
+    return [];
+  }
+}
+
 
 // ********** ENTRADA OPERATIONS ***********
 
@@ -68,26 +75,4 @@ export async function createDbRecordEntrada(saida: Operation) {
     VALUES 
     (${saida.name}, ${saida.description}, ${saida.date}, ${saida.value}, ${saida.is_paid}, TRUE, ${saida.category_id}) RETURNING *`;
   return result;
-}
-
-export async function getMonthlyEntradasEvolution() {
-  const sql = getSql();
-
-  try {
-    const results = await sql`SELECT * FROM total_entradas_mes_byday`;
-    return results as ChartData[];
-  } catch (error) {
-    return [];
-  }
-}
-
-export async function getEntradasProportion() {
-  const sql = getSql();
-
-  try {
-    const results = await sql`SELECT * FROM balanco_entradas`;
-    return results;
-  } catch (error) {
-    return [];
-  }
 }
