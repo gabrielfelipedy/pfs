@@ -127,6 +127,20 @@
       "when": 1766074928668,
       "tag": "0017_lazy_ezekiel",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "6",
+      "when": 1766081553537,
+      "tag": "0018_smart_toad",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "6",
+      "when": 1766083884384,
+      "tag": "0019_careful_thing",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,6 @@
-import { createExpenseBalanceView, createIncomeBalanceView } from "@/db/queries/views";
+//import { createExpenseBalanceView, createIncomeBalanceView } from "@/db/queries/views";
 import OperationDataTable from "./columns";
-import { getOperations } from "@/db/queries/expenses";
+import { getOperations } from "@/db/queries/operation";
 
 export default async function DataTablePage() {
   

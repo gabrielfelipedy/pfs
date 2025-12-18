@@ -1,8 +1,7 @@
-import { aliasedTable, and, eq, gte, lte, sql } from "drizzle-orm";
+import {eq, sql } from "drizzle-orm";
 import {
   integer,
   sqliteTable,
-  SQLiteTableWithColumns,
   sqliteView,
   text,
 } from "drizzle-orm/sqlite-core";
@@ -63,13 +62,18 @@ export const expenseView = sqliteView("vw_expense").as((qb) =>
   qb.select().from(operationTable).where(eq(operationTable.is_income, false))
 );
 
+
+// *** TOTAL EXPENSES BY PERIOD
+
 export const totalExpensesByDayByMonth = sqliteView(
   "vw_total_expense_by_daymonth"
 ).as((qb) =>
   qb
     .select({
       date: sql<string>`substr(${expenseView.date}, 1, 10)`.as("date"),
-      total_value: sql<number>`sum(${expenseView.value})`.as("total_value"),
+      total_value: sql<number>`CAST(SUM(${expenseView.value}) AS INTEGER)`.as(
+        "total_value"
+      ),
     })
     .from(expenseView)
     .where(
@@ -82,13 +86,70 @@ export const totalExpensesByDayByMonth = sqliteView(
     .orderBy(sql`substr(${expenseView.date}, 1, 10)`)
 );
 
+export const totalExpensesByDay = sqliteView("vw_total_expense_by_day").as(
+  (qb) =>
+    qb
+      .select({
+        total_value: sql<number>`CAST(SUM(${expenseView.value}) AS INTEGER)`.as(
+          "total_value"
+        ),
+      })
+      .from(expenseView)
+      .where(
+        sql`
+    substr(${expenseView.date}, 1, 10) >= date('now', 'start of day')
+    AND substr(${expenseView.date}, 1, 10) <= date('now')
+  `
+      )
+);
+
+export const totalExpensesByWeek = sqliteView(
+  "vw_total_expense_by_week"
+).as((qb) =>
+  qb
+    .select({
+      total_value: sql<number>`CAST(SUM(${expenseView.value}) AS INTEGER)`.as(
+        "total_value"
+      ),
+    })
+    .from(expenseView)
+    .where(
+      sql`
+    substr(${expenseView.date}, 1, 10) >= date('now', 'weekday 0', '-7 days')
+    AND substr(${expenseView.date}, 1, 10) <= date('now')
+  `
+    )
+);
+
+export const totalExpensesByMonth = sqliteView(
+  "vw_total_expense_by_month"
+).as((qb) =>
+  qb
+    .select({
+      total_value: sql<number>`CAST(SUM(${expenseView.value}) AS INTEGER)`.as(
+        "total_value"
+      ),
+    })
+    .from(expenseView)
+    .where(
+      sql`
+    substr(${expenseView.date}, 1, 10) >= date('now', 'start of month')
+    AND substr(${expenseView.date}, 1, 10) <= date('now')
+  `
+    )
+);
+
+// *** TOTAL INCOMES BY PERIOD
+
 export const totalIncomesByDayByMonth = sqliteView(
   "vw_total_income_by_daymonth"
 ).as((qb) =>
   qb
     .select({
       date: sql<string>`substr(${incomeView.date}, 1, 10)`.as("date"),
-      total_value: sql<number>`sum(${incomeView.value})`.as("total_value"),
+      total_value: sql<number>`CAST(SUM(${incomeView.value}) AS INTEGER)`.as(
+        "total_value"
+      ),
     })
     .from(incomeView)
     .where(
@@ -101,16 +162,19 @@ export const totalIncomesByDayByMonth = sqliteView(
     .orderBy(sql`substr(${incomeView.date}, 1, 10)`)
 );
 
-
-export const generalBalanceView = sqliteView(
-  "vw_general_balance"
-).as((qb) =>
+export const generalBalanceView = sqliteView("vw_general_balance").as((qb) =>
   qb
     .select({
-      total_incomes: sql`CAST(${sql.raw("vw_income_balance.total_sum")} AS INTEGER)`.as('total_incomes'),
-      total_expenses: sql`CAST(${sql.raw("vw_expense_balance.total_sum")} AS INTEGER)`.as('total_expenses'),
+      total_incomes: sql`CAST(${sql.raw(
+        "vw_income_balance.total_sum"
+      )} AS INTEGER)`.as("total_incomes"),
+      total_expenses: sql`CAST(${sql.raw(
+        "vw_expense_balance.total_sum"
+      )} AS INTEGER)`.as("total_expenses"),
 
-      balance: sql`CAST(${sql.raw("vw_income_balance.total_sum")} - ${sql.raw("vw_expense_balance.total_sum")} AS INTEGER)`.as('balance')
+      balance: sql`CAST(${sql.raw("vw_income_balance.total_sum")} - ${sql.raw(
+        "vw_expense_balance.total_sum"
+      )} AS INTEGER)`.as("balance"),
     })
     .from(sql.raw("vw_income_balance"))
     .fullJoin(sql.raw("vw_expense_balance"), sql`1=1`)

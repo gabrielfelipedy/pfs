@@ -1,11 +1,15 @@
-import { getMonthlyBalance } from '@/lib/db'
+import { getMonthlyBalance } from '@/db/queries/balance'
 import { formatter } from '@/lib/utils'
-import React from 'react'
+
+interface Balance {
+  saldo: number;
+}
 
 const Balance = async () => {
 
-    const data = await getMonthlyBalance()
-    const balance = data[0].saldo  / 100
+    const [data] = await getMonthlyBalance()
+    //console.log(data)
+    const balance = (data as Balance).saldo  / 100
 
   return (
     <div className='p-4 rounded-lg border-2'>
