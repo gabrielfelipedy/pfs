@@ -23,7 +23,7 @@ export const description = "A line chart with a label";
 
 
 const chartConfig = {
-  valor_total: {
+  total_value: {
     label: "Valor",
     color: "var(--chart-1)",
   },
@@ -55,7 +55,7 @@ export default function GenericLineChart({ title, description, data }: Props) {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="dia"
+              dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
@@ -87,12 +87,12 @@ export default function GenericLineChart({ title, description, data }: Props) {
             />
           
             <Line
-              dataKey="valor_total"
+              dataKey="total_value"
               type="natural"
-              stroke="var(--color-valor_total)"
+              stroke="var(--color-total_value)"
               strokeWidth={2}
               dot={{
-                fill: "var(--color-valor_total)",
+                fill: "var(--color-total_value)",
               }}
               activeDot={{
                 r: 6,

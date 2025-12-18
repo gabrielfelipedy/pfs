@@ -1,6 +1,6 @@
-import { desc, eq } from "drizzle-orm"
+import { desc, sql } from "drizzle-orm"
 import { db } from ".."
-import { expenseView, InsertOperation, operationTable, SelectOperation, totalExpensesByDay, totalExpensesByMonth, totalExpensesByWeek } from "../schema"
+import { expenseView, totalExpensesByDay, totalExpensesByDayByMonth, totalExpensesByMonth, totalExpensesByWeek } from "../schema"
 
 export async function getExpenses()
 {
@@ -19,4 +19,16 @@ export async function getWeeklyExpenses()
 export async function getMonthlyExpenses()
 {
     return db.select().from(totalExpensesByMonth)
+}
+
+// **************** CHARTS OPERATIONS ************
+
+export async function getExpensesEvolution()
+{
+  return db.select().from(totalExpensesByDayByMonth)
+}
+
+export async function getExpensesProportion()
+{
+  return await db.run(sql`SELECT * FROM vw_expense_balance`);
 }

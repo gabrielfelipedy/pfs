@@ -21,55 +21,23 @@ import { DataProportion } from "@/lib/definitions";
 
 export const description = "A simple pie chart";
 
-const chartConfig = {
-  total_contas: {
-    label: "Contas",
-    color: "var(--chart-1)",
-  },
-  total_investimentos: {
-    label: "Investimentos",
-    color: "var(--chart-2)",
-  },
-  total_educacao: {
-    label: "Educação",
-    color: "var(--chart-3)",
-  },
-  total_mercado: {
-    label: "Mercado",
-    color: "var(--chart-4)",
-  },
-  total_assinaturas: {
-    label: "Assinaturas",
-    color: "var(--chart-5)",
-  },
-  total_lanches: {
-    label: "Comida",
-    color: "var(--chart-6)",
-  },
-  total_sem_categoria: {
-    label: "Não categorizado",
-    color: "var(--chart-7)",
-  },
-  total_transporte: {
-    label: "Transporte",
-    color: "var(--chart-8)",
-  },
-} satisfies ChartConfig;
-
 interface Props {
+  title: string;
+  description: string;
   data: DataProportion[];
+  config: ChartConfig;
 }
 
-export default function GenericPieChart({ data }: Props) {
+export default function GenericPieChart({ title, description, data, config }: Props) {
   return (
     <Card className="flex flex-col w-full">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Proporção de gastos</CardTitle>
-        <CardDescription>Período atual</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
-          config={chartConfig}
+          config={config}
           className="mx-auto w-full max-h-125"
         >
           <PieChart>
@@ -80,7 +48,7 @@ export default function GenericPieChart({ data }: Props) {
                   formatter={(value, name) => (
                     <div>
                       <span className="text-muted-foreground">
-                        {chartConfig[name as keyof typeof chartConfig]?.label ||
+                        {config[name as keyof typeof config]?.label ||
                           name}
                         :
                       </span>
@@ -97,7 +65,7 @@ export default function GenericPieChart({ data }: Props) {
                 <Cell
                   key={`cell-${index}`}
                   fill={
-                    chartConfig[entry.type as keyof typeof chartConfig]
+                    config[entry.type as keyof typeof config]
                       ?.color || "var(--chart-1)"
                   }
                 />

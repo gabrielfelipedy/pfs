@@ -20,10 +20,7 @@ export type Categoria = {
   is_entrada: boolean;
 };
 
-export type ChartData = {
-  dia: string;
-  valor_total: number;
-};
+export type ChartData = { total_value: number; date: string };
 
 export type DataProportion = {
   type: string;
