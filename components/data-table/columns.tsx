@@ -135,7 +135,7 @@ export const columns: ColumnDef<Operation>[] = [
             dialogTitle="Atualizar Gasto"
             dialogDescription="Atualize as informações do gasto"
             buttonText="Atualizar"
-            operation={undefined}
+            operation={row.original}
             actionFunction={updateSaida}
           />
           {/* <UpdateSaidaDialog operation={row.original} /> */}

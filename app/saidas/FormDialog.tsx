@@ -58,14 +58,14 @@ export default function FormDialog({
   // States used by calendar selector propover
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(
-    operation?.date || new Date()
+    operation?.date ? new Date(operation?.date) : new Date()
   );
 
   // State to control dialog open/close
   const [dialogOpen, setDialogOpen] = useState(false);
 
   // controls the currency formatin of valor field
-  const [rawValor, setRawValor] = useState<number>(operation?.valor || 0);
+  const [rawValor, setRawValor] = useState<number>(operation?.value || 0);
 
   const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -151,7 +151,7 @@ export default function FormDialog({
                   <input
                     type="hidden"
                     name="date"
-                    value={date ? date.toISOString() : ""}
+                    value={date?.toLocaleDateString()}
                   />
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
@@ -160,7 +160,7 @@ export default function FormDialog({
                         id="date"
                         className="md:w-48 justify-between font-normal"
                       >
-                        {date ? date.toLocaleDateString() : "Selecione a data"}
+                        {date?.toLocaleDateString() || "Selecione a data"}
                         <ChevronDownIcon />
                       </Button>
                     </PopoverTrigger>
@@ -257,7 +257,7 @@ export default function FormDialog({
                 <Label htmlFor="categoria_id">Categoria</Label>
                 <NativeSelect
                   name="categoria_id"
-                  defaultValue={operation?.categoria_id}
+                  defaultValue={operation?.category_id || 1}
                 >
                   <NativeSelectOption value="1">1</NativeSelectOption>
                   <NativeSelectOption value="2">2</NativeSelectOption>
