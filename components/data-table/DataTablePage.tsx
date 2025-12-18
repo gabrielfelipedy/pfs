@@ -5,7 +5,7 @@ import { Operation } from "@/lib/definitions";
 
 export default async function DataTablePage() {
   const data: Operation[] = await getOperations();
-  //console.log(data)
+  console.log(data)
 
   return (
     <>

@@ -2,17 +2,23 @@
 
 import { neon } from "@neondatabase/serverless";
 import { ChartData, Operation } from "./definitions";
+import { createClient } from "@/utils/supabase/server";
 
 function getSql() {
   const sql = neon(process.env.DATABASE_URL!);
   return sql;
 }
 
+const supabase = await createClient()
+
+// ********** GENERAL OPERATION OPERATIONS ***********
+
 export async function getOperations() {
-  const sql = getSql();
 
   try {
-    const results = await sql`SELECT * FROM operation`;
+
+    const {data: results} = await supabase.from("operation").select("*").order("date", { ascending: false });
+
     return results as Operation[];
   } catch (error) {
     return [];
@@ -141,6 +147,9 @@ export async function getMonthlyEarnings() {
     return []
   }
 }
+
+
+// ********** BALANCO OPERATIONS ***********
 
 export async function getMonthlyBalance() {
   const sql = getSql();

@@ -44,17 +44,20 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      const dateValue = row.getValue("date") as Date;
 
-      if (dateValue instanceof Date && !isNaN(dateValue.getTime())) {
-        return <div>{dateValue.toLocaleDateString()}</div>;
+      // need to convert from UTC to -3 timezone
+      const dateValue = row.getValue("date") as string;
+
+      try {
+      return <div>{new Date(dateValue).toLocaleDateString()}</div>;
       }
-
-      return <div>Invalid Date</div>;
+      catch (error) {
+        return <div>Invalid date</div>;
+      }
     },
   },
   {
-    accessorKey: "valor",
+    accessorKey: "value",
     header: ({ column }) => {
       return (
         <Button
@@ -67,7 +70,7 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      const valor = row.getValue("valor") as number;
+      const valor = row.getValue("value") as number;
 
       return <div>{formatter.format(valor / 100)}</div>;
     },
@@ -90,7 +93,7 @@ export const columns: ColumnDef<Operation>[] = [
     },
   },
   {
-    accessorKey: "is_entrada",
+    accessorKey: "is_income",
     header: ({ column }) => {
       return (
         <Button
@@ -103,11 +106,11 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.getValue("is_entrada") === true ? "SIM" : "NÃO"}</div>;
+      return <div>{row.getValue("is_income") === true ? "SIM" : "NÃO"}</div>;
     },
   },
   {
-    accessorKey: "categoria_id",
+    accessorKey: "category_id",
     header: ({ column }) => {
       return (
         <Button
@@ -120,7 +123,7 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.getValue("categoria_id")}</div>;
+      return <div>{row.getValue("category_id")}</div>;
     },
   },
   {

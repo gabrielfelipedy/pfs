@@ -8,10 +8,6 @@ import { createClient } from "@/utils/supabase/server";
 
 export default async function Home() {
 
-  const supabase = await createClient()
-  const result = await supabase.from("category").select("*");
-  console.log(result)
-
   return (
     <section className="mt-4 md:mt-20">
 
