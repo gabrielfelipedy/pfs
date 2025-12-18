@@ -1,0 +1,2 @@
+DROP VIEW `vw_general_balance`;--> statement-breakpoint
+CREATE VIEW `vw_general_balance` AS select CAST(vw_income_balance.total_sum AS INTEGER) as "total_incomes", CAST(vw_expense_balance.total_sum AS INTEGER) as "total_expenses", CAST(vw_income_balance.total_sum - vw_expense_balance.total_sum AS INTEGER) as "balance" from vw_income_balance full join vw_expense_balance on 1=1;
