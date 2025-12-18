@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/dialog";
 
 import { toast } from "sonner";
-import { OperationActionState } from "@/lib/definitions";
 import { deleteOperationAction } from "@/actions/operation-actions";
+import { OperationActionState } from "@/actions/definitions";
 
 interface Props {
   id: number | undefined;
