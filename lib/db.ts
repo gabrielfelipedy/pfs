@@ -32,20 +32,6 @@ export async function getSaidaProportion() {
   }
 }
 
-// **** DESTRUCTIVE
-
-export async function deleteDbOperation(id: number) {
-  const sql = getSql();
-
-  try {
-    const result =
-      await sql`DELETE FROM operation WHERE id = ${id} RETURNING *`;
-    return result as Operation[];
-  } catch (error) {
-    return [];
-  }
-}
-
 
 // ** AUTHENTICATION
 
@@ -60,24 +46,6 @@ export async function getAuth() {
   {
     return []
   }
-}
-
-export async function updateDbRecordSaida(saida: Operation) {
-  if (!saida.id) {
-    throw new Error("ID is required for updating a record");
-  }
-
-  const sql = getSql();
-  const result = await sql`UPDATE operation 
-    SET 
-    name = ${saida.name},
-    description = ${saida.description},
-    date = ${saida.date},
-    valor = ${saida.value},
-    is_paid = ${saida.is_paid},
-    category_id = ${saida.category_id} 
-    WHERE id = ${saida.id} RETURNING *`;
-  return result;
 }
 
 // ********** ENTRADA OPERATIONS ***********

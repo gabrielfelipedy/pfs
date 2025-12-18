@@ -1,7 +1,6 @@
 "use server"
 
-import { insertExpense } from "@/db/queries/expense";
-import { updateDbRecordSaida } from "@/lib/db";
+import { insertExpense, updateExpense } from "@/db/queries/expense";
 import { Operation, OperationActionState, OperationSchema } from "@/lib/definitions";
 import { replaceUTCTime, utcMinus3ToUtc } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
@@ -80,7 +79,7 @@ export async function updateSaida(prevState: OperationActionState | undefined, f
     name: formData.get("name"),
     description: formData.get("description"),
     date: timestamp,
-    valor: Number(formData.get("valor")),
+    value: Number(formData.get("value")),
     is_paid: formData.get("is_paid") == "true" ? true : false,
     is_income: false,
     category_id: Number(formData.get("categoria_id")),
@@ -94,7 +93,7 @@ export async function updateSaida(prevState: OperationActionState | undefined, f
   }
 
   console.log(validationResult.data);
-  const result =await updateDbRecordSaida(validationResult.data as unknown as Operation);
+  const result = await updateExpense(Number(id), validationResult.data)
 
   if(!result){
 
