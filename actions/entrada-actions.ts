@@ -57,8 +57,9 @@ export async function createEntrada(prevState: OperationActionState | undefined,
     };
   }
 
-  revalidatePath("/entradas");
   revalidatePath('/')
+  revalidatePath('/entradas')
+
   return { success: true, message: "Entrada registrada com sucesso" };
 }
 
@@ -113,7 +114,8 @@ export async function updateIncome(prevState: OperationActionState | undefined, 
     };
   }
 
-  revalidatePath("/saidas");
   revalidatePath('/')
+  revalidatePath('/entradas')
+
   return { success: true, message: 'Entrada atualizada com sucesso' };
 }

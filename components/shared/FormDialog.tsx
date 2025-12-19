@@ -31,6 +31,7 @@ import { toast } from "sonner";
 import { formatter } from "@/lib/utils";
 import { Operation } from "@/lib/definitions";
 import { OperationActionState } from "@/actions/definitions";
+import { useRouter } from "next/navigation";
 
 // Defines the props for the FormDialog component
 
@@ -85,12 +86,17 @@ export default function FormDialog({
     FormData
   >(actionFunction, undefined);
 
+  const router = useRouter();
+
   // handles the success or erros afer action is performed
 
   useEffect(() => {
     if (state && state.success) {
       console.log("Action successful, closing dialog.");
       toast.success(state.message);
+
+      router.refresh();
+
       setTimeout(() => {
         setDialogOpen(false);
       }, 0);
@@ -99,10 +105,10 @@ export default function FormDialog({
         toast.error(state.message);
       }
     }
-  }, [state]);
+  }, [state, router]);
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog key={operation?.id || "new"} open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button variant={buttonVariation}>{openDialogText}</Button>
       </DialogTrigger>

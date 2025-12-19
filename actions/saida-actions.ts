@@ -56,7 +56,9 @@ export async function createSaida(prevState: OperationActionState | undefined, f
     };
   }
 
-  revalidatePath("/saidas");
+  revalidatePath('/')
+  revalidatePath('/saidas')
+
   return { success: true, message: "Saída criada com sucesso" };
 }
 
@@ -109,6 +111,8 @@ export async function updateSaida(prevState: OperationActionState | undefined, f
     };
   }
 
-  revalidatePath("/saidas");
+  revalidatePath('/')
+  revalidatePath('/saidas')
+
   return { success: true, message: 'Saída atualizada com sucesso' };
 }

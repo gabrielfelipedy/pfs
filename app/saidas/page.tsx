@@ -5,6 +5,8 @@ import { Operation } from "@/lib/definitions";
 import OperationDataTable from "@/components/data-table/columns";
 import { getExpenses } from "@/db/queries/expense";
 
+export const dynamic = 'force-dynamic';
+
 const Saidas = async () => {
   let data: Operation[];
 

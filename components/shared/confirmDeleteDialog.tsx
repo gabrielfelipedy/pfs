@@ -18,6 +18,7 @@ import {
 import { toast } from "sonner";
 import { deleteOperationAction } from "@/actions/operation-actions";
 import { OperationActionState } from "@/actions/definitions";
+import { useRouter } from "next/navigation";
 
 interface Props {
   id: number | undefined;
@@ -31,10 +32,15 @@ export default function ConfirmDeleteDialog({ id }: Props) {
     FormData
   >(deleteOperationAction, undefined);
 
+  const router = useRouter();
+
   useEffect(() => {
     if (state && state.success) {
       console.log("Action successful, closing dialog.");
       toast.success(state.message);
+
+      router.refresh()
+
       setTimeout(() => {
         setDialogOpen(false);
       }, 0);
@@ -43,10 +49,10 @@ export default function ConfirmDeleteDialog({ id }: Props) {
         toast.error(state.message);
       }
     }
-  }, [state]);
+  }, [state, router]);
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog key={id} open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button variant="destructive">
           <Trash />
