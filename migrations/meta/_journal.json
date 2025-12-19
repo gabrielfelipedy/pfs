@@ -225,6 +225,27 @@
       "when": 1766167134623,
       "tag": "0031_fuzzy_the_hood",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "6",
+      "when": 1766169827995,
+      "tag": "0032_nappy_proteus",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "6",
+      "when": 1766170718153,
+      "tag": "0033_curious_bill_hollister",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "6",
+      "when": 1766170924926,
+      "tag": "0034_open_vulture",
+      "breakpoints": true
     }
   ]
 }
