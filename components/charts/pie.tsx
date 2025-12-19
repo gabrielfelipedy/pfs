@@ -38,7 +38,7 @@ const Pie = ({ title, description, totalValue, data }: Props) => {
   series: [
     {
       type: 'pie',
-      radius: ['40%', '70%'],
+      radius: ['60%', '100%'],
       avoidLabelOverlap: false,
       itemStyle: {
         borderRadius: 10,
@@ -46,14 +46,22 @@ const Pie = ({ title, description, totalValue, data }: Props) => {
         borderWidth: 2
       },
       label: {
-        position: 'outer',
+        show: false,
+        position: 'center',
         alignTo: 'none',
         overflow: 'breakAll',
         formatter: (data: DataProportion) => `${((data.value/totalValue) * 100).toFixed(2)} %`
       },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 20,
+          formatter: (data: DataProportion) => `${((data.value/totalValue) * 100).toFixed(2)} %`
+        }
+      },
       data: data,
-      startAngle: 200,
-      endAngle: 340,
+      startAngle: 185,
+      endAngle: 355,
     }
   ]
 };
@@ -65,7 +73,7 @@ const Pie = ({ title, description, totalValue, data }: Props) => {
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ReactCharts option={option} />
+        <ReactCharts option={option} style={{ height: '300px', width: '100%' }} />
       </CardContent>
     </Card>
   );
