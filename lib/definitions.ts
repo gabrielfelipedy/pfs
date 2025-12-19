@@ -23,7 +23,7 @@ export type Categoria = {
 export type ChartData = { total_value: number; date: string };
 
 export type DataProportion = {
-  type: string;
+  name: string;
   value: number;
 };
 

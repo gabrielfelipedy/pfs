@@ -1,62 +1,28 @@
-import React from "react";
-import GenericLineChart from "./genericLineChart";
+import {
+  getExpensesEvolution,
+  getExpensesProportion,
+} from "@/db/queries/expense";
 
-import GenericPieChart from "./genericPieChart";
-import { getExpensesEvolution, getExpensesProportion } from "@/db/queries/expense";
-import { ChartConfig } from "@/components/ui/chart";
+import Line from "@/components/charts/line";
+import Pie from "@/components/charts/pie";
 
-const chartConfig = {
-  total_contas: {
-    label: "Contas",
-    color: "var(--chart-1)",
-  },
-  total_investimentos: {
-    label: "Investimentos",
-    color: "var(--chart-2)",
-  },
-  total_educacao: {
-    label: "Educação",
-    color: "var(--chart-3)",
-  },
-  total_mercado: {
-    label: "Mercado",
-    color: "var(--chart-4)",
-  },
-  total_assinaturas: {
-    label: "Assinaturas",
-    color: "var(--chart-5)",
-  },
-  total_lanches: {
-    label: "Comida",
-    color: "var(--chart-6)",
-  },
-  total_transporte: {
-    label: "Transporte",
-    color: "var(--chart-8)",
-  },
-  total_uncategorized: {
-    label: "Não categorizado",
-    color: "var(--chart-7)",
-  },
-} satisfies ChartConfig;
 
 const MonthlySaidas = async () => {
-
   let expense_data;
   let expense_proportion;
- try {
-  const data = await getExpensesEvolution()
-  //console.log(data)
-  expense_data = data
+  try {
+    const data = await getExpensesEvolution();
+    //console.log(data)
+    expense_data = data;
 
-  const {rows: [saidaProportion]} = await getExpensesProportion();
-  expense_proportion = saidaProportion
-  //console.log(saidaProportion)
-
-  }
-  catch (error) {
-    console.error(error)
-   return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    const {
+      rows: [saidaProportion],
+    } = await getExpensesProportion();
+    expense_proportion = saidaProportion;
+    //console.log(saidaProportion)
+  } catch (error) {
+    console.error(error);
+    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
   }
 
   const transformedData = expense_data.map((item) => ({
@@ -68,38 +34,37 @@ const MonthlySaidas = async () => {
   let transformedSaidaProportion;
 
   try {
+    transformedSaidaProportion = Object.entries(expense_proportion)
+      .filter(([key]) => key !== "total_sum")
+      .map(([key, val]) => ({
+        name: key.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+        value: Number(val)
+      }));
 
-  transformedSaidaProportion = Object.entries(expense_proportion)
-    .filter(([key]) => key !== "total_sum")
-    .map(([key, val]) => ({
-      type: key,
-      value: Number(
-        Number(
-          (Number(val) / 100 / (Number(expense_proportion.total_sum) / 100)) * 100
-        ).toFixed(2)
-      ),
-    }));
+      transformedSaidaProportion.sort((a, b) => b.value - a.value) 
 
-    console.log(transformedSaidaProportion)
+    //console.log(transformedSaidaProportion);
+  } catch (error) {
+    return <div className="p-4 text-red-500">Erro ao processar dados.</div>;
   }
-  catch(error)
-  {
-    return <div className="p-4 text-red-500">Erro ao processar dados.</div>; 
-  }
-  
 
   //console.log(transformedSaidaProportion);
 
   return (
     <div className="flex flex-col lg:flex-row gap-4 w-full justify-between">
-      <GenericLineChart title="Evolução de gastos" description="Evolução"  data={transformedData} />
-      <GenericPieChart 
-      
-      title="Evolução dos gastos"
-      description="No período de um mês"
-      data={transformedSaidaProportion}
-      config={chartConfig}
+      <Line
+        title="Evolução de gastos"
+        description="Ao longo do mês atual"
+        data={transformedData}
       />
+
+      <Pie
+        title="Evolução de gastos"
+        description="Ao longo do mês atual"
+        totalValue={Number(expense_proportion.total_sum)}
+        data={transformedSaidaProportion}
+      />
+
     </div>
   );
 };

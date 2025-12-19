@@ -1,0 +1,79 @@
+"use client";
+
+import React from "react";
+import ReactCharts from "echarts-for-react";
+import { ChartData } from "@/lib/definitions";
+import { formatter } from "@/lib/utils";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+
+interface Props {
+  title: string;
+  description: string;
+  data: ChartData[];
+}
+
+const Line = ({ title, description, data }: Props) => {
+  const result = {
+    date: data.map((item) =>
+      new Date(item.date).toLocaleDateString("pt-BR", {
+        month: "long",
+        day: "numeric",
+      })
+    ),
+    total_value: data.map((item) => item.total_value),
+  };
+  console.log(result);
+
+  const option = {
+    tooltip: {
+      trigger: "axis",
+      valueFormatter: (value: number) => formatter.format(value),
+    },
+    xAxis: {
+      type: "category",
+      data: result.date,
+    },
+    toolbox: {
+      feature: {
+        saveAsImage: {},
+      },
+    },
+    yAxis: {
+      type: "value",
+      splitLine: {
+        show: false,
+      },
+      axisLabel: {
+        // Formats the axis labels
+        formatter: (value: number) => formatter.format(value),
+      },
+    },
+    series: [
+      {
+        data: result.total_value,
+        type: "line",
+        smooth: true,
+      },
+    ],
+  };
+
+  return (
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ReactCharts option={option} />
+      </CardContent>
+    </Card>
+  );
+};
+
+export default Line;
