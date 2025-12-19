@@ -21,7 +21,7 @@ export type LoginActionState =
     };
 
 export async function login(prevState: LoginActionState | undefined, formData: FormData): Promise<LoginActionState> {
-  
+
   const validationResult = LoginFormSchema.safeParse(
     Object.fromEntries(formData)
   );
