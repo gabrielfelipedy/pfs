@@ -170,7 +170,7 @@ export default function FormDialog({
                   <input
                     type="hidden"
                     name="date"
-                    value={date?.toLocaleDateString()}
+                    value={date ? date.toISOString().split('T')[0] : ""}
                   />
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
@@ -179,7 +179,7 @@ export default function FormDialog({
                         id="date"
                         className="md:w-48 justify-between font-normal"
                       >
-                        {date?.toLocaleDateString() || "Selecione a data"}
+                        {date ? date.toISOString().split('T')[0].replace('-', '/').replace('-', '/') : "Selecione a data"}
                         <ChevronDownIcon />
                       </Button>
                     </PopoverTrigger>
