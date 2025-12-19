@@ -40,7 +40,7 @@ export async function createSaida(prevState: OperationActionState | undefined, f
     };
   }
 
-  console.log(validationResult.data);
+  //console.log(validationResult.data);
   const result = await insertOperation(
     validationResult.data
   );
@@ -60,10 +60,7 @@ export async function createSaida(prevState: OperationActionState | undefined, f
   return { success: true, message: "Saída criada com sucesso" };
 }
 
-
 // **************** UPDATE ***************
-
-
 
 export async function updateSaida(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
 

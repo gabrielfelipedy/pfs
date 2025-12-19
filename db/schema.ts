@@ -70,7 +70,7 @@ export const totalExpensesByDayByMonth = sqliteView(
 ).as((qb) =>
   qb
     .select({
-      date: sql<string>`substr(${expenseView.date}, 1, 10)`.as("date"),
+      date: sql<string>`date(${expenseView.date}, 'unixepoch')`.as("date"),
       total_value: sql<number>`CAST(SUM(${expenseView.value}) AS INTEGER)`.as(
         "total_value"
       ),
@@ -78,12 +78,12 @@ export const totalExpensesByDayByMonth = sqliteView(
     .from(expenseView)
     .where(
       sql`
-    substr(${expenseView.date}, 1, 10) >= date('now', 'start of month')
-    AND substr(${expenseView.date}, 1, 10) <= date('now')
+    date(${expenseView.date}, 'unixepoch') >= date('now', 'start of month')
+    AND date(${expenseView.date}, 'unixepoch') <= date('now')
   `
     )
-    .groupBy(sql`substr(${expenseView.date}, 1, 10)`)
-    .orderBy(sql`substr(${expenseView.date}, 1, 10)`)
+    .groupBy(sql`date(${expenseView.date}, 'unixepoch')`)
+    .orderBy(sql`date(${expenseView.date}, 'unixepoch')`)
 );
 
 export const totalExpensesByDay = sqliteView("vw_total_expense_by_day").as(
@@ -97,8 +97,8 @@ export const totalExpensesByDay = sqliteView("vw_total_expense_by_day").as(
       .from(expenseView)
       .where(
         sql`
-    substr(${expenseView.date}, 1, 10) >= date('now', 'start of day')
-    AND substr(${expenseView.date}, 1, 10) <= date('now')
+     date(${expenseView.date}, 'unixepoch') >= date('now', 'start of day')
+    AND date(${expenseView.date}, 'unixepoch') <= date('now')
   `
       )
 );
@@ -115,8 +115,8 @@ export const totalExpensesByWeek = sqliteView(
     .from(expenseView)
     .where(
       sql`
-    substr(${expenseView.date}, 1, 10) >= date('now', 'weekday 0', '-7 days')
-    AND substr(${expenseView.date}, 1, 10) <= date('now')
+    date(${expenseView.date}, 'unixepoch') >= date('now', 'weekday 0', '-7 days')
+    AND date(${expenseView.date}, 'unixepoch') <= date('now')
   `
     )
 );
@@ -133,8 +133,8 @@ export const totalExpensesByMonth = sqliteView(
     .from(expenseView)
     .where(
       sql`
-    substr(${expenseView.date}, 1, 10) >= date('now', 'start of month')
-    AND substr(${expenseView.date}, 1, 10) <= date('now')
+    date(${expenseView.date}, 'unixepoch') >= date('now', 'start of month')
+    AND date(${expenseView.date}, 'unixepoch') <= date('now')
   `
     )
 );
@@ -146,7 +146,7 @@ export const totalIncomesByDayByMonth = sqliteView(
 ).as((qb) =>
   qb
     .select({
-      date: sql<string>`substr(${incomeView.date}, 1, 10)`.as("date"),
+      date: sql<string>`date(${incomeView.date}, 'unixepoch')`.as("date"),
       total_value: sql<number>`CAST(SUM(${incomeView.value}) AS INTEGER)`.as(
         "total_value"
       ),
@@ -154,12 +154,12 @@ export const totalIncomesByDayByMonth = sqliteView(
     .from(incomeView)
     .where(
       sql`
-    substr(${incomeView.date}, 1, 10) >= date('now', 'start of month')
-    AND substr(${incomeView.date}, 1, 10) <= date('now')
+    date(${incomeView.date}, 'unixepoch') >= date('now', 'start of month')
+    AND date(${incomeView.date}, 'unixepoch') <= date('now')
   `
     )
-    .groupBy(sql`substr(${incomeView.date}, 1, 10)`)
-    .orderBy(sql`substr(${incomeView.date}, 1, 10)`)
+    .groupBy(sql`date(${incomeView.date}, 'unixepoch')`)
+    .orderBy(sql`date(${incomeView.date}, 'unixepoch')`)
 );
 
 export const generalBalanceView = sqliteView("vw_general_balance").as((qb) =>

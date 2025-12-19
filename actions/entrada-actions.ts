@@ -40,7 +40,8 @@ export async function createEntrada(prevState: OperationActionState | undefined,
     };
   }
 
-  console.log(validationResult.data);
+  //console.log(validationResult.data);
+  
   const result = await insertOperation(
     validationResult.data
   );
@@ -97,7 +98,7 @@ export async function updateIncome(prevState: OperationActionState | undefined, 
     };
   }
 
-  console.log(validationResult.data);
+  //console.log(validationResult.data);
   const result = await updateOperation(Number(id), validationResult.data)
 
   if(!result){
@@ -105,14 +106,14 @@ export async function updateIncome(prevState: OperationActionState | undefined, 
     return {
       success: false,
       errors: {
-        name: ["Erro ao atualizar saída"],
+        name: ["Erro ao atualizar entrada"],
       },
 
-      message: 'Erro ao atualizar saída'
+      message: 'Erro ao atualizar entrada'
     };
   }
 
   revalidatePath("/saidas");
   revalidatePath('/')
-  return { success: true, message: 'Saída atualizada com sucesso' };
+  return { success: true, message: 'Entrada atualizada com sucesso' };
 }

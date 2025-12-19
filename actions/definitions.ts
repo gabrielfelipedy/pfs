@@ -4,7 +4,8 @@ export const OperationSchema = z.object({
   id: z.number().optional(),
   name: z.string().min(1, { message: "Name cannot be empty" }).trim(),
   description: z.string().optional(),
-  date: z.iso.datetime({ offset: true }),
+  date: z.coerce.date(),
+
   value: z.number().min(0, { message: "Valor must be a positive number" }),
   is_paid: z.boolean(),
   is_income: z.boolean(),
