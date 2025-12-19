@@ -2,8 +2,11 @@ import { getIncomesEvolution, getIncomesProportion } from "@/db/queries/income";
 import Line from "@/components/charts/line";
 import Pie from "@/components/charts/pie";
 
+interface Props {
+  className?: string;
+}
 
-const MonthlyEntradas = async () => {
+const MonthlyEntradas = async ({className}: Props) => {
   let income_data;
   let income_proportion;
 
@@ -44,7 +47,7 @@ const MonthlyEntradas = async () => {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 w-full justify-between">
+    <div className={`${className} flex flex-col lg:flex-row gap-4 w-full justify-between`}>
       <Line
         title="Evolução de entradas mensal"
         description="Ao longo do mês atual"

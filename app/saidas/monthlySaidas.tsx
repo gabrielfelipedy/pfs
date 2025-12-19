@@ -6,8 +6,11 @@ import {
 import Line from "@/components/charts/line";
 import Pie from "@/components/charts/pie";
 
+interface Props {
+  className?: string;
+}
 
-const MonthlySaidas = async () => {
+const MonthlySaidas = async ({className}: Props) => {
   let expense_data;
   let expense_proportion;
   try {
@@ -51,7 +54,7 @@ const MonthlySaidas = async () => {
   //console.log(transformedSaidaProportion);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 w-full justify-between">
+    <div className={`${className} flex flex-col lg:flex-row gap-4 w-full justify-between`}>
       <Line
         title="Evolução de gastos"
         description="Ao longo do mês atual"

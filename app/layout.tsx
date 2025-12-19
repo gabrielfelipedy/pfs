@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/shared/Navbar";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
@@ -19,11 +19,11 @@ export default function RootLayout({
       <body
         className={`antialiased`}
       >
-        <nav>
+        <header>
           <Navbar linksClassName="px-6 md:px-20" />
-        </nav>
+        </header>
 
-        <main className="px-6 md:px-20">
+        <main className="px-6 md:px-20 mt-20">
         {children}
         <Toaster />
         </main>

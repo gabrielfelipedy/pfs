@@ -7,8 +7,8 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "../ui/button";
 import { formatter } from "@/lib/utils";
 import { Pencil } from "lucide-react";
-import ConfirmDeleteDialog from "@/app/saidas/confirmDeleteDialog";
-import FormDialog from "@/app/saidas/FormDialog";
+import ConfirmDeleteDialog from "@/components/shared/confirmDeleteDialog";
+import FormDialog from "@/components/shared/FormDialog";
 import { Operation } from "@/lib/definitions";
 import { updateSaida } from "@/actions/saida-actions";
 

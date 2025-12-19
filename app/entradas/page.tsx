@@ -1,23 +1,19 @@
-import FormDialog from "../saidas/FormDialog";
+import FormDialog from "../../components/shared/FormDialog";
 import { createEntrada } from "@/actions/entrada-actions";
 import { Operation } from "@/lib/definitions";
 import OperationDataTable from "@/components/data-table/columns";
-import MonthlyEntradas from "../saidas/monthlyEntradas";
+import MonthlyEntradas from "./monthlyEntradas";
 import { getIncomes } from "@/db/queries/income";
 
-
 const Entradas = async () => {
+  let data: Operation[];
 
-  let data: Operation[]
-    
-    try{
-      const result = await getIncomes();
-      data = result
-    }
-    catch(error)
-    {
-      return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
-    }
+  try {
+    const result = await getIncomes();
+    data = result;
+  } catch (error) {
+    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+  }
 
   return (
     <>
@@ -36,8 +32,7 @@ const Entradas = async () => {
         />
       </div>
 
-      <MonthlyEntradas />
-    
+      <MonthlyEntradas className="mt-4" />
 
       <div className="mt-10">
         <OperationDataTable operations={data} />
