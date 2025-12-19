@@ -10,6 +10,9 @@ import Line from "@/components/charts/line";
 import { getIncomesEvolution } from "@/db/queries/income";
 import Area from "@/components/charts/area";
 import ErrorLoading from "@/components/error/ErrorLoading";
+import FormDialog from "@/components/shared/FormDialog";
+import { createEntrada } from "@/actions/entrada-actions";
+import { createSaida } from "@/actions/saida-actions";
 
 export default async function Home() {
   let expense_data;
@@ -21,10 +24,9 @@ export default async function Home() {
 
     const data2 = await getIncomesEvolution();
     income_data = data2;
-
   } catch (error) {
     console.error(error);
-    return <ErrorLoading />
+    return <ErrorLoading />;
   }
 
   const transformedData = expense_data.map((item) => ({
@@ -35,12 +37,12 @@ export default async function Home() {
   const transformedIncomes = income_data.map((item) => ({
     ...item,
     total_value: item.total_value / 100,
-  })); 
+  }));
 
   const general_data = {
     expense: transformedData,
-    income: transformedIncomes
-  }
+    income: transformedIncomes,
+  };
 
   return (
     <section className="mt-4 md:mt-20">
@@ -50,7 +52,6 @@ export default async function Home() {
       </p>
 
       <div className="mt-8">
-
         {/* <Area
         title="Evolução de gastos"
         description="Ao longo do mês atual"
@@ -63,9 +64,29 @@ export default async function Home() {
           <EarningResumes />
           <CostsResume />
         </div>
-        <div className="mt-20">
-          <p className="font-bold">Lista de gastos geral</p>
 
+        <div className="mt-10 flex gap-5">
+          {/* <CreateSaidaDialog /> */}
+          <FormDialog
+            openDialogText="Adicionar entrada"
+            dialogTitle="Adicionar entrada"
+            dialogDescription="Preencha as informações da entrada"
+            buttonText="Adicionar"
+            operation={undefined}
+            actionFunction={createEntrada}
+          />
+
+          <FormDialog
+            openDialogText="Adicionar Gasto"
+            dialogTitle="Adicionar Gasto"
+            dialogDescription="Preencha as informações do gasto"
+            buttonText="Adicionar"
+            operation={undefined}
+            actionFunction={createSaida}
+          />
+        </div>
+
+        <div className="mt-2">
           <DataTablePage />
         </div>
       </div>
