@@ -21,6 +21,8 @@ const Entradas = async () => {
       <h1 className="text-[3rem] font-bold mt-10">Entradas</h1>
       <p className="text-xl text-slate-600">Todos os registros de entradas</p>
 
+      <MonthlyEntradas className="mt-4" />
+
       <div className="mt-10">
         {/* <CreateSaidaDialog /> */}
         <FormDialog
@@ -33,9 +35,7 @@ const Entradas = async () => {
         />
       </div>
 
-      <MonthlyEntradas className="mt-4" />
-
-      <div className="mt-10">
+      <div className="mt-2">
         <OperationDataTable operations={data} />
       </div>
     </>
