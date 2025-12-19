@@ -1,14 +1,23 @@
-import DataTableSaidas from "@/components/data-table/DataTableSaidas";
 import MonthlySaidas from "./monthlySaidas";
 import FormDialog from "./FormDialog";
 import { createSaida } from "@/actions/saida-actions";
 import { Operation } from "@/lib/definitions";
-import { getSaidas } from "@/lib/db";
 import OperationDataTable from "@/components/data-table/columns";
+import { getExpenses } from "@/db/queries/expense";
 
 const Saidas = async () => {
 
-  const data: Operation[] = await getSaidas();
+  let data: Operation[]
+  
+  try{
+    const result = await getExpenses();
+    data = result
+  }
+  catch(error)
+  {
+    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+  }
+  //console.log(data)
 
   return (
     <div>

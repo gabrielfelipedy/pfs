@@ -29,7 +29,8 @@ import {
 
 import { toast } from "sonner";
 import { formatter } from "@/lib/utils";
-import { Operation, OperationActionState } from "@/lib/definitions";
+import { Operation } from "@/lib/definitions";
+import { OperationActionState } from "@/actions/definitions";
 
 // Defines the props for the FormDialog component
 
@@ -58,14 +59,14 @@ export default function FormDialog({
   // States used by calendar selector propover
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(
-    operation?.date || new Date()
+    operation?.date ? new Date(operation?.date) : new Date()
   );
 
   // State to control dialog open/close
   const [dialogOpen, setDialogOpen] = useState(false);
 
   // controls the currency formatin of valor field
-  const [rawValor, setRawValor] = useState<number>(operation?.valor || 0);
+  const [rawValor, setRawValor] = useState<number>(operation?.value || 0);
 
   const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -151,7 +152,7 @@ export default function FormDialog({
                   <input
                     type="hidden"
                     name="date"
-                    value={date ? date.toISOString() : ""}
+                    value={date?.toLocaleDateString()}
                   />
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
@@ -160,7 +161,7 @@ export default function FormDialog({
                         id="date"
                         className="md:w-48 justify-between font-normal"
                       >
-                        {date ? date.toLocaleDateString() : "Selecione a data"}
+                        {date?.toLocaleDateString() || "Selecione a data"}
                         <ChevronDownIcon />
                       </Button>
                     </PopoverTrigger>
@@ -214,7 +215,7 @@ export default function FormDialog({
           <div className="grid gap-3 mt-4">
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-3">
-                <Label htmlFor="valor">Valor</Label>
+                <Label htmlFor="value">Valor</Label>
                 {/* <Input className="max-w-[150px]" id="valor" name="valor" /> */}
 
                 <Input
@@ -226,11 +227,11 @@ export default function FormDialog({
                   className="max-w-28 md:max-w-37.5 text-right"
                 />
                 {/* 2. DATA INPUT: Hidden, has the "name", sends the raw integer */}
-                <input type="hidden" name="valor" value={rawValor} />
+                <input type="hidden" name="value" value={rawValor} />
 
                 {!state?.success && (
                   <p className="text-sm text-red-500">
-                    {state?.errors?.valor || ""}
+                    {state?.errors?.value || ""}
                   </p>
                 )}
               </div>
@@ -257,7 +258,7 @@ export default function FormDialog({
                 <Label htmlFor="categoria_id">Categoria</Label>
                 <NativeSelect
                   name="categoria_id"
-                  defaultValue={operation?.categoria_id}
+                  defaultValue={operation?.category_id || 1}
                 >
                   <NativeSelectOption value="1">1</NativeSelectOption>
                   <NativeSelectOption value="2">2</NativeSelectOption>
@@ -269,7 +270,7 @@ export default function FormDialog({
                 </NativeSelect>
                 {!state?.success && (
                   <p className="text-sm text-red-500">
-                    {state?.errors?.categoria_id || ""}
+                    {state?.errors?.category_id || ""}
                   </p>
                 )}
               </div>

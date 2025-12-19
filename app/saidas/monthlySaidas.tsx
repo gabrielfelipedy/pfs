@@ -1,47 +1,70 @@
-import React from "react";
-import GenericLineChart from "./genericLineChart";
 import {
-  getMonthlySaidasEvolution,
-  getSaidaProportion,
-} from "@/lib/db";
-import GenericPieChart from "./genericPieChart";
-import { DataProportion } from "@/lib/definitions";
+  getExpensesEvolution,
+  getExpensesProportion,
+} from "@/db/queries/expense";
+
+import Line from "@/components/charts/line";
+import Pie from "@/components/charts/pie";
+
 
 const MonthlySaidas = async () => {
-  const data = await getMonthlySaidasEvolution();
+  let expense_data;
+  let expense_proportion;
+  try {
+    const data = await getExpensesEvolution();
+    //console.log(data)
+    expense_data = data;
 
-  const transformedData = data.map((item) => ({
+    const {
+      rows: [saidaProportion],
+    } = await getExpensesProportion();
+    expense_proportion = saidaProportion;
+    //console.log(saidaProportion)
+  } catch (error) {
+    console.error(error);
+    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+  }
+
+  const transformedData = expense_data.map((item) => ({
     ...item,
-    valor_total: item.valor_total / 100,
+    total_value: item.total_value / 100,
   }));
+  //console.log(transformedData)
 
-  let transformedSaidaProportion: DataProportion[] = [];
+  let transformedSaidaProportion;
 
   try {
+    transformedSaidaProportion = Object.entries(expense_proportion)
+      .filter(([key]) => key !== "total_sum")
+      .map(([key, val]) => ({
+        name: key.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+        value: Number(val)
+      }));
 
-  const saidaProportion = await getSaidaProportion();
+      transformedSaidaProportion.sort((a, b) => b.value - a.value) 
 
-  transformedSaidaProportion = Object.entries(saidaProportion[0])
-    .filter(([key]) => key !== "soma_total")
-    .map(([key, val]) => ({
-      type: key,
-      value: Number(
-        Number(
-          (val / 100 / (saidaProportion[0].soma_total / 100)) * 100
-        ).toFixed(2)
-      ),
-    }));
-  }
-  catch (error) {
-    console.error("Error fetching saida proportion:", error);
+    //console.log(transformedSaidaProportion);
+  } catch (error) {
+    return <div className="p-4 text-red-500">Erro ao processar dados.</div>;
   }
 
   //console.log(transformedSaidaProportion);
 
   return (
     <div className="flex flex-col lg:flex-row gap-4 w-full justify-between">
-      <GenericLineChart title="Evolução de gastos" description="Evolução"  data={transformedData} />
-      <GenericPieChart data={transformedSaidaProportion} />
+      <Line
+        title="Evolução de gastos"
+        description="Ao longo do mês atual"
+        data={transformedData}
+      />
+
+      <Pie
+        title="Evolução de gastos"
+        description="Ao longo do mês atual"
+        totalValue={Number(expense_proportion.total_sum)}
+        data={transformedSaidaProportion}
+      />
+
     </div>
   );
 };

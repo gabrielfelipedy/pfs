@@ -1,19 +1,29 @@
-import { getMonthlyEarnings } from '@/lib/db'
-import { formatter } from '@/lib/utils'
-import React from 'react'
+import { getMonthlyIncomes } from "@/db/queries/income";
+import { formatter } from "@/lib/utils";
 
-const EarningResumes = async () => {
-
-    const total = await getMonthlyEarnings()
-    //console.log(total)
-
-  return (
-    <div className='p-4'>
-        <p>Ganhos mensais</p>
-
-        <h1 className='text-[2.2rem] md:text-[5rem] font-bold text-green-600'>{formatter.format(total[0].total / 100)}</h1>
-    </div>
-  )
+interface TotalIncomes {
+  total_incomes: number;
 }
 
-export default EarningResumes
+const EarningResumes = async () => {
+  let total;
+
+  try {
+    const [result] = await getMonthlyIncomes();
+    total = result;
+  } catch (error) {
+    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+  }
+
+  return (
+    <div className="p-4">
+      <p>Ganhos mensais</p>
+
+      <h1 className="text-[2.2rem] md:text-[5rem] font-bold text-green-600">
+        {formatter.format((total as TotalIncomes).total_incomes / 100)}
+      </h1>
+    </div>
+  );
+};
+
+export default EarningResumes;

@@ -4,16 +4,31 @@ import { createSession } from "@/lib/session";
 import { LoginFormSchema } from "../../lib/definitions";
 import { redirect } from "next/navigation";
 import * as bcrypt from "bcrypt";
-import { getAuth } from "@/lib/db";
+import { getAuth } from "@/db/auth";
 
+export type LoginActionState =
+  | {
+      success: true;
+      message: string;
+    }
+  | {
+      success: false;
+      message?: string;
+      errors: {
+        username?: string[];
+        password?: string[];
+      };
+    };
 
-export async function login(prevState: any, formData: FormData) {
+export async function login(prevState: LoginActionState | undefined, formData: FormData): Promise<LoginActionState> {
+
   const validationResult = LoginFormSchema.safeParse(
     Object.fromEntries(formData)
   );
 
   if (!validationResult.success) {
     return {
+      success: false,
       errors: validationResult.error.flatten().fieldErrors,
     };
   }
@@ -22,8 +37,9 @@ export async function login(prevState: any, formData: FormData) {
 
   const dbData = await getAuth();
 
-  if(dbData.length === 0){
+  if (dbData.length === 0) {
     return {
+      success: false,
       errors: {
         username: ["Error on login"],
       },
@@ -34,6 +50,7 @@ export async function login(prevState: any, formData: FormData) {
 
   if (username !== dbData[0].username || !match) {
     return {
+      success: false,
       errors: {
         username: ["Invalid username or password"],
       },
@@ -41,9 +58,9 @@ export async function login(prevState: any, formData: FormData) {
   }
 
   await createSession(username);
+  redirect("/");
 
-
-  redirect('/')
+  return { success: true, message: "Login Sucessfully" };
 }
 
 export async function logout() {}

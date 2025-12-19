@@ -1,0 +1,1 @@
+CREATE VIEW `vw_general_balance` AS select "total_value", "total_value", "total_value" - "total_value" as "balance" from "vw_total_expense_by_daymonth" full join "vw_total_income_by_daymonth" on 1=1;

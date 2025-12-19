@@ -1,0 +1,2 @@
+DROP VIEW `vw_general_balance`;--> statement-breakpoint
+CREATE VIEW `vw_general_balance` AS select vw_income_balance.total_sum as "total_incomes", vw_expense_balance.total_sum as "total_expenses", vw_income_balance.total_sum - vw_expense_balance.total_sum as "balance" from vw_income_balance full join vw_expense_balance on 1=1;
