@@ -20,16 +20,20 @@ interface Props {
 }
 
 const Line = ({ title, description, className, data }: Props) => {
+
+  //console.log(data)
+
   const result = {
     date: data.map((item) =>
       new Date(item.date).toLocaleDateString("pt-BR", {
-        month: "long",
+        month: "short",
         day: "numeric",
+        timeZone: 'UTC'
       })
     ),
     total_value: data.map((item) => item.total_value),
   };
-  console.log(result);
+  //console.log(result);
 
   const option = {
     tooltip: {
