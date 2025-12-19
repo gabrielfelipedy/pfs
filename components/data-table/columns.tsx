@@ -48,7 +48,7 @@ export const columns: ColumnDef<Operation>[] = [
       const dateValue = row.getValue("date") as string;
 
       try {
-        return <div>{new Date(dateValue).toLocaleDateString()}</div>;
+        return <div>{new Date(dateValue).toLocaleDateString('pt-BR')}</div>;
       } catch (error) {
         return <div>Invalid Date</div>;
       }

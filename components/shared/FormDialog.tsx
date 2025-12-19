@@ -179,7 +179,7 @@ export default function FormDialog({
                         id="date"
                         className="md:w-48 justify-between font-normal"
                       >
-                        {date ? date.toISOString().split('T')[0].replace('-', '/').replace('-', '/') : "Selecione a data"}
+                        {date ? date.toLocaleDateString('pt-BR') : "Selecione a data"}
                         <ChevronDownIcon />
                       </Button>
                     </PopoverTrigger>
