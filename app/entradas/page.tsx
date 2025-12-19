@@ -20,7 +20,7 @@ const Entradas = async () => {
     }
 
   return (
-    <div>
+    <>
       <h1 className="text-[3rem] font-bold mt-10">Entradas</h1>
       <p className="text-xl text-slate-600">Todos os registros de entradas</p>
 
@@ -36,14 +36,13 @@ const Entradas = async () => {
         />
       </div>
 
-      <div className="mt-8">
-        <MonthlyEntradas />
-      </div>
+      <MonthlyEntradas />
+    
 
       <div className="mt-10">
         <OperationDataTable operations={data} />
       </div>
-    </div>
+    </>
   );
 };
 

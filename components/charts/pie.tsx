@@ -47,8 +47,8 @@ const Pie = ({ title, description, totalValue, data }: Props) => {
       },
       label: {
         position: 'outer',
-        alignTo: 'labelLine',
-        bleedMargin: 5,
+        alignTo: 'none',
+        overflow: 'breakAll',
         formatter: (data: DataProportion) => `${((data.value/totalValue) * 100).toFixed(2)} %`
       },
       data: data,
