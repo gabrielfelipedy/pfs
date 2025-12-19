@@ -11,6 +11,7 @@ import ConfirmDeleteDialog from "@/components/shared/confirmDeleteDialog";
 import FormDialog from "@/components/shared/FormDialog";
 import { Operation } from "@/lib/definitions";
 import { updateSaida } from "@/actions/saida-actions";
+import { updateIncome } from "@/actions/entrada-actions";
 
 export const columns: ColumnDef<Operation>[] = [
   {
@@ -136,7 +137,7 @@ export const columns: ColumnDef<Operation>[] = [
             dialogDescription="Atualize as informações do gasto"
             buttonText="Atualizar"
             operation={row.original}
-            actionFunction={updateSaida}
+            actionFunction={row.original.is_income ? updateIncome : updateSaida}
           />
           {/* <UpdateSaidaDialog operation={row.original} /> */}
           <ConfirmDeleteDialog id={row.original.id} />
@@ -153,7 +154,6 @@ interface Props {
 export default function OperationDataTable({ operations }: Props) {
   return <DataTable columns={columns} data={operations} />;
 }
-
 /* export type Operation = {
   id: number;
   name: string;

@@ -57,6 +57,7 @@ export async function createEntrada(prevState: OperationActionState | undefined,
   }
 
   revalidatePath("/entradas");
+  revalidatePath('/')
   return { success: true, message: "Entrada registrada com sucesso" };
 }
 
@@ -64,8 +65,7 @@ export async function createEntrada(prevState: OperationActionState | undefined,
 // **************** UPDATE ***************
 
 
-
-export async function updateSaida(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
+export async function updateIncome(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
 
   const id = formData.get("id");
   const date = formData.get("date");
@@ -113,5 +113,6 @@ export async function updateSaida(prevState: OperationActionState | undefined, f
   }
 
   revalidatePath("/saidas");
+  revalidatePath('/')
   return { success: true, message: 'Saída atualizada com sucesso' };
 }
