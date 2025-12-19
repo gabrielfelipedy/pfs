@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "../ui/data-table";
 
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, X, Check  } from "lucide-react";
 import { Button } from "../ui/button";
 import { formatter } from "@/lib/utils";
 import { Pencil } from "lucide-react";
@@ -87,7 +87,11 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.getValue("is_paid") === true ? "SIM" : "NÃO"}</div>;
+
+      const isPaid = row.getValue("is_paid")
+      const variant = isPaid ? 'text-green-600' : 'text-red-600'
+
+      return <div className={variant}>{isPaid ? <Check /> : <X />}</div>;
     },
   },
   {
@@ -104,7 +108,10 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.getValue("is_income") == true ? "SIM" : "NÃO"}</div>;
+      const isIncome = row.getValue("is_income")
+      const variant = isIncome ? 'text-green-600' : 'text-red-600'
+
+      return <div className={variant}>{isIncome ? <Check /> : <X />}</div>;
     },
   },
   {
