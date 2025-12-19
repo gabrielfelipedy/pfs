@@ -73,7 +73,7 @@ export const operationWithCategoryView = sqliteView("vw_operation_with_category"
     is_income: operationTable.is_income,
     category_id: operationTable.category_id,
     category_name: categoryTable.name
-  }).from(operationTable).leftJoin(categoryTable, sql`operationTable.category_id = categoryTable.id`)
+  }).from(operationTable).leftJoin(categoryTable, sql`operation.category_id = category.id`)
 );
 
 // *** TOTAL EXPENSES BY PERIOD

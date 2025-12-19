@@ -1,6 +1,7 @@
 import { getIncomesEvolution, getIncomesProportion } from "@/db/queries/income";
 import Line from "@/components/charts/line";
 import Pie from "@/components/charts/pie";
+import ErrorLoading from "@/components/error/ErrorLoading";
 
 interface Props {
   className?: string;
@@ -21,7 +22,7 @@ const MonthlyEntradas = async ({className}: Props) => {
   } catch (error) {
     console.error(error);
     //console.log(income_proportion)
-    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    return <ErrorLoading />
   }
 
   const transformedData = income_data.map((item) => ({

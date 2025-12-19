@@ -5,6 +5,7 @@ import {
 
 import Line from "@/components/charts/line";
 import Pie from "@/components/charts/pie";
+import ErrorLoading from "@/components/error/ErrorLoading";
 
 interface Props {
   className?: string;
@@ -25,7 +26,7 @@ const MonthlySaidas = async ({className}: Props) => {
     //console.log(saidaProportion)
   } catch (error) {
     console.error(error);
-    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    return <ErrorLoading />
   }
 
   const transformedData = expense_data.map((item) => ({
@@ -48,7 +49,7 @@ const MonthlySaidas = async ({className}: Props) => {
 
     //console.log(transformedSaidaProportion);
   } catch (error) {
-    return <div className="p-4 text-red-500">Erro ao processar dados.</div>;
+    return <ErrorLoading />
   }
 
   //console.log(transformedSaidaProportion);

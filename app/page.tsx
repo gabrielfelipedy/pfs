@@ -9,6 +9,7 @@ import { getExpensesEvolution } from "@/db/queries/expense";
 import Line from "@/components/charts/line";
 import { getIncomesEvolution } from "@/db/queries/income";
 import Area from "@/components/charts/area";
+import ErrorLoading from "@/components/error/ErrorLoading";
 
 export default async function Home() {
   let expense_data;
@@ -23,7 +24,7 @@ export default async function Home() {
 
   } catch (error) {
     console.error(error);
-    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    return <ErrorLoading />
   }
 
   const transformedData = expense_data.map((item) => ({

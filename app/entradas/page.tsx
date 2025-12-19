@@ -4,6 +4,7 @@ import { Operation } from "@/lib/definitions";
 import OperationDataTable from "@/components/data-table/columns";
 import MonthlyEntradas from "./monthlyEntradas";
 import { getIncomes } from "@/db/queries/income";
+import ErrorLoading from "@/components/error/ErrorLoading";
 
 const Entradas = async () => {
   let data: Operation[];
@@ -12,7 +13,7 @@ const Entradas = async () => {
     const result = await getIncomes();
     data = result;
   } catch (error) {
-    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    return <ErrorLoading />
   }
 
   return (

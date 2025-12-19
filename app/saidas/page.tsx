@@ -4,6 +4,7 @@ import { createSaida } from "@/actions/saida-actions";
 import { Operation } from "@/lib/definitions";
 import OperationDataTable from "@/components/data-table/columns";
 import { getExpenses } from "@/db/queries/expense";
+import ErrorLoading from "@/components/error/ErrorLoading";
 
 export const dynamic = 'force-dynamic';
 
@@ -14,7 +15,7 @@ const Saidas = async () => {
     const result = await getExpenses();
     data = result;
   } catch (error) {
-    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    return <ErrorLoading />
   }
   //console.log(data)
 

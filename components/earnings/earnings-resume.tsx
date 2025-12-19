@@ -1,5 +1,6 @@
 import { getMonthlyIncomes } from "@/db/queries/income";
 import { formatter } from "@/lib/utils";
+import ErrorLoading from "../error/ErrorLoading";
 
 interface TotalIncomes {
   total_incomes: number;
@@ -12,7 +13,7 @@ const EarningResumes = async () => {
     const [result] = await getMonthlyIncomes();
     total = result;
   } catch (error) {
-    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    return <ErrorLoading />
   }
 
   return (

@@ -1,3 +1,4 @@
+import ErrorLoading from "../error/ErrorLoading";
 import Costs from "./costs";
 import {
   getDailyExpenses,
@@ -25,7 +26,7 @@ const CostsResume = async () => {
     monthly_data = monthly_result;
     
   } catch (error) {
-    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    return <ErrorLoading />
   }
 
   return (
