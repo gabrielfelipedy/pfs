@@ -11,10 +11,10 @@ export const categoryTable = sqliteTable("category", {
   name: text().notNull(),
   description: text(),
   is_income: integer({ mode: "boolean" }).notNull(),
-  created_at: text()
+  created_at: integer({mode: 'timestamp'})
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdate(
+  updated_at: integer("updated_at", { mode: "timestamp" }).$onUpdate(
     () => new Date()
   ),
 });
@@ -23,10 +23,10 @@ export const userTable = sqliteTable("user", {
   id: integer().primaryKey({ autoIncrement: true }),
   username: text().notNull(),
   password: text().notNull(),
-  created_at: text()
+  created_at: integer({mode: 'timestamp'})
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdate(
+  updated_at: integer("updated_at", { mode: "timestamp" }).$onUpdate(
     () => new Date()
   ),
 });
@@ -37,7 +37,7 @@ export const operationTable = sqliteTable("operation", {
   name: text().notNull(),
   description: text(),
   value: integer(),
-  date: text().default(sql`(CURRENT_TIMESTAMP)`),
+  date: integer({mode: 'timestamp'}).default(sql`(CURRENT_TIMESTAMP)`),
   is_paid: integer({ mode: "boolean" }),
   is_income: integer({ mode: "boolean" }),
   category_id: integer().references(() => categoryTable.id, {
@@ -45,10 +45,10 @@ export const operationTable = sqliteTable("operation", {
     onDelete: "set null",
   }),
 
-  createdAt: text("created_at")
+  created_at: integer({mode: 'timestamp'})
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$onUpdate(
+  updated_at: integer("updated_at", { mode: "timestamp" }).$onUpdate(
     () => new Date()
   ),
 });
@@ -182,6 +182,7 @@ export const generalBalanceView = sqliteView("vw_general_balance").as((qb) =>
 
 export type InsertCategory = typeof categoryTable.$inferInsert;
 export type SelectCategory = typeof categoryTable.$inferSelect;
+
 
 export type InsertOperation = typeof operationTable.$inferInsert;
 export type SelectOperation = typeof operationTable.$inferSelect;

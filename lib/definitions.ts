@@ -5,12 +5,12 @@ export type Operation = {
   name: string;
   description: string | null;
   value: number | null;
-  date: string | null;
+  date: Date | null;
   is_paid: boolean | null;
   is_income: boolean | null;
   category_id: number | null;
-  createdAt: string;
-  updatedAt: Date | null;
+  created_at: Date;
+  updated_at: Date | null;
 };
 
 export type Categoria = {
