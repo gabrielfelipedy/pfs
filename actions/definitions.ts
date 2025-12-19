@@ -23,7 +23,7 @@ export type OperationActionState =
   | {
       success: false;
       message?: string;
-      errors: {
+      errors?: {
         name?: string[];
         description?: string[];
         date?: string[];

@@ -1,0 +1,1 @@
+CREATE VIEW `vw_operation_with_category` AS select "operation"."id", "operation"."name", "operation"."description", "operation"."value", "operation"."date", "operation"."is_income", "operation"."is_income", "operation"."category_id", "category"."name" from "operation" left join "category" on operationTable.category_id = categoryTable.id;

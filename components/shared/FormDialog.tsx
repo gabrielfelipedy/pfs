@@ -37,7 +37,15 @@ import { useRouter } from "next/navigation";
 
 interface Props {
   openDialogText: string | ReactNode;
-  buttonVariation?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined;
+  buttonVariation?:
+    | "link"
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | null
+    | undefined;
   dialogTitle: string;
   dialogDescription: string;
   buttonText: string;
@@ -108,7 +116,11 @@ export default function FormDialog({
   }, [state, router]);
 
   return (
-    <Dialog key={operation?.id || "new"} open={dialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog
+      key={operation?.id || "new"}
+      open={dialogOpen}
+      onOpenChange={setDialogOpen}
+    >
       <DialogTrigger asChild>
         <Button variant={buttonVariation}>{openDialogText}</Button>
       </DialogTrigger>
@@ -262,17 +274,31 @@ export default function FormDialog({
 
               <div className="flex flex-col gap-2">
                 <Label htmlFor="categoria_id">Categoria</Label>
+
                 <NativeSelect
                   name="categoria_id"
                   defaultValue={operation?.category_id || 1}
                 >
-                  <NativeSelectOption value="1">1</NativeSelectOption>
-                  <NativeSelectOption value="2">2</NativeSelectOption>
-                  <NativeSelectOption value="3">3</NativeSelectOption>
-                  <NativeSelectOption value="4">4</NativeSelectOption>
-                  <NativeSelectOption value="5">5</NativeSelectOption>
-                  <NativeSelectOption value="6">6</NativeSelectOption>
-                  <NativeSelectOption value="7">7</NativeSelectOption>
+                  {operation?.is_income ? (
+                    <>
+                      <NativeSelectOption value="8">8</NativeSelectOption>
+                      <NativeSelectOption value="9">9</NativeSelectOption>
+                      <NativeSelectOption value="10">10</NativeSelectOption>
+                    </>
+                  ) : (
+                    <>
+                      <NativeSelectOption value="1">1</NativeSelectOption>
+                      <NativeSelectOption value="2">2</NativeSelectOption>
+                      <NativeSelectOption value="3">3</NativeSelectOption>
+                      <NativeSelectOption value="4">4</NativeSelectOption>
+                      <NativeSelectOption value="5">5</NativeSelectOption>
+                      <NativeSelectOption value="6">6</NativeSelectOption>
+                      <NativeSelectOption value="7">7</NativeSelectOption>
+                      <NativeSelectOption value="8">8</NativeSelectOption>
+                      <NativeSelectOption value="9">9</NativeSelectOption>
+                      <NativeSelectOption value="10">10</NativeSelectOption>
+                    </>
+                  )}
                 </NativeSelect>
                 {!state?.success && (
                   <p className="text-sm text-red-500">

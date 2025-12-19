@@ -246,6 +246,13 @@
       "when": 1766170924926,
       "tag": "0034_open_vulture",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "6",
+      "when": 1766180028309,
+      "tag": "0035_redundant_manta",
+      "breakpoints": true
     }
   ]
 }

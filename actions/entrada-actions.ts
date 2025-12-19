@@ -42,9 +42,19 @@ export async function createEntrada(prevState: OperationActionState | undefined,
 
   //console.log(validationResult.data);
   
-  const result = await insertOperation(
+  let result;
+  try {
+  result = await insertOperation(
     validationResult.data
   );
+  }
+  catch(error)
+  {
+    return {
+      success: false,
+      message: "Erro ao registrar entrada no banco de dados",
+    };
+  }
 
   if (!result) {
     return {
