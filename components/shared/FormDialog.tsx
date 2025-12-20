@@ -212,7 +212,7 @@ export default function FormDialog({
                     type="time"
                     name="time"
                     defaultValue={
-                      operation
+                      operation?.date
                         ? new Date(operation?.date || "").toLocaleTimeString(
                             "pt-BR",
                             { hour12: false }
@@ -231,7 +231,7 @@ export default function FormDialog({
           </div>
 
           <div className="grid gap-3 mt-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
               <div className="flex flex-col gap-3">
                 <Label htmlFor="value">Valor</Label>
                 {/* <Input className="max-w-[150px]" id="valor" name="valor" /> */}
@@ -242,7 +242,7 @@ export default function FormDialog({
                   value={formatter.format(rawValor / 100)}
                   onChange={handleValorChange}
                   onSelect={handleSelect}
-                  className="max-w-28 md:max-w-37.5 text-right"
+                  className="max-w-28 md:max-w-30 text-right"
                 />
                 {/* 2. DATA INPUT: Hidden, has the "name", sends the raw integer */}
                 <input type="hidden" name="value" value={rawValor} />
@@ -259,7 +259,7 @@ export default function FormDialog({
                 <NativeSelect
                   name="is_paid"
                   defaultValue={
-                    operation ? (operation?.is_paid ? "true" : "false") : "true"
+                    operation?.is_paid ? (operation?.is_paid ? "true" : "false") : "true"
                   }
                 >
                   <NativeSelectOption value="true">Sim</NativeSelectOption>
@@ -279,11 +279,12 @@ export default function FormDialog({
                   name="categoria_id"
                   defaultValue={operation?.category_id || undefined}
                 >
-                  {operation?.is_income ? (
+                  {operation?.is_income === true ? (
                     <>
-                      <NativeSelectOption value="8">8</NativeSelectOption>
-                      <NativeSelectOption value="9">9</NativeSelectOption>
-                      <NativeSelectOption value="10">10</NativeSelectOption>
+                    <NativeSelectOption value={undefined}>Sem categoria</NativeSelectOption>
+                      <NativeSelectOption value="8">Salário</NativeSelectOption>
+                      <NativeSelectOption value="9">Design</NativeSelectOption>
+                      <NativeSelectOption value="10">Música</NativeSelectOption>
                     </>
                   ) : (
                     <>
@@ -295,9 +296,6 @@ export default function FormDialog({
                       <NativeSelectOption value="5">Mercado</NativeSelectOption>
                       <NativeSelectOption value="6">Investimentos</NativeSelectOption>
                       <NativeSelectOption value="7">Contas</NativeSelectOption>
-                      <NativeSelectOption value="8">Salário</NativeSelectOption>
-                      <NativeSelectOption value="9">Design</NativeSelectOption>
-                      <NativeSelectOption value="10">Música</NativeSelectOption>
                     </>
                   )}
                 </NativeSelect>

@@ -13,6 +13,15 @@ import ErrorLoading from "@/components/error/ErrorLoading";
 import FormDialog from "@/components/shared/FormDialog";
 import { createEntrada } from "@/actions/entrada-actions";
 import { createSaida } from "@/actions/saida-actions";
+import { Operation } from "@/lib/definitions";
+
+const emptyExpenseOperation: Operation = {
+  is_income: false
+};
+
+const emptyIncomeOperation: Operation = {
+  is_income: true
+};
 
 export default async function Home() {
   let expense_data;
@@ -72,7 +81,7 @@ export default async function Home() {
             dialogTitle="Adicionar entrada"
             dialogDescription="Preencha as informações da entrada"
             buttonText="Adicionar"
-            operation={undefined}
+            operation={emptyIncomeOperation}
             actionFunction={createEntrada}
           />
 
@@ -81,7 +90,7 @@ export default async function Home() {
             dialogTitle="Adicionar Gasto"
             dialogDescription="Preencha as informações do gasto"
             buttonText="Adicionar"
-            operation={undefined}
+            operation={emptyExpenseOperation}
             actionFunction={createSaida}
           />
         </div>

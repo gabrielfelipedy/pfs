@@ -6,6 +6,10 @@ import MonthlyEntradas from "./monthlyEntradas";
 import { getIncomes } from "@/db/queries/income";
 import ErrorLoading from "@/components/error/ErrorLoading";
 
+const emptyOperation: Operation = {
+  is_income: true
+};
+
 const Entradas = async () => {
   let data: Operation[];
 
@@ -30,7 +34,7 @@ const Entradas = async () => {
           dialogTitle="Adicionar entrada"
           dialogDescription="Preencha as informações da entrada"
           buttonText="Adicionar"
-          operation={undefined}
+          operation={emptyOperation}
           actionFunction={createEntrada}
         />
       </div>

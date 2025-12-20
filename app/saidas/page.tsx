@@ -8,6 +8,10 @@ import ErrorLoading from "@/components/error/ErrorLoading";
 
 export const dynamic = 'force-dynamic';
 
+const emptyOperation: Operation = {
+  is_income: false
+};
+
 const Saidas = async () => {
   let data: Operation[];
 
@@ -33,7 +37,7 @@ const Saidas = async () => {
           dialogTitle="Adicionar Gasto"
           dialogDescription="Preencha as informações do gasto"
           buttonText="Adicionar"
-          operation={undefined}
+          operation={emptyOperation}
           actionFunction={createSaida}
         />
       </div>

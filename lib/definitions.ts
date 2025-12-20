@@ -1,14 +1,14 @@
 import * as z from "zod";
 
 export type Operation = {
-  id: number;
-  name: string;
-  description: string | null;
-  value: number | null;
-  date: Date | null;
-  is_paid: boolean | null;
-  is_income: boolean | null;
-  category_id: number | null;
+  id?: number;
+  name?: string;
+  description?: string | null;
+  value?: number | null;
+  date?: Date | null;
+  is_paid?: boolean | null;
+  is_income?: boolean | null;
+  category_id?: number | null;
   category_name?: string | null;
   created_at?: Date;
   updated_at?: Date | null;
