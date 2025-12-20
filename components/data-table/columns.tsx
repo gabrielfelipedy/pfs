@@ -5,13 +5,14 @@ import { DataTable } from "../ui/data-table";
 
 import { ArrowUpDown, X, Check  } from "lucide-react";
 import { Button } from "../ui/button";
-import { formatter } from "@/lib/utils";
+import { capitalizeFirstLetter, formatter } from "@/lib/utils";
 import { Pencil } from "lucide-react";
 import ConfirmDeleteDialog from "@/components/shared/confirmDeleteDialog";
 import FormDialog from "@/components/shared/FormDialog";
 import { Operation } from "@/lib/definitions";
 import { updateSaida } from "@/actions/saida-actions";
 import { updateIncome } from "@/actions/entrada-actions";
+import { Badge } from "../ui/badge";
 
 export const columns: ColumnDef<Operation>[] = [
   {
@@ -115,7 +116,7 @@ export const columns: ColumnDef<Operation>[] = [
     },
   },
   {
-    accessorKey: "category_id",
+    accessorKey: "category_name",
     header: ({ column }) => {
       return (
         <Button
@@ -128,7 +129,7 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.getValue("category_id")}</div>;
+      return <Badge>{capitalizeFirstLetter(row.original.category_name ?? 'sem categoria')}</Badge>;
     },
   },
   {

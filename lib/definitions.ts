@@ -9,8 +9,9 @@ export type Operation = {
   is_paid: boolean | null;
   is_income: boolean | null;
   category_id: number | null;
-  created_at: Date;
-  updated_at: Date | null;
+  category_name?: string | null;
+  created_at?: Date;
+  updated_at?: Date | null;
 };
 
 export type Categoria = {

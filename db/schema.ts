@@ -69,10 +69,10 @@ export const operationWithCategoryView = sqliteView("vw_operation_with_category"
     description: operationTable.description,
     value: operationTable.value,
     date: operationTable.date,
-    is_pad: operationTable.is_income,
+    is_paid: operationTable.is_paid,
     is_income: operationTable.is_income,
     category_id: operationTable.category_id,
-    category_name: categoryTable.name
+    category_name: sql<string>`category.name`.as('category_name')
   }).from(operationTable).leftJoin(categoryTable, sql`operation.category_id = category.id`)
 );
 

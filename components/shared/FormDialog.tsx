@@ -277,7 +277,7 @@ export default function FormDialog({
 
                 <NativeSelect
                   name="categoria_id"
-                  defaultValue={operation?.category_id || 1}
+                  defaultValue={operation?.category_id || undefined}
                 >
                   {operation?.is_income ? (
                     <>
@@ -287,16 +287,17 @@ export default function FormDialog({
                     </>
                   ) : (
                     <>
-                      <NativeSelectOption value="1">1</NativeSelectOption>
-                      <NativeSelectOption value="2">2</NativeSelectOption>
-                      <NativeSelectOption value="3">3</NativeSelectOption>
-                      <NativeSelectOption value="4">4</NativeSelectOption>
-                      <NativeSelectOption value="5">5</NativeSelectOption>
-                      <NativeSelectOption value="6">6</NativeSelectOption>
-                      <NativeSelectOption value="7">7</NativeSelectOption>
-                      <NativeSelectOption value="8">8</NativeSelectOption>
-                      <NativeSelectOption value="9">9</NativeSelectOption>
-                      <NativeSelectOption value="10">10</NativeSelectOption>
+                    <NativeSelectOption value={undefined}>Sem categoria</NativeSelectOption>
+                      <NativeSelectOption value="1">Transporte</NativeSelectOption>
+                      <NativeSelectOption value="2">Comida</NativeSelectOption>
+                      <NativeSelectOption value="3">Educação</NativeSelectOption>
+                      <NativeSelectOption value="4">Assinaturas</NativeSelectOption>
+                      <NativeSelectOption value="5">Mercado</NativeSelectOption>
+                      <NativeSelectOption value="6">Investimentos</NativeSelectOption>
+                      <NativeSelectOption value="7">Contas</NativeSelectOption>
+                      <NativeSelectOption value="8">Salário</NativeSelectOption>
+                      <NativeSelectOption value="9">Design</NativeSelectOption>
+                      <NativeSelectOption value="10">Música</NativeSelectOption>
                     </>
                   )}
                 </NativeSelect>
