@@ -13,6 +13,7 @@ import { Operation } from "@/lib/definitions";
 import { updateSaida } from "@/actions/saida-actions";
 import { updateIncome } from "@/actions/entrada-actions";
 import { Badge } from "../ui/badge";
+import CategorySelector from "../shared/categorySelector";
 
 export const columns: ColumnDef<Operation>[] = [
   {

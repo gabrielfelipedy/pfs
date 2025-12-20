@@ -76,6 +76,34 @@ export const operationWithCategoryView = sqliteView("vw_operation_with_category"
   }).from(operationTable).leftJoin(categoryTable, sql`operation.category_id = category.id`)
 );
 
+export const expenseWithCategoryView = sqliteView("vw_expense_with_category").as((qb) =>
+  qb.select({
+    id: expenseView.id,
+    name: expenseView.name,
+    description: expenseView.description,
+    value: expenseView.value,
+    date: expenseView.date,
+    is_paid: expenseView.is_paid,
+    is_income: expenseView.is_income,
+    category_id: expenseView.category_id,
+    category_name: sql<string>`category.name`.as('category_name')
+  }).from(expenseView).leftJoin(categoryTable, sql`vw_expense.category_id = category.id`)
+);
+
+export const incomeWithCategoryView = sqliteView("vw_income_with_category").as((qb) =>
+  qb.select({
+    id: incomeView.id,
+    name: incomeView.name,
+    description: incomeView.description,
+    value: incomeView.value,
+    date: incomeView.date,
+    is_paid: incomeView.is_paid,
+    is_income: incomeView.is_income,
+    category_id: incomeView.category_id,
+    category_name: sql<string>`category.name`.as('category_name')
+  }).from(incomeView).leftJoin(categoryTable, sql`vw_income.category_id = category.id`)
+);
+
 // *** TOTAL EXPENSES BY PERIOD
 
 export const totalExpensesByDayByMonth = sqliteView(

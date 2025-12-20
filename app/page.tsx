@@ -14,6 +14,7 @@ import FormDialog from "@/components/shared/FormDialog";
 import { createEntrada } from "@/actions/entrada-actions";
 import { createSaida } from "@/actions/saida-actions";
 import { Operation } from "@/lib/definitions";
+import { getExpenseCategories, getIncomeCategories } from "@/db/queries/category";
 
 const emptyExpenseOperation: Operation = {
   is_income: false
@@ -26,13 +27,15 @@ const emptyIncomeOperation: Operation = {
 export default async function Home() {
   let expense_data;
   let income_data;
+  //let expense_categories;
+  //let income_categories;
 
   try {
-    const data = await getExpensesEvolution();
-    expense_data = data;
-
-    const data2 = await getIncomesEvolution();
-    income_data = data2;
+    expense_data = await getExpensesEvolution();
+    income_data = await getIncomesEvolution();
+    //expense_categories = await getExpenseCategories()
+    //income_categories = await getIncomeCategories()
+    
   } catch (error) {
     console.error(error);
     return <ErrorLoading />;
