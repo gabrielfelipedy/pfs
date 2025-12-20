@@ -1,19 +1,23 @@
-import React from "react";
 import { formatter } from "@/lib/utils";
+import { MoveDown } from "lucide-react";
 
 interface Props {
   title: string;
   currencyValue: number;
-  currencyTextClassName?: string;
 }
 
-const Costs = ({ title, currencyValue, currencyTextClassName }: Props) => {
+const Costs = ({ title, currencyValue }: Props) => {
   return (
     <div>
-      <p>{title}</p>
-      <h1 className={`${currencyTextClassName} font-bold`}>
+      <p className="text-sm">{title}</p>
+
+      <div className="flex items-center gap-2">
+        <MoveDown />
+
+        <span className="text-[2.2rem] sm:text[4rem] font-bold text-slate-700">
         {formatter.format(currencyValue)}
-      </h1>
+        </span>
+      </div>
     </div>
   );
 };
