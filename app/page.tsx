@@ -14,44 +14,34 @@ import FormDialog from "@/components/shared/FormDialog";
 import { createEntrada } from "@/actions/entrada-actions";
 import { createSaida } from "@/actions/saida-actions";
 import { Operation } from "@/lib/definitions";
+import { getOperationEvolution } from "@/db/queries/operation";
 
 const emptyExpenseOperation: Operation = {
-  is_income: false
+  is_income: false,
 };
 
 const emptyIncomeOperation: Operation = {
-  is_income: true
+  is_income: true,
 };
 
 export default async function Home() {
-  let expense_data;
-  let income_data;
+  let operation_data;
 
   try {
-    const data = await getExpensesEvolution();
-    expense_data = data;
-
-    const data2 = await getIncomesEvolution();
-    income_data = data2;
+    operation_data = await getOperationEvolution();
   } catch (error) {
     console.error(error);
     return <ErrorLoading />;
   }
 
-  const transformedData = expense_data.map((item) => ({
+  const transformedData = operation_data.map((item) => ({
     ...item,
-    total_value: item.total_value / 100,
+    total_income: item.total_income / 100,
+    total_expense: item.total_expense / 100,
+    balance: item.balance / 100,
   }));
 
-  const transformedIncomes = income_data.map((item) => ({
-    ...item,
-    total_value: item.total_value / 100,
-  }));
-
-  const general_data = {
-    expense: transformedData,
-    income: transformedIncomes,
-  };
+  //console.log(transformedData)
 
   return (
     <section className="mt-4 md:mt-20">
@@ -61,17 +51,18 @@ export default async function Home() {
       </p>
 
       <div className="mt-8">
-        {/* <Area
-        title="Evolução de gastos"
-        description="Ao longo do mês atual"
-        data={general_data}
-      /> */}
+        <div className="flex flex-col lg:flex-row gap-5">
+          <div className="border-2 rounded-lg">
+            <Balance className="mt-6" />
+            <EarningResumes />
+            <CostsResume />
+          </div>
 
-        <Balance />
-
-        <div className="border-2 rounded-lg mt-8">
-          <EarningResumes />
-          <CostsResume />
+          <Area
+            title="Evolução de gastos"
+            description="Ao longo do mês atual"
+            data={transformedData}
+          />
         </div>
 
         <div className="mt-10 flex gap-5">

@@ -17,75 +17,83 @@ interface Props {
   description: string;
   className?: string;
   data: {
-    expense: ChartData[],
-    income: ChartData[] ;
-  }
+    day: string;
+    total_income: number;
+    total_expense: number;
+    balance: number;
+  }[];
 }
 
 const Area = ({ title, description, className, data }: Props) => {
+  const days: string[] = [];
+  const totalIncomes: number[] = [];
+  const totalExpenses: number[] = [];
+  const balances: number[] = [];
 
-   const result = {
-    date: data.expense.map((item) =>
-      new Date(item.date).toLocaleDateString("pt-BR", {
+  data.forEach((item) => {
+    days.push(
+      new Date(item.day).toLocaleDateString("pt-BR", {
         month: "short",
         day: "numeric",
-        timeZone: 'UTC'
+        timeZone: "UTC",
       })
-    ),
-    total_value: data.expense.map((item) => item.total_value),
-  };
-
-  const result2 = {
-    date: data.income.map((item) =>
-      new Date(item.date).toLocaleDateString("pt-BR", {
-        month: "short",
-        day: "numeric",
-        timeZone: 'UTC'
-      })
-    ),
-    total_value: data.income.map((item) => item.total_value),
-  };
-  
+    );
+    totalIncomes.push(item.total_income);
+    totalExpenses.push(item.total_expense);
+    balances.push(item.balance);
+  });
 
   const option = {
-      tooltip: {
-        trigger: "axis",
-        valueFormatter: (value: number) => formatter.format(value),
+    tooltip: {
+      trigger: "axis",
+      valueFormatter: (value: number) => formatter.format(value),
+    },
+    xAxis: {
+      type: "category",
+      data: days,
+    },
+    legend: {
+      data: ["Entradas", "Gastos"],
+    },
+    toolbox: {
+      feature: {
+        saveAsImage: {},
       },
-      xAxis: {
-        type: "category",
-        data: result.date,
+    },
+    yAxis: {
+      type: "value",
+      show: true,
+      splitLine: {
+        show: false,
       },
-      toolbox: {
-        feature: {
-          saveAsImage: {},
-        },
+      axisLabel: {
+        // Formats the axis labels
+        formatter: (value: number) => formatter.format(value),
       },
-      yAxis: {
-        type: "value",
-        splitLine: {
-          show: false,
-        },
-        axisLabel: {
-          // Formats the axis labels
-          formatter: (value: number) => formatter.format(value),
-        },
+    },
+    series: [
+      {
+        name: "Entradas",
+        data: totalIncomes,
+        type: "line",
+        smooth: true,
+        areaStyle: {},
       },
-      series: [
-        {
-          data: result.total_value,
-          type: "line",
-          smooth: true,
-          areaStyle: {},
-        },
-        {
-          data: result2.total_value,
-          type: "line",
-          smooth: true,
-          areaStyle: {},
-        },
-      ],
-    };
+      {
+        name: "Gastos",
+        data: totalExpenses,
+        type: "line",
+        smooth: true,
+        areaStyle: {},
+      } /* ,
+      {
+        data: balances,
+        type: "line",
+        smooth: true,
+        areaStyle: {},
+      }, */,
+    ],
+  };
 
   return (
     <Card className={`${className} w-full`}>

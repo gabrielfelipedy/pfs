@@ -5,6 +5,7 @@ import { Operation } from "@/lib/definitions";
 import OperationDataTable from "@/components/data-table/columns";
 import { getExpenses } from "@/db/queries/expense";
 import ErrorLoading from "@/components/error/ErrorLoading";
+import CategorySelector from "@/components/shared/categorySelector";
 
 export const dynamic = 'force-dynamic';
 

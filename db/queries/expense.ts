@@ -1,10 +1,10 @@
 import { desc, sql } from "drizzle-orm"
 import { db } from ".."
-import { expenseView, totalExpensesByDay, totalExpensesByDayByMonth, totalExpensesByMonth, totalExpensesByWeek } from "../schema"
+import { expenseWithCategoryView, totalExpensesByDay, totalExpensesByDayByMonth, totalExpensesByMonth, totalExpensesByWeek } from "../schema"
 
 export async function getExpenses()
 {
-    return db.select().from(expenseView).orderBy(desc(expenseView.date))
+    return db.select().from(expenseWithCategoryView).orderBy(desc(expenseWithCategoryView.date))
 }
 
 export async function getDailyExpenses() {

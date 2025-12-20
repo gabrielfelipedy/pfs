@@ -32,6 +32,7 @@ import { formatter } from "@/lib/utils";
 import { Operation } from "@/lib/definitions";
 import { OperationActionState } from "@/actions/definitions";
 import { useRouter } from "next/navigation";
+import CategorySelector from "./categorySelector";
 
 // Defines the props for the FormDialog component
 
@@ -54,6 +55,7 @@ interface Props {
     prevState: OperationActionState | undefined,
     formData: FormData
   ) => Promise<OperationActionState>;
+  categorySelector?: ReactNode
 }
 
 export default function FormDialog({
@@ -64,6 +66,7 @@ export default function FormDialog({
   buttonText,
   operation,
   actionFunction,
+  categorySelector
 }: Props) {
   // States used by calendar selector propover
   const [open, setOpen] = useState(false);
@@ -273,32 +276,10 @@ export default function FormDialog({
               </div>
 
               <div className="flex flex-col gap-2">
-                <Label htmlFor="categoria_id">Categoria</Label>
+                <Label htmlFor="category_id">Categoria</Label>
 
-                <NativeSelect
-                  name="categoria_id"
-                  defaultValue={operation?.category_id || undefined}
-                >
-                  {operation?.is_income === true ? (
-                    <>
-                    <NativeSelectOption value={undefined}>Sem categoria</NativeSelectOption>
-                      <NativeSelectOption value="8">Salário</NativeSelectOption>
-                      <NativeSelectOption value="9">Design</NativeSelectOption>
-                      <NativeSelectOption value="10">Música</NativeSelectOption>
-                    </>
-                  ) : (
-                    <>
-                    <NativeSelectOption value={undefined}>Sem categoria</NativeSelectOption>
-                      <NativeSelectOption value="1">Transporte</NativeSelectOption>
-                      <NativeSelectOption value="2">Comida</NativeSelectOption>
-                      <NativeSelectOption value="3">Educação</NativeSelectOption>
-                      <NativeSelectOption value="4">Assinaturas</NativeSelectOption>
-                      <NativeSelectOption value="5">Mercado</NativeSelectOption>
-                      <NativeSelectOption value="6">Investimentos</NativeSelectOption>
-                      <NativeSelectOption value="7">Contas</NativeSelectOption>
-                    </>
-                  )}
-                </NativeSelect>
+                <CategorySelector category_id={operation?.category_id || undefined} is_income={operation?.is_income ?? true} />
+
                 {!state?.success && (
                   <p className="text-sm text-red-500">
                     {state?.errors?.category_id || ""}

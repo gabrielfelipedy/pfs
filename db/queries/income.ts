@@ -2,12 +2,12 @@ import { desc, sql } from "drizzle-orm";
 import { db } from "..";
 import {
   generalBalanceView,
-  incomeView,
+  incomeWithCategoryView,
   totalIncomesByDayByMonth,
 } from "../schema";
 
 export async function getIncomes() {
-  return db.select().from(incomeView).orderBy(desc(incomeView.date));
+  return db.select().from(incomeWithCategoryView).orderBy(desc(incomeWithCategoryView.date));
 }
 
 export async function getMonthlyIncomes() {

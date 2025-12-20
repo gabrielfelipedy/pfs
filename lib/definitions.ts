@@ -14,11 +14,11 @@ export type Operation = {
   updated_at?: Date | null;
 };
 
-export type Categoria = {
+export type Category = {
   id?: number;
   name: string;
   description: string;
-  is_entrada: boolean;
+  is_income: boolean;
 };
 
 export type ChartData = { total_value: number; date: string };
