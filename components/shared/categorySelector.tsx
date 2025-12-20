@@ -9,6 +9,7 @@ import {
 } from "@/db/queries/category";
 import { Category } from "@/lib/definitions";
 import { capitalizeFirstLetter } from "@/lib/utils";
+import { fetchCategoriesAction } from "@/actions/category-actions";
 
 interface Props {
   category_id: number | undefined;
@@ -38,9 +39,7 @@ const CategorySelector = ({ category_id, is_income }: Props) => {
       setLoading(true);
 
       try {
-        const type = is_income ? "income" : "expense";
-        const res = await fetch(`/api/categories?type=${type}`);
-        const data = await res.json();
+        const data = await fetchCategoriesAction(is_income)
         setCategories(data)
 
         if(category_id) setSelectedValue(category_id)
