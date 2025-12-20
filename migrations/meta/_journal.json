@@ -281,6 +281,41 @@
       "when": 1766243430713,
       "tag": "0039_ambitious_maestro",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "6",
+      "when": 1766246784905,
+      "tag": "0040_mushy_mauler",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "6",
+      "when": 1766246962256,
+      "tag": "0041_friendly_logan",
+      "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "6",
+      "when": 1766247032578,
+      "tag": "0042_lyrical_scarlet_spider",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "6",
+      "when": 1766247055615,
+      "tag": "0043_blue_daimon_hellstrom",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "6",
+      "when": 1766247484306,
+      "tag": "0044_whole_supernaut",
+      "breakpoints": true
     }
   ]
 }

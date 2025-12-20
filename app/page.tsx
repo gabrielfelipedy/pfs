@@ -14,7 +14,8 @@ import FormDialog from "@/components/shared/FormDialog";
 import { createEntrada } from "@/actions/entrada-actions";
 import { createSaida } from "@/actions/saida-actions";
 import { Operation } from "@/lib/definitions";
-import { getExpenseCategories, getIncomeCategories } from "@/db/queries/category";
+import { getOperationEvolution } from "@/db/queries/operation";
+
 
 const emptyExpenseOperation: Operation = {
   is_income: false
@@ -25,36 +26,25 @@ const emptyIncomeOperation: Operation = {
 };
 
 export default async function Home() {
-  let expense_data;
-  let income_data;
-  //let expense_categories;
-  //let income_categories;
+  let operation_data
 
   try {
-    expense_data = await getExpensesEvolution();
-    income_data = await getIncomesEvolution();
-    //expense_categories = await getExpenseCategories()
-    //income_categories = await getIncomeCategories()
+    operation_data = await getOperationEvolution()
     
   } catch (error) {
     console.error(error);
     return <ErrorLoading />;
   }
 
-  const transformedData = expense_data.map((item) => ({
+  const transformedData = operation_data.map((item) => ({
     ...item,
-    total_value: item.total_value / 100,
+    total_income: item.total_income / 100,
+    total_expense: item.total_expense / 100,
+    balance: item.balance / 100,
   }));
 
-  const transformedIncomes = income_data.map((item) => ({
-    ...item,
-    total_value: item.total_value / 100,
-  }));
+  //console.log(transformedData)
 
-  const general_data = {
-    expense: transformedData,
-    income: transformedIncomes,
-  };
 
   return (
     <section className="mt-4 md:mt-20">
@@ -64,11 +54,11 @@ export default async function Home() {
       </p>
 
       <div className="mt-8">
-        {/* <Area
+        <Area
         title="Evolução de gastos"
         description="Ao longo do mês atual"
-        data={general_data}
-      /> */}
+        data={transformedData}
+      />
 
         <Balance />
 
