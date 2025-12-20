@@ -3,14 +3,16 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "../ui/data-table";
 
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, X, Check  } from "lucide-react";
 import { Button } from "../ui/button";
-import { formatter } from "@/lib/utils";
+import { capitalizeFirstLetter, formatter } from "@/lib/utils";
 import { Pencil } from "lucide-react";
-import ConfirmDeleteDialog from "@/app/saidas/confirmDeleteDialog";
-import FormDialog from "@/app/saidas/FormDialog";
+import ConfirmDeleteDialog from "@/components/shared/confirmDeleteDialog";
+import FormDialog from "@/components/shared/FormDialog";
 import { Operation } from "@/lib/definitions";
 import { updateSaida } from "@/actions/saida-actions";
+import { updateIncome } from "@/actions/entrada-actions";
+import { Badge } from "../ui/badge";
 
 export const columns: ColumnDef<Operation>[] = [
   {
@@ -47,7 +49,7 @@ export const columns: ColumnDef<Operation>[] = [
       const dateValue = row.getValue("date") as string;
 
       try {
-        return <div>{new Date(dateValue).toLocaleDateString()}</div>;
+        return <div>{new Date(dateValue).toLocaleDateString('pt-BR')}</div>;
       } catch (error) {
         return <div>Invalid Date</div>;
       }
@@ -86,7 +88,11 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.getValue("is_paid") === true ? "SIM" : "NÃO"}</div>;
+
+      const isPaid = row.getValue("is_paid")
+      const variant = isPaid ? 'text-green-600' : 'text-red-600'
+
+      return <div className={variant}>{isPaid ? <Check /> : <X />}</div>;
     },
   },
   {
@@ -103,11 +109,14 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.getValue("is_income") == true ? "SIM" : "NÃO"}</div>;
+      const isIncome = row.getValue("is_income")
+      const variant = isIncome ? 'text-green-600' : 'text-red-600'
+
+      return <div className={variant}>{isIncome ? <Check /> : <X />}</div>;
     },
   },
   {
-    accessorKey: "category_id",
+    accessorKey: "category_name",
     header: ({ column }) => {
       return (
         <Button
@@ -120,7 +129,7 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.getValue("category_id")}</div>;
+      return <Badge>{capitalizeFirstLetter(row.original.category_name ?? 'sem categoria')}</Badge>;
     },
   },
   {
@@ -136,7 +145,7 @@ export const columns: ColumnDef<Operation>[] = [
             dialogDescription="Atualize as informações do gasto"
             buttonText="Atualizar"
             operation={row.original}
-            actionFunction={updateSaida}
+            actionFunction={row.original.is_income ? updateIncome : updateSaida}
           />
           {/* <UpdateSaidaDialog operation={row.original} /> */}
           <ConfirmDeleteDialog id={row.original.id} />
@@ -153,7 +162,6 @@ interface Props {
 export default function OperationDataTable({ operations }: Props) {
   return <DataTable columns={columns} data={operations} />;
 }
-
 /* export type Operation = {
   id: number;
   name: string;

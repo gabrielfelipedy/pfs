@@ -40,7 +40,7 @@ export async function createSaida(prevState: OperationActionState | undefined, f
     };
   }
 
-  console.log(validationResult.data);
+  //console.log(validationResult.data);
   const result = await insertOperation(
     validationResult.data
   );
@@ -56,14 +56,13 @@ export async function createSaida(prevState: OperationActionState | undefined, f
     };
   }
 
-  revalidatePath("/saidas");
+  revalidatePath('/')
+  revalidatePath('/saidas')
+
   return { success: true, message: "Saída criada com sucesso" };
 }
 
-
 // **************** UPDATE ***************
-
-
 
 export async function updateSaida(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
 
@@ -112,6 +111,8 @@ export async function updateSaida(prevState: OperationActionState | undefined, f
     };
   }
 
-  revalidatePath("/saidas");
+  revalidatePath('/')
+  revalidatePath('/saidas')
+
   return { success: true, message: 'Saída atualizada com sucesso' };
 }

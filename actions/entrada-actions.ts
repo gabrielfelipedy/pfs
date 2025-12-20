@@ -40,10 +40,21 @@ export async function createEntrada(prevState: OperationActionState | undefined,
     };
   }
 
-  console.log(validationResult.data);
-  const result = await insertOperation(
+  //console.log(validationResult.data);
+  
+  let result;
+  try {
+  result = await insertOperation(
     validationResult.data
   );
+  }
+  catch(error)
+  {
+    return {
+      success: false,
+      message: "Erro ao registrar entrada no banco de dados",
+    };
+  }
 
   if (!result) {
     return {
@@ -56,7 +67,9 @@ export async function createEntrada(prevState: OperationActionState | undefined,
     };
   }
 
-  revalidatePath("/entradas");
+  revalidatePath('/')
+  revalidatePath('/entradas')
+
   return { success: true, message: "Entrada registrada com sucesso" };
 }
 
@@ -64,8 +77,7 @@ export async function createEntrada(prevState: OperationActionState | undefined,
 // **************** UPDATE ***************
 
 
-
-export async function updateSaida(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
+export async function updateIncome(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
 
   const id = formData.get("id");
   const date = formData.get("date");
@@ -97,7 +109,7 @@ export async function updateSaida(prevState: OperationActionState | undefined, f
     };
   }
 
-  console.log(validationResult.data);
+  //console.log(validationResult.data);
   const result = await updateOperation(Number(id), validationResult.data)
 
   if(!result){
@@ -105,13 +117,15 @@ export async function updateSaida(prevState: OperationActionState | undefined, f
     return {
       success: false,
       errors: {
-        name: ["Erro ao atualizar saída"],
+        name: ["Erro ao atualizar entrada"],
       },
 
-      message: 'Erro ao atualizar saída'
+      message: 'Erro ao atualizar entrada'
     };
   }
 
-  revalidatePath("/saidas");
-  return { success: true, message: 'Saída atualizada com sucesso' };
+  revalidatePath('/')
+  revalidatePath('/entradas')
+
+  return { success: true, message: 'Entrada atualizada com sucesso' };
 }

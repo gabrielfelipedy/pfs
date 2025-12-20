@@ -31,12 +31,21 @@ import { toast } from "sonner";
 import { formatter } from "@/lib/utils";
 import { Operation } from "@/lib/definitions";
 import { OperationActionState } from "@/actions/definitions";
+import { useRouter } from "next/navigation";
 
 // Defines the props for the FormDialog component
 
 interface Props {
   openDialogText: string | ReactNode;
-  buttonVariation?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined;
+  buttonVariation?:
+    | "link"
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | null
+    | undefined;
   dialogTitle: string;
   dialogDescription: string;
   buttonText: string;
@@ -85,12 +94,17 @@ export default function FormDialog({
     FormData
   >(actionFunction, undefined);
 
+  const router = useRouter();
+
   // handles the success or erros afer action is performed
 
   useEffect(() => {
     if (state && state.success) {
       console.log("Action successful, closing dialog.");
       toast.success(state.message);
+
+      router.refresh();
+
       setTimeout(() => {
         setDialogOpen(false);
       }, 0);
@@ -99,10 +113,14 @@ export default function FormDialog({
         toast.error(state.message);
       }
     }
-  }, [state]);
+  }, [state, router]);
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog
+      key={operation?.id || "new"}
+      open={dialogOpen}
+      onOpenChange={setDialogOpen}
+    >
       <DialogTrigger asChild>
         <Button variant={buttonVariation}>{openDialogText}</Button>
       </DialogTrigger>
@@ -152,7 +170,7 @@ export default function FormDialog({
                   <input
                     type="hidden"
                     name="date"
-                    value={date?.toLocaleDateString()}
+                    value={date ? date.toISOString().split('T')[0] : ""}
                   />
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
@@ -161,7 +179,7 @@ export default function FormDialog({
                         id="date"
                         className="md:w-48 justify-between font-normal"
                       >
-                        {date?.toLocaleDateString() || "Selecione a data"}
+                        {date ? date.toLocaleDateString('pt-BR') : "Selecione a data"}
                         <ChevronDownIcon />
                       </Button>
                     </PopoverTrigger>
@@ -194,7 +212,7 @@ export default function FormDialog({
                     type="time"
                     name="time"
                     defaultValue={
-                      operation
+                      operation?.date
                         ? new Date(operation?.date || "").toLocaleTimeString(
                             "pt-BR",
                             { hour12: false }
@@ -213,7 +231,7 @@ export default function FormDialog({
           </div>
 
           <div className="grid gap-3 mt-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3">
               <div className="flex flex-col gap-3">
                 <Label htmlFor="value">Valor</Label>
                 {/* <Input className="max-w-[150px]" id="valor" name="valor" /> */}
@@ -224,7 +242,7 @@ export default function FormDialog({
                   value={formatter.format(rawValor / 100)}
                   onChange={handleValorChange}
                   onSelect={handleSelect}
-                  className="max-w-28 md:max-w-37.5 text-right"
+                  className="max-w-28 md:max-w-30 text-right"
                 />
                 {/* 2. DATA INPUT: Hidden, has the "name", sends the raw integer */}
                 <input type="hidden" name="value" value={rawValor} />
@@ -241,7 +259,7 @@ export default function FormDialog({
                 <NativeSelect
                   name="is_paid"
                   defaultValue={
-                    operation ? (operation?.is_paid ? "true" : "false") : "true"
+                    operation?.is_paid ? (operation?.is_paid ? "true" : "false") : "true"
                   }
                 >
                   <NativeSelectOption value="true">Sim</NativeSelectOption>
@@ -256,17 +274,30 @@ export default function FormDialog({
 
               <div className="flex flex-col gap-2">
                 <Label htmlFor="categoria_id">Categoria</Label>
+
                 <NativeSelect
                   name="categoria_id"
-                  defaultValue={operation?.category_id || 1}
+                  defaultValue={operation?.category_id || undefined}
                 >
-                  <NativeSelectOption value="1">1</NativeSelectOption>
-                  <NativeSelectOption value="2">2</NativeSelectOption>
-                  <NativeSelectOption value="3">3</NativeSelectOption>
-                  <NativeSelectOption value="4">4</NativeSelectOption>
-                  <NativeSelectOption value="5">5</NativeSelectOption>
-                  <NativeSelectOption value="6">6</NativeSelectOption>
-                  <NativeSelectOption value="7">7</NativeSelectOption>
+                  {operation?.is_income === true ? (
+                    <>
+                    <NativeSelectOption value={undefined}>Sem categoria</NativeSelectOption>
+                      <NativeSelectOption value="8">Salário</NativeSelectOption>
+                      <NativeSelectOption value="9">Design</NativeSelectOption>
+                      <NativeSelectOption value="10">Música</NativeSelectOption>
+                    </>
+                  ) : (
+                    <>
+                    <NativeSelectOption value={undefined}>Sem categoria</NativeSelectOption>
+                      <NativeSelectOption value="1">Transporte</NativeSelectOption>
+                      <NativeSelectOption value="2">Comida</NativeSelectOption>
+                      <NativeSelectOption value="3">Educação</NativeSelectOption>
+                      <NativeSelectOption value="4">Assinaturas</NativeSelectOption>
+                      <NativeSelectOption value="5">Mercado</NativeSelectOption>
+                      <NativeSelectOption value="6">Investimentos</NativeSelectOption>
+                      <NativeSelectOption value="7">Contas</NativeSelectOption>
+                    </>
+                  )}
                 </NativeSelect>
                 {!state?.success && (
                   <p className="text-sm text-red-500">

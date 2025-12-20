@@ -7,9 +7,9 @@ interface Props {
 
 const Navbar = ({linksClassName}: Props) => {
   return (
-    <div className='w-full bg-slate-200 py-8 flex justify-center'>
+    <nav className='fixed top-0 left-0 z-50 w-full flex py-3 justify-center'>
 
-        <div className={`${linksClassName} flex gap-10`}>
+        <div className={`${linksClassName} text-[0.8rem] md:text-md py-3 flex gap-6 md:gap-10 bg-white/70 rounded-full backdrop-blur-xs`}>
         <Link href={'/'}>
             Dashborad
         </Link>
@@ -22,7 +22,7 @@ const Navbar = ({linksClassName}: Props) => {
             Saídas
         </Link>
         </div>
-    </div>
+    </nav>
   )
 }
 

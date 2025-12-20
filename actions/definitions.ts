@@ -4,14 +4,17 @@ export const OperationSchema = z.object({
   id: z.number().optional(),
   name: z.string().min(1, { message: "Name cannot be empty" }).trim(),
   description: z.string().optional(),
-  date: z.iso.datetime({ offset: true }),
+  date: z.coerce.date(),
+
   value: z.number().min(0, { message: "Valor must be a positive number" }),
   is_paid: z.boolean(),
   is_income: z.boolean(),
-  category_id: z
-    .number()
-    .int()
-    .positive({ message: "Category ID must be a positive integer" }),
+  category_id: z.preprocess((val) => {
+    if (val === undefined || (typeof val === "number" && isNaN(val)))
+      return null;
+
+    return val;
+  }, z.number().int().positive({ message: "Category ID must be a positive integer" }).nullable()),
 });
 
 export type OperationActionState =
@@ -22,7 +25,7 @@ export type OperationActionState =
   | {
       success: false;
       message?: string;
-      errors: {
+      errors?: {
         name?: string[];
         description?: string[];
         date?: string[];

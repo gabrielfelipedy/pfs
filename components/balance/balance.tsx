@@ -1,5 +1,6 @@
 import { getMonthlyBalance } from "@/db/queries/balance";
 import { formatter } from "@/lib/utils";
+import ErrorLoading from "../error/ErrorLoading";
 
 interface Balance {
   saldo: number;
@@ -12,7 +13,7 @@ const Balance = async () => {
     const [result] = await getMonthlyBalance();
     data = result;
   } catch (error) {
-    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    return <ErrorLoading />
   }
 
   const balance = (data as Balance).saldo / 100;

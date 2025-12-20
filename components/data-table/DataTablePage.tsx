@@ -1,4 +1,5 @@
 //import { createExpenseBalanceView, createIncomeBalanceView } from "@/db/queries/views";
+import ErrorLoading from "../error/ErrorLoading";
 import OperationDataTable from "./columns";
 import { getOperations } from "@/db/queries/operation";
 
@@ -11,7 +12,7 @@ export default async function DataTablePage() {
     //await createExpenseBalanceView()
     //await createIncomeBalanceView()
   } catch (error) {
-    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    return <ErrorLoading />
   }
 
   return (

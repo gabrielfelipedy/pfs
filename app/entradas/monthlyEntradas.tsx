@@ -1,9 +1,13 @@
 import { getIncomesEvolution, getIncomesProportion } from "@/db/queries/income";
 import Line from "@/components/charts/line";
 import Pie from "@/components/charts/pie";
+import ErrorLoading from "@/components/error/ErrorLoading";
 
+interface Props {
+  className?: string;
+}
 
-const MonthlyEntradas = async () => {
+const MonthlyEntradas = async ({className}: Props) => {
   let income_data;
   let income_proportion;
 
@@ -18,7 +22,7 @@ const MonthlyEntradas = async () => {
   } catch (error) {
     console.error(error);
     //console.log(income_proportion)
-    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    return <ErrorLoading />
   }
 
   const transformedData = income_data.map((item) => ({
@@ -44,7 +48,7 @@ const MonthlyEntradas = async () => {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 w-full justify-between">
+    <div className={`${className} flex flex-col lg:flex-row gap-4 w-full justify-between`}>
       <Line
         title="Evolução de entradas mensal"
         description="Ao longo do mês atual"

@@ -1,28 +1,31 @@
-import FormDialog from "../saidas/FormDialog";
+import FormDialog from "../../components/shared/FormDialog";
 import { createEntrada } from "@/actions/entrada-actions";
 import { Operation } from "@/lib/definitions";
 import OperationDataTable from "@/components/data-table/columns";
-import MonthlyEntradas from "../saidas/monthlyEntradas";
+import MonthlyEntradas from "./monthlyEntradas";
 import { getIncomes } from "@/db/queries/income";
+import ErrorLoading from "@/components/error/ErrorLoading";
 
+const emptyOperation: Operation = {
+  is_income: true
+};
 
 const Entradas = async () => {
+  let data: Operation[];
 
-  let data: Operation[]
-    
-    try{
-      const result = await getIncomes();
-      data = result
-    }
-    catch(error)
-    {
-      return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
-    }
+  try {
+    const result = await getIncomes();
+    data = result;
+  } catch (error) {
+    return <ErrorLoading />
+  }
 
   return (
-    <div>
+    <>
       <h1 className="text-[3rem] font-bold mt-10">Entradas</h1>
       <p className="text-xl text-slate-600">Todos os registros de entradas</p>
+
+      <MonthlyEntradas className="mt-4" />
 
       <div className="mt-10">
         {/* <CreateSaidaDialog /> */}
@@ -31,19 +34,15 @@ const Entradas = async () => {
           dialogTitle="Adicionar entrada"
           dialogDescription="Preencha as informações da entrada"
           buttonText="Adicionar"
-          operation={undefined}
+          operation={emptyOperation}
           actionFunction={createEntrada}
         />
       </div>
 
-      <div className="mt-8">
-        <MonthlyEntradas />
-      </div>
-
-      <div className="mt-10">
+      <div className="mt-2">
         <OperationDataTable operations={data} />
       </div>
-    </div>
+    </>
   );
 };
 

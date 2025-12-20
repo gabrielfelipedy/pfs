@@ -6,6 +6,11 @@ export const formatter = new Intl.NumberFormat("pt-BR", {
   currency: "BRL",
 });
 
+export function capitalizeFirstLetter(text: string | null): string {
+  if (!text) return ""; // Handles empty strings or null
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

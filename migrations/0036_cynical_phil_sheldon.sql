@@ -1,0 +1,2 @@
+DROP VIEW `vw_operation_with_category`;--> statement-breakpoint
+CREATE VIEW `vw_operation_with_category` AS select "operation"."id", "operation"."name", "operation"."description", "operation"."value", "operation"."date", "operation"."is_income", "operation"."is_income", "operation"."category_id", "category"."name" from "operation" left join "category" on operation.category_id = category.id;

@@ -1,28 +1,34 @@
 import MonthlySaidas from "./monthlySaidas";
-import FormDialog from "./FormDialog";
+import FormDialog from "../../components/shared/FormDialog";
 import { createSaida } from "@/actions/saida-actions";
 import { Operation } from "@/lib/definitions";
 import OperationDataTable from "@/components/data-table/columns";
 import { getExpenses } from "@/db/queries/expense";
+import ErrorLoading from "@/components/error/ErrorLoading";
+
+export const dynamic = 'force-dynamic';
+
+const emptyOperation: Operation = {
+  is_income: false
+};
 
 const Saidas = async () => {
+  let data: Operation[];
 
-  let data: Operation[]
-  
-  try{
+  try {
     const result = await getExpenses();
-    data = result
-  }
-  catch(error)
-  {
-    return <div className="p-4 text-red-500">Erro ao carregar dados.</div>;
+    data = result;
+  } catch (error) {
+    return <ErrorLoading />
   }
   //console.log(data)
 
   return (
-    <div>
+    <>
       <h1 className="text-[3rem] font-bold mt-10">Saídas</h1>
       <p className="text-xl text-slate-600">Todos os registros de saídas</p>
+
+      <MonthlySaidas className="mt-4" />
 
       <div className="mt-10">
         {/* <CreateSaidaDialog /> */}
@@ -31,19 +37,15 @@ const Saidas = async () => {
           dialogTitle="Adicionar Gasto"
           dialogDescription="Preencha as informações do gasto"
           buttonText="Adicionar"
-          operation={undefined}
+          operation={emptyOperation}
           actionFunction={createSaida}
         />
       </div>
 
-      <div className="mt-8">
-        <MonthlySaidas />
-      </div>
-
-      <div className="mt-10">
+      <div className="mt-2">
         <OperationDataTable operations={data} />
       </div>
-    </div>
+    </>
   );
 };
 

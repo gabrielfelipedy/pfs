@@ -15,20 +15,25 @@ import {
 interface Props {
   title: string;
   description: string;
+  className?: string;
   data: ChartData[];
 }
 
-const Line = ({ title, description, data }: Props) => {
+const Line = ({ title, description, className, data }: Props) => {
+
+  //console.log(data)
+
   const result = {
     date: data.map((item) =>
       new Date(item.date).toLocaleDateString("pt-BR", {
-        month: "long",
+        month: "short",
         day: "numeric",
+        timeZone: 'UTC'
       })
     ),
     total_value: data.map((item) => item.total_value),
   };
-  console.log(result);
+  //console.log(result);
 
   const option = {
     tooltip: {
@@ -64,7 +69,7 @@ const Line = ({ title, description, data }: Props) => {
   };
 
   return (
-    <Card className="w-full">
+    <Card className={`${className} w-full`}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

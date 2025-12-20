@@ -13,7 +13,7 @@ const Login = () => {
   >(login, undefined);
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen w-full">
+    <div className="flex flex-col justify-center items-center h-screen mt-[-60] w-full">
       <p className="text-2xl font-bold">Faça login para continuar</p>
       <form
         action={loginAction}

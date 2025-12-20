@@ -1,9 +1,9 @@
 import { desc, eq } from "drizzle-orm";
 import { db } from "..";
-import { InsertOperation, operationTable, SelectOperation } from "../schema";
+import { InsertOperation, operationTable, operationWithCategoryView, SelectOperation } from "../schema";
 
 export async function getOperations() {
-    return db.select().from(operationTable).orderBy(desc(operationTable.date))
+    return db.select().from(operationWithCategoryView).orderBy(desc(operationWithCategoryView.date))
 }
 
 export async function deleteOperation(id: SelectOperation['id'])
