@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "PFS",
@@ -15,18 +15,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`antialiased`}
-      >
-        <header>
-          <Navbar linksClassName="px-6 md:px-20" />
-        </header>
+    <html lang="pt-BR">
+      <body className={`antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <header className="flex justify-center">
+          <Navbar />
+          </header>
 
-        <main className="px-6 md:px-20 mt-20">
-        {children}
-        <Toaster />
-        </main>
+          <main className="px-6 md:px-20 mt-30 md:mt-40">
+            {children}
+            <Toaster />
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );
