@@ -7,8 +7,9 @@ import FormDialog from "@/components/shared/FormDialog";
 import { createEntrada } from "@/actions/entrada-actions";
 import { createSaida } from "@/actions/saida-actions";
 import { Operation } from "@/lib/definitions";
-import { getOperationEvolution } from "@/db/queries/operation";
+import { getBalanceEvolution, getOperationEvolution } from "@/db/queries/operation";
 import Resume from "@/components/resume/resume";
+import Line from "@/components/charts/line";
 
 const emptyExpenseOperation: Operation = {
   is_income: false,
@@ -20,9 +21,12 @@ const emptyIncomeOperation: Operation = {
 
 export default async function Home() {
   let operation_data;
+  let balance_evolution;
 
   try {
     operation_data = await getOperationEvolution();
+    balance_evolution = await getBalanceEvolution()
+
   } catch (error) {
     console.error(error);
     return <ErrorLoading />;
@@ -33,6 +37,11 @@ export default async function Home() {
     total_income: item.total_income / 100,
     total_expense: item.total_expense / 100,
     balance: item.balance / 100,
+  }));
+
+  const transformedBalanceEvolution = balance_evolution.map((item) => ({
+    date: item.day,
+    total_value: item.balance / 100
   }));
 
   //console.log(transformedData)
@@ -47,6 +56,13 @@ export default async function Home() {
       <Resume />
 
       <div className="mt-8">
+
+        <Line
+        title="Evolução do saldo"
+        description="Ao longo do mês atual"
+        data={transformedBalanceEvolution}
+      />
+
         <Area
           title="Evolução de gastos"
           description="Ao longo do mês atual"

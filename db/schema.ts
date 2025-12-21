@@ -1,4 +1,4 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { asc, desc, eq, sql } from "drizzle-orm";
 import {
   integer,
   sqliteTable,
@@ -189,7 +189,7 @@ export const totalExpensesByMonth = sqliteView("vw_total_expense_by_month").as(
       .where(
         sql`
     date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', 'start of month')
-    AND date(${expenseView.date}, 'unixepoch', '-3 hours') <= date('now', '+1 day')
+    AND date(${expenseView.date}, 'unixepoch', '-3 hours') <= date('now', 'start of month', '+1 month')
   `
       )
 );
@@ -229,12 +229,45 @@ export const generalBalanceView = sqliteView("vw_general_balance").as((qb) =>
         "vw_expense_balance.total_sum"
       )} AS INTEGER)`.as("total_expenses"),
 
-      balance: sql<number>`CAST(${sql.raw("vw_income_balance.total_sum")} - ${sql.raw(
-        "vw_expense_balance.total_sum"
-      )} AS INTEGER)`.as("balance"),
+      balance: sql<number>`CAST(${sql.raw(
+        "vw_income_balance.total_sum"
+      )} - ${sql.raw("vw_expense_balance.total_sum")} AS INTEGER)`.as(
+        "balance"
+      ),
     })
     .from(sql.raw("vw_income_balance"))
     .fullJoin(sql.raw("vw_expense_balance"), sql`1=1`)
+);
+
+export const balanceEvolutionView = sqliteView("vw_balance_evolution").as(
+  (qb) => {
+    const dailySum = qb.$with("expenses_by_daymonth").as(
+      qb
+        .select({
+          day: sql<string>`date(date, 'unixepoch', '-3 hours')`.as("day"),
+          total_expense: sql<number>`CAST(SUM(value) AS INTEGER)`.as(
+            "total_expense"
+          ),
+        })
+        .from(expenseView)
+        .where(
+          sql`day >= date('now', 'start of month') AND day <= date('now', 'start of month', '+1 month')`
+        )
+        .groupBy(sql`day`)
+    );
+
+    return qb
+      .with(dailySum)
+      .select({
+        day: dailySum.day,
+        balance:
+          sql<number>`CAST(${qb.select({total_incomes: generalBalanceView.total_incomes}).from(generalBalanceView).limit(1)} - SUM(${dailySum.total_expense}) OVER (ORDER BY ${dailySum.day} ASC) AS INTEGER)`.as(
+            "balance"
+          ),
+      })
+      .from(dailySum)
+      .orderBy(asc(dailySum.day));
+  }
 );
 
 // ********* TOTAL INCOMES BY PERIOD **************
@@ -251,7 +284,9 @@ export const totalOperationsByDayByMonth = sqliteView(
         ),
       })
       .from(expenseView)
-      .where(sql`day >= date('now', 'start of month') AND day <= date('now')`)
+      .where(
+        sql`day >= date('now', 'start of month') AND day <= date('now', 'start of month', '+1 month')`
+      )
       .groupBy(sql`day`)
   );
 
@@ -264,7 +299,9 @@ export const totalOperationsByDayByMonth = sqliteView(
         ),
       })
       .from(incomeView)
-      .where(sql`day >= date('now', 'start of month') AND day <= date('now')`)
+      .where(
+        sql`day >= date('now', 'start of month') AND day <= date('now', 'start of month', '+1 month')`
+      )
       .groupBy(sql`day`)
   );
 

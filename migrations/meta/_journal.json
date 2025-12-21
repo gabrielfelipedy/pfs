@@ -337,6 +337,20 @@
       "when": 1766322508551,
       "tag": "0047_rapid_lord_tyger",
       "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "6",
+      "when": 1766335956372,
+      "tag": "0048_loose_starjammers",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "6",
+      "when": 1766336967330,
+      "tag": "0049_striped_silk_fever",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import { db } from "..";
-import { InsertOperation, operationTable, operationWithCategoryView, SelectOperation, totalOperationsByDayByMonth } from "../schema";
+import { balanceEvolutionView, InsertOperation, operationTable, operationWithCategoryView, SelectOperation, totalOperationsByDayByMonth } from "../schema";
 
 export async function getOperations() {
     return db.select().from(operationWithCategoryView).orderBy(desc(operationWithCategoryView.date))
@@ -9,6 +9,11 @@ export async function getOperations() {
 export async function getOperationEvolution()
 {
   return db.select().from(totalOperationsByDayByMonth)
+}
+
+export async function getBalanceEvolution()
+{
+  return db.select().from(balanceEvolutionView)
 }
 
 export async function deleteOperation(id: SelectOperation['id'])

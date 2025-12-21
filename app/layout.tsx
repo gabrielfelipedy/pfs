@@ -34,7 +34,7 @@ export default function RootLayout({
         </ThemeProvider>
 
         <footer>
-          <div className="w-screen h-40"></div>
+          <div className="w-full h-40"></div>
         </footer>
       </body>
     </html>
