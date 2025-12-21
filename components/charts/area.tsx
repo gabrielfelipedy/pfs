@@ -2,7 +2,6 @@
 
 import React from "react";
 import ReactCharts from "echarts-for-react";
-import { ChartData, DataProportion } from "@/lib/definitions";
 import { formatter } from "@/lib/utils";
 import {
   Card,
@@ -66,8 +65,9 @@ const Area = ({ title, description, className, data }: Props) => {
       splitLine: {
         show: false,
       },
+
       axisLabel: {
-        // Formats the axis labels
+        // format value as currency
         formatter: (value: number) => formatter.format(value),
       },
     },

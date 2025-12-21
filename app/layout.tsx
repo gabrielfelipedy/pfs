@@ -32,6 +32,10 @@ export default function RootLayout({
             <Toaster />
           </main>
         </ThemeProvider>
+
+        <footer>
+          <div className="w-screen h-40"></div>
+        </footer>
       </body>
     </html>
   );
