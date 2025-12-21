@@ -154,8 +154,8 @@ export const totalExpensesByDay = sqliteView("vw_total_expense_by_day").as(
       .from(expenseView)
       .where(
         sql`
-     date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', 'start of day')
-    AND date(${expenseView.date}, 'unixepoch', '-3 hours') <= date('now')
+     date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', 'start of day', '-3 hours')
+    AND date(${expenseView.date}, 'unixepoch', '-3 hours') <= date('now', '-3 hours')
   `
       )
 );
