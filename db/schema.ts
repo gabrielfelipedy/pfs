@@ -245,7 +245,7 @@ export const totalOperationsByDayByMonth = sqliteView(
   const expensesByDayByMonth = qb.$with("expenses_by_daymonth").as(
     qb
       .select({
-        date: sql<string>`date(date, 'unixepoch')`.as("day"),
+        date: sql<string>`date(date, 'unixepoch', '-3 hours')`.as("day"),
         total_expense: sql<number>`CAST(SUM(value) AS INTEGER)`.as(
           "total_expense"
         ),
@@ -258,7 +258,7 @@ export const totalOperationsByDayByMonth = sqliteView(
   const icomesByDayByMonth = qb.$with("incomes_by_daymonth").as(
     qb
       .select({
-        date: sql<string>`date(date, 'unixepoch')`.as("day"),
+        date: sql<string>`date(date, 'unixepoch', '-3 hours')`.as("day"),
         total_income: sql<number>`CAST(SUM(value) AS INTEGER)`.as(
           "total_income"
         ),

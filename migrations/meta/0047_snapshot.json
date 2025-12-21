@@ -1,0 +1,606 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "7b15c167-d353-4364-903a-973844cc10e5",
+  "prevId": "25fd4a49-ee20-4f7c-bbbf-a814b832b5c2",
+  "tables": {
+    "category": {
+      "name": "category",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_income": {
+          "name": "is_income",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "operation": {
+      "name": "operation",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "date": {
+          "name": "date",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        },
+        "is_paid": {
+          "name": "is_paid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_income": {
+          "name": "is_income",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "operation_category_id_category_id_fk": {
+          "name": "operation_category_id_category_id_fk",
+          "tableFrom": "operation",
+          "tableTo": "category",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "user": {
+      "name": "user",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    }
+  },
+  "views": {
+    "vw_expense": {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "date": {
+          "name": "date",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        },
+        "is_paid": {
+          "name": "is_paid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_income": {
+          "name": "is_income",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "name": "vw_expense",
+      "isExisting": false,
+      "definition": "select \"id\", \"name\", \"description\", \"value\", \"date\", \"is_paid\", \"is_income\", \"category_id\", \"created_at\", \"updated_at\" from \"operation\" where \"operation\".\"is_income\" = 0"
+    },
+    "vw_expense_with_category": {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "date": {
+          "name": "date",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        },
+        "is_paid": {
+          "name": "is_paid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_income": {
+          "name": "is_income",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "name": "vw_expense_with_category",
+      "isExisting": false,
+      "definition": "select \"vw_expense\".\"id\", \"vw_expense\".\"name\", \"vw_expense\".\"description\", \"vw_expense\".\"value\", \"vw_expense\".\"date\", \"vw_expense\".\"is_paid\", \"vw_expense\".\"is_income\", \"vw_expense\".\"category_id\", category.name as \"category_name\" from \"vw_expense\" left join \"category\" on vw_expense.category_id = category.id"
+    },
+    "vw_general_balance": {
+      "columns": {},
+      "name": "vw_general_balance",
+      "isExisting": false,
+      "definition": "select CAST(vw_income_balance.total_sum AS INTEGER) as \"total_incomes\", CAST(vw_expense_balance.total_sum AS INTEGER) as \"total_expenses\", CAST(vw_income_balance.total_sum - vw_expense_balance.total_sum AS INTEGER) as \"balance\" from vw_income_balance full join vw_expense_balance on 1=1"
+    },
+    "vw_income": {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "date": {
+          "name": "date",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        },
+        "is_paid": {
+          "name": "is_paid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_income": {
+          "name": "is_income",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "name": "vw_income",
+      "isExisting": false,
+      "definition": "select \"id\", \"name\", \"description\", \"value\", \"date\", \"is_paid\", \"is_income\", \"category_id\", \"created_at\", \"updated_at\" from \"operation\" where \"operation\".\"is_income\" = 1"
+    },
+    "vw_income_with_category": {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "date": {
+          "name": "date",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        },
+        "is_paid": {
+          "name": "is_paid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_income": {
+          "name": "is_income",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "name": "vw_income_with_category",
+      "isExisting": false,
+      "definition": "select \"vw_income\".\"id\", \"vw_income\".\"name\", \"vw_income\".\"description\", \"vw_income\".\"value\", \"vw_income\".\"date\", \"vw_income\".\"is_paid\", \"vw_income\".\"is_income\", \"vw_income\".\"category_id\", category.name as \"category_name\" from \"vw_income\" left join \"category\" on vw_income.category_id = category.id"
+    },
+    "vw_operation_with_category": {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "date": {
+          "name": "date",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(CURRENT_TIMESTAMP)"
+        },
+        "is_paid": {
+          "name": "is_paid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_income": {
+          "name": "is_income",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "name": "vw_operation_with_category",
+      "isExisting": false,
+      "definition": "select \"operation\".\"id\", \"operation\".\"name\", \"operation\".\"description\", \"operation\".\"value\", \"operation\".\"date\", \"operation\".\"is_paid\", \"operation\".\"is_income\", \"operation\".\"category_id\", category.name as \"category_name\" from \"operation\" left join \"category\" on operation.category_id = category.id"
+    },
+    "vw_total_expense_by_day": {
+      "columns": {},
+      "name": "vw_total_expense_by_day",
+      "isExisting": false,
+      "definition": "select CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_expense\" where \n     date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') >= date('now', 'start of day')\n    AND date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') <= date('now', '-3 hours')\n  "
+    },
+    "vw_total_expense_by_daymonth": {
+      "columns": {},
+      "name": "vw_total_expense_by_daymonth",
+      "isExisting": false,
+      "definition": "select date(\"date\", 'unixepoch', '-3 hours') as \"date\", CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_expense\" where \n    date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') >= date('now', 'start of month')\n    AND date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') <= date('now')\n   group by date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') order by date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours')"
+    },
+    "vw_total_expense_by_month": {
+      "columns": {},
+      "name": "vw_total_expense_by_month",
+      "isExisting": false,
+      "definition": "select CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_expense\" where \n    date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') >= date('now', 'start of month')\n    AND date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') <= date('now', '+1 day')\n  "
+    },
+    "vw_total_expense_by_week": {
+      "columns": {},
+      "name": "vw_total_expense_by_week",
+      "isExisting": false,
+      "definition": "select CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_expense\" where \n    date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') >= date('now', 'weekday 0', '-7 days')\n    AND date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') <= date('now')\n  "
+    },
+    "vw_total_income_by_daymonth": {
+      "columns": {},
+      "name": "vw_total_income_by_daymonth",
+      "isExisting": false,
+      "definition": "select date(\"date\", 'unixepoch', '-3 hours') as \"date\", CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_income\" where \n    date(\"vw_income\".\"date\", 'unixepoch', '-3 hours') >= date('now', 'start of month')\n    AND date(\"vw_income\".\"date\", 'unixepoch', '-3 hours') <= date('now')\n   group by date(\"vw_income\".\"date\", 'unixepoch', '-3 hours') order by date(\"vw_income\".\"date\", 'unixepoch', '-3 hours')"
+    },
+    "vw_total_operation_by_daymonth": {
+      "columns": {},
+      "name": "vw_total_operation_by_daymonth",
+      "isExisting": false,
+      "definition": "with \"expenses_by_daymonth\" as (select date(date, 'unixepoch', '-3 hours') as \"day\", CAST(SUM(value) AS INTEGER) as \"total_expense\" from \"vw_expense\" where day >= date('now', 'start of month') AND day <= date('now') group by day), \"incomes_by_daymonth\" as (select date(date, 'unixepoch', '-3 hours') as \"day\", CAST(SUM(value) AS INTEGER) as \"total_income\" from \"vw_income\" where day >= date('now', 'start of month') AND day <= date('now') group by day) select COALESCE(expenses_by_daymonth.day, incomes_by_daymonth.day) as \"day\", IFNULL(\"total_income\", 0) as \"total_income\", IFNULL(\"total_expense\", 0) as \"total_expense\", (IFNULL(\"total_income\", 0) - IFNULL(\"total_expense\", 0)) as \"balance\" from \"expenses_by_daymonth\" full join \"incomes_by_daymonth\" on expenses_by_daymonth.day = incomes_by_daymonth.day order by day"
+    }
+  },
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}
