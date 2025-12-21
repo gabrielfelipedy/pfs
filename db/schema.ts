@@ -154,7 +154,7 @@ export const totalExpensesByDay = sqliteView("vw_total_expense_by_day").as(
       .from(expenseView)
       .where(
         sql`
-     date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', 'start of day', '-3 hours')
+     date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', 'start of day')
     AND date(${expenseView.date}, 'unixepoch', '-3 hours') <= date('now', '-3 hours')
   `
       )
@@ -222,14 +222,14 @@ export const totalIncomesByDayByMonth = sqliteView(
 export const generalBalanceView = sqliteView("vw_general_balance").as((qb) =>
   qb
     .select({
-      total_incomes: sql`CAST(${sql.raw(
+      total_incomes: sql<number>`CAST(${sql.raw(
         "vw_income_balance.total_sum"
       )} AS INTEGER)`.as("total_incomes"),
-      total_expenses: sql`CAST(${sql.raw(
+      total_expenses: sql<number>`CAST(${sql.raw(
         "vw_expense_balance.total_sum"
       )} AS INTEGER)`.as("total_expenses"),
 
-      balance: sql`CAST(${sql.raw("vw_income_balance.total_sum")} - ${sql.raw(
+      balance: sql<number>`CAST(${sql.raw("vw_income_balance.total_sum")} - ${sql.raw(
         "vw_expense_balance.total_sum"
       )} AS INTEGER)`.as("balance"),
     })

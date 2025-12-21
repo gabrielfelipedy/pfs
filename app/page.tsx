@@ -1,13 +1,6 @@
 //import Image from "next/image";
 
 import DataTablePage from "@/components/data-table/DataTablePage";
-import Costs from "@/components/costs/costs";
-import CostsResume from "@/components/costs/costs-resume";
-import EarningResumes from "@/components/earnings/earnings-resume";
-import Balance from "@/components/balance/balance";
-import { getExpensesEvolution } from "@/db/queries/expense";
-import Line from "@/components/charts/line";
-import { getIncomesEvolution } from "@/db/queries/income";
 import Area from "@/components/charts/area";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import FormDialog from "@/components/shared/FormDialog";
@@ -15,6 +8,7 @@ import { createEntrada } from "@/actions/entrada-actions";
 import { createSaida } from "@/actions/saida-actions";
 import { Operation } from "@/lib/definitions";
 import { getOperationEvolution } from "@/db/queries/operation";
+import Resume from "@/components/resume/resume";
 
 const emptyExpenseOperation: Operation = {
   is_income: false,
@@ -46,24 +40,18 @@ export default async function Home() {
   return (
     <section className="mt-4 md:mt-20">
       <h1 className="text-[2.2rem] md:text-[4rem] font-bold">Dashboard</h1>
-      <p className="text-slate-500 text-xl md:text-2xl">
+      <p className="text-slate-500 dark:text-gray-300 text-xl md:text-2xl">
         Visão geral das finanças
       </p>
 
-      <div className="mt-8">
-        <div className="flex flex-col lg:flex-row gap-5">
-          <div className="border-2 rounded-lg">
-            <Balance className="mt-6" />
-            <EarningResumes />
-            <CostsResume />
-          </div>
+      <Resume />
 
-          <Area
-            title="Evolução de gastos"
-            description="Ao longo do mês atual"
-            data={transformedData}
-          />
-        </div>
+      <div className="mt-8">
+        <Area
+          title="Evolução de gastos"
+          description="Ao longo do mês atual"
+          data={transformedData}
+        />
 
         <div className="mt-10 flex gap-5">
           {/* <CreateSaidaDialog /> */}
