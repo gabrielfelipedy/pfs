@@ -164,6 +164,7 @@ export const totalExpensesByWeek = sqliteView("vw_total_expense_by_week").as(
   (qb) =>
     qb
       .select({
+        day: sql<string>`date(date, 'unixepoch', '-3 hours')`.as("day"),
         total_value: sql<number>`CAST(SUM(${expenseView.value}) AS INTEGER)`.as(
           "total_value"
         ),
@@ -171,8 +172,8 @@ export const totalExpensesByWeek = sqliteView("vw_total_expense_by_week").as(
       .from(expenseView)
       .where(
         sql`
-    date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', 'weekday 0', '-7 days')
-    AND date(${expenseView.date}, 'unixepoch', '-3 hours') <= date('now')
+    day >= date('now', 'start of day', 'weekday 0')
+    AND day <= date('now', 'start of day', 'weekday 0', '+7 days')
   `
       )
 );
@@ -260,10 +261,12 @@ export const balanceEvolutionView = sqliteView("vw_balance_evolution").as(
       .with(dailySum)
       .select({
         day: dailySum.day,
-        balance:
-          sql<number>`CAST(${qb.select({total_incomes: generalBalanceView.total_incomes}).from(generalBalanceView).limit(1)} - SUM(${dailySum.total_expense}) OVER (ORDER BY ${dailySum.day} ASC) AS INTEGER)`.as(
-            "balance"
-          ),
+        balance: sql<number>`CAST(${qb
+          .select({ total_incomes: generalBalanceView.total_incomes })
+          .from(generalBalanceView)
+          .limit(1)} - SUM(${dailySum.total_expense}) OVER (ORDER BY ${
+          dailySum.day
+        } ASC) AS INTEGER)`.as("balance"),
       })
       .from(dailySum)
       .orderBy(asc(dailySum.day));
