@@ -49,6 +49,22 @@ const Line = ({ title, description, className, data }: Props) => {
         saveAsImage: {},
       },
     },
+    visualMap: {
+        top: 50,
+        right: 10,
+        pieces: [
+          {
+            gt: 0,
+            lte: 10000,
+            color: '#54FF76'
+          },
+          {
+            gt: -1000,
+            lte: 0,
+            color: '#FF5454'
+          }
+        ]
+      },
     yAxis: {
       type: "value",
       splitLine: {
@@ -64,6 +80,7 @@ const Line = ({ title, description, className, data }: Props) => {
         data: result.total_value,
         type: "line",
         smooth: true,
+        areaStyle: {}
       },
     ],
   };

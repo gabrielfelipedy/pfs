@@ -4,12 +4,14 @@ import Pie from "@/components/charts/pie";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import Radar from "@/components/charts/radar";
 import TreeMap from "@/components/charts/treemap";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Props {
   className?: string;
 }
 
-const MonthlyEntradas = async ({className}: Props) => {
+const MonthlyEntradas = async ({ className }: Props) => {
   let income_data;
   let income_proportion;
 
@@ -24,7 +26,7 @@ const MonthlyEntradas = async ({className}: Props) => {
   } catch (error) {
     console.error(error);
     //console.log(income_proportion)
-    return <ErrorLoading />
+    return <ErrorLoading />;
   }
 
   const transformedData = income_data.map((item) => ({
@@ -39,10 +41,10 @@ const MonthlyEntradas = async ({className}: Props) => {
       .filter(([key]) => key !== "total_sum")
       .map(([key, val]) => ({
         name: key.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase()),
-        value: Number(val)
+        value: Number(val),
       }));
 
-      transformedSaidaProportion.sort((a, b) => b.value - a.value)
+    transformedSaidaProportion.sort((a, b) => b.value - a.value);
 
     //console.log(transformedSaidaProportion);
   } catch (error) {
@@ -50,33 +52,47 @@ const MonthlyEntradas = async ({className}: Props) => {
   }
 
   return (
-    <div className={`${className} flex flex-col lg:flex-row gap-4 w-full justify-between`}>
+    <div
+      className={`${className} flex flex-col lg:flex-row gap-4 w-full justify-between`}
+    >
       <Line
         title="Evolução de entradas mensal"
         description="Ao longo do mês atual"
         data={transformedData}
       />
 
-      <Pie
-        title="Evolução de entradas mensal"
-        description="Ao longo do mês atual"
-        totalValue={Number(income_proportion.total_sum)}
-        data={transformedSaidaProportion}
-      />
+      <Tabs defaultValue="pie" className="lg:w-1/2">
+        <TabsList>
+          <TabsTrigger value="pie">Gráfico de Pizza</TabsTrigger>
+          <TabsTrigger value="radar">Gráfico de Radar</TabsTrigger>
+          <TabsTrigger value="tree">Gráfico de árvore</TabsTrigger>
+        </TabsList>
+        <TabsContent value="pie">
+          <Pie
+            title="Evolução de entradas mensal"
+            description="Ao longo do mês atual"
+            totalValue={Number(income_proportion.total_sum)}
+            data={transformedSaidaProportion}
+          />
+        </TabsContent>
+        <TabsContent value="radar">
+          <Radar
+            title="Evolução de entradas mensal"
+            description="Ao longo do mês atual"
+            totalValue={Number(income_proportion.total_sum)}
+            data={transformedSaidaProportion}
+          />
+        </TabsContent>
 
-      <Radar
-        title="Evolução de entradas mensal"
-        description="Ao longo do mês atual"
-        totalValue={Number(income_proportion.total_sum)}
-        data={transformedSaidaProportion}
-      />
-
-      <TreeMap
-        title="Evolução de entradas mensal"
-        description="Ao longo do mês atual"
-        totalValue={Number(income_proportion.total_sum)}
-        data={transformedSaidaProportion}
-      />
+        <TabsContent value="tree">
+          <TreeMap
+            title="Evolução de entradas mensal"
+            description="Ao longo do mês atual"
+            totalValue={Number(income_proportion.total_sum)}
+            data={transformedSaidaProportion}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

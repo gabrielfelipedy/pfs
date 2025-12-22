@@ -77,14 +77,18 @@ const Area = ({ title, description, className, data }: Props) => {
         data: totalIncomes,
         type: "line",
         smooth: true,
-        areaStyle: {},
+        areaStyle: {
+          color: '#54FF76'
+        },
       },
       {
         name: "Gastos",
         data: totalExpenses,
         type: "line",
         smooth: true,
-        areaStyle: {},
+        areaStyle: {
+          color: '#FF5454'
+        },
       } /* ,
       {
         data: balances,
