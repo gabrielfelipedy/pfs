@@ -48,12 +48,12 @@ export default async function Home() {
 
   return (
     <section className="mt-4 md:mt-20">
-      <h1 className="text-[2.2rem] md:text-[4rem] font-bold">Dashboard</h1>
-      <p className="text-slate-500 dark:text-gray-300 text-xl md:text-2xl">
+      <h1 className="text-[2.2rem] md:text-[3.2rem] font-bold">Dashboard</h1>
+      <p className="text-slate-500 dark:text-gray-300 text-xl md:text-xl">
         Visão geral das finanças
       </p>
 
-      <Resume />
+      <Resume className="mt-10" />
 
       <div className="mt-8 flex flex-col gap-5">
 

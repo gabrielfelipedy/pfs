@@ -8,11 +8,12 @@ interface Props {
   data: number;
   subtext: string;
   is_income?: boolean;
+  className?: string;
 }
 
-const CardResume = ({ title, icon, data, subtext, is_income }: Props) => {
+const CardResume = ({ title, icon, data, subtext, is_income, className }: Props) => {
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         {icon}
