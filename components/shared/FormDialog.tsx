@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,10 +23,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  NativeSelect,
-  NativeSelectOption,
-} from "@/components/ui/native-select";
 
 import { toast } from "sonner";
 import { formatter } from "@/lib/utils";
@@ -33,6 +30,8 @@ import { Operation } from "@/lib/definitions";
 import { OperationActionState } from "@/actions/definitions";
 import { useRouter } from "next/navigation";
 import CategorySelector from "./categorySelector";
+import { Spinner } from "../ui/spinner";
+import { Switch } from "../ui/switch";
 
 // Defines the props for the FormDialog component
 
@@ -55,7 +54,6 @@ interface Props {
     prevState: OperationActionState | undefined,
     formData: FormData
   ) => Promise<OperationActionState>;
-  categorySelector?: ReactNode
 }
 
 export default function FormDialog({
@@ -66,13 +64,16 @@ export default function FormDialog({
   buttonText,
   operation,
   actionFunction,
-  categorySelector
 }: Props) {
+  //console.log(operation)
+
   // States used by calendar selector propover
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(
     operation?.date ? new Date(operation?.date) : new Date()
   );
+
+  const [selected, setSelected] = useState(operation?.is_paid ?? true);
 
   // State to control dialog open/close
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -173,7 +174,7 @@ export default function FormDialog({
                   <input
                     type="hidden"
                     name="date"
-                    value={date ? date.toISOString().split('T')[0] : ""}
+                    value={date ? date.toISOString().split("T")[0] : ""}
                   />
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
@@ -182,7 +183,9 @@ export default function FormDialog({
                         id="date"
                         className="md:w-48 justify-between font-normal"
                       >
-                        {date ? date.toLocaleDateString('pt-BR') : "Selecione a data"}
+                        {date
+                          ? date.toLocaleDateString("pt-BR")
+                          : "Selecione a data"}
                         <ChevronDownIcon />
                       </Button>
                     </PopoverTrigger>
@@ -258,39 +261,51 @@ export default function FormDialog({
               </div>
 
               <div className="flex flex-col gap-2">
-                <Label htmlFor="is_paid">Pago</Label>
-                <NativeSelect
-                  name="is_paid"
-                  defaultValue={
-                    operation?.is_paid ? (operation?.is_paid ? "true" : "false") : "true"
-                  }
-                >
-                  <NativeSelectOption value="true">Sim</NativeSelectOption>
-                  <NativeSelectOption value="false">Não</NativeSelectOption>
-                </NativeSelect>
-                {!state?.success && (
-                  <p className="text-sm text-red-500">
-                    {state?.errors?.is_paid || ""}
-                  </p>
-                )}
+                <Label htmlFor="category_id">Categoria</Label>
+
+                <CategorySelector
+                  category_id={operation?.category_id || undefined}
+                  is_income={operation?.is_income ?? true}
+                />
               </div>
 
               <div className="flex flex-col gap-2">
-                <Label htmlFor="category_id">Categoria</Label>
+                <Label htmlFor="is_paid_switch">Pago</Label>
 
-                <CategorySelector category_id={operation?.category_id || undefined} is_income={operation?.is_income ?? true} />
+                <Switch
+                  name="is_paid_switch"
+                  checked={selected}
+                  onCheckedChange={(checked) => setSelected(checked)}
+                  id="is_paid"
+                />
 
-                {!state?.success && (
-                  <p className="text-sm text-red-500">
-                    {state?.errors?.category_id || ""}
-                  </p>
-                )}
+                <input
+                  type="hidden"
+                  name="is_paid"
+                  value={selected ? "true" : "false"}
+                />
               </div>
             </div>
+
+            {!state?.success && (
+              <p className="text-sm text-red-500">
+                {state?.errors?.category_id || ""}
+              </p>
+            )}
+
+            {!state?.success && (
+              <p className="text-sm text-red-500">
+                {state?.errors?.is_paid || ""}
+              </p>
+            )}
           </div>
 
           <DialogFooter className="mt-12">
-            <Button className="w-full" disabled={pending}>
+            <DialogClose className="w-1/2" asChild>
+              <Button variant="outline">Cancelar</Button>
+            </DialogClose>
+            <Button className="w-1/2" disabled={pending}>
+              {pending && <Spinner />}
               {pending ? "Validando" : buttonText}
             </Button>
           </DialogFooter>

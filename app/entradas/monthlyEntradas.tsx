@@ -2,6 +2,8 @@ import { getIncomesEvolution, getIncomesProportion } from "@/db/queries/income";
 import Line from "@/components/charts/line";
 import Pie from "@/components/charts/pie";
 import ErrorLoading from "@/components/error/ErrorLoading";
+import Radar from "@/components/charts/radar";
+import TreeMap from "@/components/charts/treemap";
 
 interface Props {
   className?: string;
@@ -56,6 +58,20 @@ const MonthlyEntradas = async ({className}: Props) => {
       />
 
       <Pie
+        title="Evolução de entradas mensal"
+        description="Ao longo do mês atual"
+        totalValue={Number(income_proportion.total_sum)}
+        data={transformedSaidaProportion}
+      />
+
+      <Radar
+        title="Evolução de entradas mensal"
+        description="Ao longo do mês atual"
+        totalValue={Number(income_proportion.total_sum)}
+        data={transformedSaidaProportion}
+      />
+
+      <TreeMap
         title="Evolução de entradas mensal"
         description="Ao longo do mês atual"
         totalValue={Number(income_proportion.total_sum)}

@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useActionState } from "react";
+import { useActionState } from "react";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { login, LoginActionState } from "./actions";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 
 const Login = () => {
   const [state, loginAction, pending] = useActionState<
@@ -40,6 +41,7 @@ const Login = () => {
         )}
 
         <Button className="mt-6 w-full" disabled={pending}>
+          {pending && <Spinner />}
           {pending ? "Validando" : "Login"}
         </Button>
       </form>

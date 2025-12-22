@@ -6,6 +6,8 @@ import {
 import Line from "@/components/charts/line";
 import Pie from "@/components/charts/pie";
 import ErrorLoading from "@/components/error/ErrorLoading";
+import Radar from "@/components/charts/radar";
+import TreeMap from "@/components/charts/treemap";
 
 interface Props {
   className?: string;
@@ -63,7 +65,21 @@ const MonthlySaidas = async ({className}: Props) => {
       />
 
       <Pie
-        title="Evolução de gastos"
+        title="Gastos por categoria"
+        description="Ao longo do mês atual"
+        totalValue={Number(expense_proportion.total_sum)}
+        data={transformedSaidaProportion}
+      />
+
+      <Radar
+        title="Gastos por categoria"
+        description="Ao longo do mês atual"
+        totalValue={Number(expense_proportion.total_sum)}
+        data={transformedSaidaProportion}
+      />
+
+      <TreeMap
+        title="Gastos por categoria"
         description="Ao longo do mês atual"
         totalValue={Number(expense_proportion.total_sum)}
         data={transformedSaidaProportion}
