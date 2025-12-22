@@ -135,8 +135,8 @@ export const totalExpensesByDayByMonth = sqliteView(
     .from(expenseView)
     .where(
       sql`
-    date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', 'start of month')
-    AND date(${expenseView.date}, 'unixepoch', '-3 hours') <= date('now')
+    date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month')
+    AND date(${expenseView.date}, 'unixepoch', '-3 hours') <= date('now', '-3 hours', '+1 month', 'start of month')
   `
     )
     .groupBy(sql`date(${expenseView.date}, 'unixepoch', '-3 hours')`)
@@ -154,8 +154,8 @@ export const totalExpensesByDay = sqliteView("vw_total_expense_by_day").as(
       .from(expenseView)
       .where(
         sql`
-     date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', 'start of day')
-    AND date(${expenseView.date}, 'unixepoch', '-3 hours') <= date('now', '-3 hours')
+     date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of day')
+    AND date(${expenseView.date}, 'unixepoch', '-3 hours') <= date('now', '-3 hours', '+1 day','start of day')
   `
       )
 );
@@ -172,8 +172,8 @@ export const totalExpensesByWeek = sqliteView("vw_total_expense_by_week").as(
       .from(expenseView)
       .where(
         sql`
-    day >= date('now', 'start of day', 'weekday 0')
-    AND day <= date('now', 'start of day', 'weekday 0', '+7 days')
+    day >= date('now', '-3 hours', 'weekday 0', 'start of day')
+    AND day <= date('now', '-3 hours', 'weekday 0', 'start of day', '+7 days')
   `
       )
 );
@@ -189,8 +189,8 @@ export const totalExpensesByMonth = sqliteView("vw_total_expense_by_month").as(
       .from(expenseView)
       .where(
         sql`
-    date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', 'start of month')
-    AND date(${expenseView.date}, 'unixepoch', '-3 hours') <= date('now', 'start of month', '+1 month')
+    date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month')
+    AND date(${expenseView.date}, 'unixepoch', '-3 hours') <= date('now', '-3 hours', '+1 month', 'start of month')
   `
       )
 );
@@ -212,8 +212,8 @@ export const totalIncomesByDayByMonth = sqliteView(
     .from(incomeView)
     .where(
       sql`
-    date(${incomeView.date}, 'unixepoch', '-3 hours') >= date('now', 'start of month')
-    AND date(${incomeView.date}, 'unixepoch', '-3 hours') <= date('now')
+    date(${incomeView.date}, 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month')
+    AND date(${incomeView.date}, 'unixepoch', '-3 hours') <= date('now', '-3 hours', '+1 month', 'start of month')
   `
     )
     .groupBy(sql`date(${incomeView.date}, 'unixepoch', '-3 hours')`)
@@ -252,7 +252,7 @@ export const balanceEvolutionView = sqliteView("vw_balance_evolution").as(
         })
         .from(expenseView)
         .where(
-          sql`day >= date('now', 'start of month') AND day <= date('now', 'start of month', '+1 month')`
+          sql`day >= date('now', '-3 hours', 'start of month') AND day <= date('now', '-3 hours' , '+1 month', 'start of month')`
         )
         .groupBy(sql`day`)
     );
@@ -288,7 +288,7 @@ export const totalOperationsByDayByMonth = sqliteView(
       })
       .from(expenseView)
       .where(
-        sql`day >= date('now', 'start of month') AND day <= date('now', 'start of month', '+1 month')`
+        sql`day >= date('now', '-3 hours', 'start of month') AND day <= date('now', '-3 hours', '+1 month', 'start of month')`
       )
       .groupBy(sql`day`)
   );
@@ -303,7 +303,7 @@ export const totalOperationsByDayByMonth = sqliteView(
       })
       .from(incomeView)
       .where(
-        sql`day >= date('now', 'start of month') AND day <= date('now', 'start of month', '+1 month')`
+        sql`day >= date('now', '-3 hours', 'start of month') AND day <= date('now', '-3 hours', '+1 month', 'start of month')`
       )
       .groupBy(sql`day`)
   );
