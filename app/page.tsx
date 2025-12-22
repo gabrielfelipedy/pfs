@@ -7,8 +7,9 @@ import FormDialog from "@/components/shared/FormDialog";
 import { createEntrada } from "@/actions/entrada-actions";
 import { createSaida } from "@/actions/saida-actions";
 import { Operation } from "@/lib/definitions";
-import { getOperationEvolution } from "@/db/queries/operation";
+import { getBalanceEvolution, getOperationEvolution } from "@/db/queries/operation";
 import Resume from "@/components/resume/resume";
+import Line from "@/components/charts/line";
 
 const emptyExpenseOperation: Operation = {
   is_income: false,
@@ -20,9 +21,12 @@ const emptyIncomeOperation: Operation = {
 
 export default async function Home() {
   let operation_data;
+  let balance_evolution;
 
   try {
     operation_data = await getOperationEvolution();
+    balance_evolution = await getBalanceEvolution()
+
   } catch (error) {
     console.error(error);
     return <ErrorLoading />;
@@ -35,18 +39,30 @@ export default async function Home() {
     balance: item.balance / 100,
   }));
 
+  const transformedBalanceEvolution = balance_evolution.map((item) => ({
+    date: item.day,
+    total_value: item.balance / 100
+  }));
+
   //console.log(transformedData)
 
   return (
     <section className="mt-4 md:mt-20">
-      <h1 className="text-[2.2rem] md:text-[4rem] font-bold">Dashboard</h1>
-      <p className="text-slate-500 dark:text-gray-300 text-xl md:text-2xl">
+      <h1 className="text-[2.2rem] md:text-[3.2rem] font-bold">Dashboard</h1>
+      <p className="text-slate-500 dark:text-gray-300 text-xl md:text-xl">
         Visão geral das finanças
       </p>
 
-      <Resume />
+      <Resume className="mt-10" />
 
-      <div className="mt-8">
+      <div className="mt-8 flex flex-col gap-5">
+
+        <Line
+        title="Evolução do saldo"
+        description="Ao longo do mês atual"
+        data={transformedBalanceEvolution}
+      />
+
         <Area
           title="Evolução de gastos"
           description="Ao longo do mês atual"

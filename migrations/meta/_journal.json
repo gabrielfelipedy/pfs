@@ -330,6 +330,83 @@
       "when": 1766286397869,
       "tag": "0046_salty_maverick",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "6",
+      "when": 1766322508551,
+      "tag": "0047_rapid_lord_tyger",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "6",
+      "when": 1766335956372,
+      "tag": "0048_loose_starjammers",
+      "breakpoints": true
+    },
+    {
+      "idx": 49,
+      "version": "6",
+      "when": 1766336967330,
+      "tag": "0049_striped_silk_fever",
+      "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "6",
+      "when": 1766337655656,
+      "tag": "0050_abandoned_the_spike",
+      "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "6",
+      "when": 1766337987614,
+      "tag": "0051_next_loki",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "6",
+      "when": 1766338223804,
+      "tag": "0052_numerous_thena",
+      "breakpoints": true
+    },
+    {
+      "idx": 53,
+      "version": "6",
+      "when": 1766423279851,
+      "tag": "0053_overrated_iron_monger",
+      "breakpoints": true
+    },
+    {
+      "idx": 54,
+      "version": "6",
+      "when": 1766424175854,
+      "tag": "0054_fair_steel_serpent",
+      "breakpoints": true
+    },
+    {
+      "idx": 55,
+      "version": "6",
+      "when": 1766424623216,
+      "tag": "0055_zippy_moira_mactaggert",
+      "breakpoints": true
+    },
+    {
+      "idx": 56,
+      "version": "6",
+      "when": 1766439754722,
+      "tag": "0056_chunky_captain_midlands",
+      "breakpoints": true
+    },
+    {
+      "idx": 57,
+      "version": "6",
+      "when": 1766439907474,
+      "tag": "0057_wonderful_lionheart",
+      "breakpoints": true
     }
   ]
 }

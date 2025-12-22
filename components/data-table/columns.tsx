@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "../ui/data-table";
 
-import { ArrowUpDown, X, Check  } from "lucide-react";
+import { X, Check, ChevronsUpDown  } from "lucide-react";
 import { Button } from "../ui/button";
 import { capitalizeFirstLetter, formatter } from "@/lib/utils";
 import { Pencil } from "lucide-react";
@@ -13,7 +13,6 @@ import { Operation } from "@/lib/definitions";
 import { updateSaida } from "@/actions/saida-actions";
 import { updateIncome } from "@/actions/entrada-actions";
 import { Badge } from "../ui/badge";
-import CategorySelector from "../shared/categorySelector";
 
 export const columns: ColumnDef<Operation>[] = [
   {
@@ -25,7 +24,7 @@ export const columns: ColumnDef<Operation>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Nome
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ChevronsUpDown className="h-4 w-4" />
         </Button>
       );
     },
@@ -42,7 +41,7 @@ export const columns: ColumnDef<Operation>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Data
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ChevronsUpDown className="h-4 w-4" />
         </Button>
       );
     },
@@ -65,7 +64,7 @@ export const columns: ColumnDef<Operation>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Valor
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ChevronsUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
@@ -84,7 +83,7 @@ export const columns: ColumnDef<Operation>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Pago?
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ChevronsUpDown className="h-4 w-4" />
         </Button>
       );
     },
@@ -105,7 +104,7 @@ export const columns: ColumnDef<Operation>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Entrada?
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ChevronsUpDown className="h-4 w-4" />
         </Button>
       );
     },
@@ -125,7 +124,7 @@ export const columns: ColumnDef<Operation>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Categoria
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ChevronsUpDown className="h-4 w-4" />
         </Button>
       );
     },
@@ -163,13 +162,3 @@ interface Props {
 export default function OperationDataTable({ operations }: Props) {
   return <DataTable columns={columns} data={operations} />;
 }
-/* export type Operation = {
-  id: number;
-  name: string;
-  description: string;
-  date: string;
-  valor: number;
-  is_paid: boolean;
-  is_entrada: boolean;
-  category_id: number;
-} */

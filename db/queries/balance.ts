@@ -3,7 +3,7 @@ import { generalBalanceView } from "../schema"
 
 export async function getMonthlyBalance()
 {
-    return db.select({saldo: generalBalanceView.balance}).from(generalBalanceView)
+    return db.select({balance: generalBalanceView.balance}).from(generalBalanceView)
 }
 
 /* export async function getMonthlyBalance() {

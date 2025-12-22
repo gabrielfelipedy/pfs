@@ -56,7 +56,7 @@ interface Props {
   ) => Promise<OperationActionState>;
 }
 
-export default function FormDialog({
+export default function LimitDialog({
   openDialogText,
   buttonVariation,
   dialogTitle,
@@ -126,7 +126,7 @@ export default function FormDialog({
       onOpenChange={setDialogOpen}
     >
       <DialogTrigger asChild>
-        <Button variant={buttonVariation}>{openDialogText}</Button>
+        <Button disabled={true} variant={buttonVariation}>{openDialogText}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-106.25">
         <form action={formAction}>
@@ -152,7 +152,7 @@ export default function FormDialog({
               )}
             </div>
             <div className="md:grid gap-3">
-              <Label htmlFor="description">Descrição</Label>
+              <Label htmlFor="description">Descrição (opcional)</Label>
               <Input
                 className="mt-4"
                 id="description"
