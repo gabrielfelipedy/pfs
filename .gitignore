@@ -42,3 +42,7 @@ next-env.d.ts
 
 # todo
 TODO.txt
+
+# git backup
+
+.git_backup/*
