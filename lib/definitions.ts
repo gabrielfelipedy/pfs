@@ -14,6 +14,18 @@ export type Operation = {
   updated_at?: Date | null;
 };
 
+export type ExpenseLimit = {
+  id?: number;
+  name?: string;
+  description?: string | null;
+  value?: number | null;
+  start_date: Date | null;
+  end_date: Date | null;
+  category_id?: number | null;
+  created_at?: Date;
+  updated_at?: Date | null;
+};
+
 export type Category = {
   id?: number;
   name: string;

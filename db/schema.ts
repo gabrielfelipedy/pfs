@@ -31,6 +31,27 @@ export const userTable = sqliteTable("user", {
   ),
 });
 
+export const expenselimitTable = sqliteTable('expense_limit', {
+  id: integer().primaryKey({ autoIncrement: true }),
+  name: text().notNull(),
+  description: text(),
+  value: integer(),
+  recursive: integer({ mode: "boolean" }).notNull(),
+  start_date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
+  end_date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
+  category_id: integer().references(() => categoryTable.id, {
+    onUpdate: "cascade",
+    onDelete: "set null",
+  }),
+
+  created_at: integer({ mode: "timestamp" })
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updated_at: integer("updated_at", { mode: "timestamp" }).$onUpdate(
+    () => new Date()
+  ),
+})
+
 export const operationTable = sqliteTable("operation", {
   id: integer().primaryKey({ autoIncrement: true }),
 
@@ -341,3 +362,6 @@ export type SelectOperation = typeof operationTable.$inferSelect;
 
 export type InsertUser = typeof userTable.$inferInsert;
 export type SelectUser = typeof userTable.$inferSelect;
+
+export type InsertExpenseLimit = typeof expenselimitTable.$inferInsert;
+export type SelectExpenseLimit = typeof expenselimitTable.$inferSelect;
