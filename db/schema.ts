@@ -170,8 +170,8 @@ export const totalExpensesByWeek = sqliteView("vw_total_expense_by_week").as(
       .from(expenseView)
       .where(
         sql`
-    day >= date('now', '-3 hours', 'weekday 0', '-7 days')
-    AND day < date('now', '-3 hours', 'weekday 0')
+    day >= date('now', '-3 hours', '+1 day', 'weekday 0', '-7 days')
+    AND day < date('now', '-3 hours', '+1 day', 'weekday 0')
   `
       )
 );
