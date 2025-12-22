@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "16ca60bf-1480-4825-965b-403adef85082",
-  "prevId": "3573d171-55b4-4058-8fcb-8bdf4922cff3",
+  "id": "c13ae852-35a1-4217-a7ba-b67ad2f44ee3",
+  "prevId": "2f695b21-8262-4183-a70e-831ba8c2c6e4",
   "tables": {
     "category": {
       "name": "category",
@@ -205,7 +205,7 @@
       "columns": {},
       "name": "vw_balance_evolution",
       "isExisting": false,
-      "definition": "with \"expenses_by_daymonth\" as (select date(date, 'unixepoch', '-3 hours') as \"day\", CAST(SUM(value) AS INTEGER) as \"total_expense\" from \"vw_expense\" where day >= date('now', 'start of month') AND day <= date('now', 'start of month', '+1 month') group by day) select \"day\", CAST((select \"total_incomes\" from \"vw_general_balance\" limit 1) - SUM(\"total_expense\") OVER (ORDER BY \"day\" ASC) AS INTEGER) as \"balance\" from \"expenses_by_daymonth\" order by \"day\" asc"
+      "definition": "with \"expenses_by_daymonth\" as (select date(date, 'unixepoch', '-3 hours') as \"day\", CAST(SUM(value) AS INTEGER) as \"total_expense\" from \"vw_expense\" where day >= date('now', '-3 hours', 'start of month') AND day < date('now', '-3 hours' , '+1 month', 'start of month') group by day) select \"day\", CAST((select \"total_incomes\" from \"vw_general_balance\" limit 1) - SUM(\"total_expense\") OVER (ORDER BY \"day\" ASC) AS INTEGER) as \"balance\" from \"expenses_by_daymonth\" order by \"day\" asc"
     },
     "vw_expense": {
       "columns": {
@@ -567,37 +567,37 @@
       "columns": {},
       "name": "vw_total_expense_by_day",
       "isExisting": false,
-      "definition": "select CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_expense\" where \n     date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') >= date('now', 'start of day')\n    AND date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') <= date('now', '-3 hours')\n  "
+      "definition": "select CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_expense\" where \n     date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') = date('now', '-3 hours')"
     },
     "vw_total_expense_by_daymonth": {
       "columns": {},
       "name": "vw_total_expense_by_daymonth",
       "isExisting": false,
-      "definition": "select date(\"date\", 'unixepoch', '-3 hours') as \"date\", CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_expense\" where \n    date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') >= date('now', 'start of month')\n    AND date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') <= date('now')\n   group by date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') order by date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours')"
+      "definition": "select date(\"date\", 'unixepoch', '-3 hours') as \"date\", CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_expense\" where \n    date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month')\n    AND date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') < date('now', '-3 hours', '+1 month', 'start of month')\n   group by date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') order by date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours')"
     },
     "vw_total_expense_by_month": {
       "columns": {},
       "name": "vw_total_expense_by_month",
       "isExisting": false,
-      "definition": "select CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_expense\" where \n    date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') >= date('now', 'start of month')\n    AND date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') <= date('now', 'start of month', '+1 month')\n  "
+      "definition": "select CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_expense\" where \n    date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month')\n    AND date(\"vw_expense\".\"date\", 'unixepoch', '-3 hours') < date('now', '-3 hours', '+1 month', 'start of month')\n  "
     },
     "vw_total_expense_by_week": {
       "columns": {},
       "name": "vw_total_expense_by_week",
       "isExisting": false,
-      "definition": "select date(date, 'unixepoch', '-3 hours') as \"day\", CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_expense\" where \n    day >= date('now', '-3 hours', 'weekday 0', 'start of day')\n    AND day <= date('now', '-3 hours', 'weekday 0', 'start of day', '+7 days')\n  "
+      "definition": "select date(date, 'unixepoch', '-3 hours') as \"day\", CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_expense\" where \n    day >= date('now', '-3 hours', 'weekday 0', '-7 days')\n    AND day < date('now', '-3 hours', 'weekday 0')\n  "
     },
     "vw_total_income_by_daymonth": {
       "columns": {},
       "name": "vw_total_income_by_daymonth",
       "isExisting": false,
-      "definition": "select date(\"date\", 'unixepoch', '-3 hours') as \"date\", CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_income\" where \n    date(\"vw_income\".\"date\", 'unixepoch', '-3 hours') >= date('now', 'start of month')\n    AND date(\"vw_income\".\"date\", 'unixepoch', '-3 hours') <= date('now')\n   group by date(\"vw_income\".\"date\", 'unixepoch', '-3 hours') order by date(\"vw_income\".\"date\", 'unixepoch', '-3 hours')"
+      "definition": "select date(\"date\", 'unixepoch', '-3 hours') as \"date\", CAST(SUM(\"value\") AS INTEGER) as \"total_value\" from \"vw_income\" where \n    date(\"vw_income\".\"date\", 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month')\n    AND date(\"vw_income\".\"date\", 'unixepoch', '-3 hours') < date('now', '-3 hours', '+1 month', 'start of month')\n   group by date(\"vw_income\".\"date\", 'unixepoch', '-3 hours') order by date(\"vw_income\".\"date\", 'unixepoch', '-3 hours')"
     },
     "vw_total_operation_by_daymonth": {
       "columns": {},
       "name": "vw_total_operation_by_daymonth",
       "isExisting": false,
-      "definition": "with \"expenses_by_daymonth\" as (select date(date, 'unixepoch', '-3 hours') as \"day\", CAST(SUM(value) AS INTEGER) as \"total_expense\" from \"vw_expense\" where day >= date('now', 'start of month') AND day <= date('now', 'start of month', '+1 month') group by day), \"incomes_by_daymonth\" as (select date(date, 'unixepoch', '-3 hours') as \"day\", CAST(SUM(value) AS INTEGER) as \"total_income\" from \"vw_income\" where day >= date('now', 'start of month') AND day <= date('now', 'start of month', '+1 month') group by day) select COALESCE(expenses_by_daymonth.day, incomes_by_daymonth.day) as \"day\", IFNULL(\"total_income\", 0) as \"total_income\", IFNULL(\"total_expense\", 0) as \"total_expense\", (IFNULL(\"total_income\", 0) - IFNULL(\"total_expense\", 0)) as \"balance\" from \"expenses_by_daymonth\" full join \"incomes_by_daymonth\" on expenses_by_daymonth.day = incomes_by_daymonth.day order by day"
+      "definition": "with \"expenses_by_daymonth\" as (select date(date, 'unixepoch', '-3 hours') as \"day\", CAST(SUM(value) AS INTEGER) as \"total_expense\" from \"vw_expense\" where day >= date('now', '-3 hours', 'start of month') AND day < date('now', '-3 hours', '+1 month', 'start of month') group by day), \"incomes_by_daymonth\" as (select date(date, 'unixepoch', '-3 hours') as \"day\", CAST(SUM(value) AS INTEGER) as \"total_income\" from \"vw_income\" where day >= date('now', '-3 hours', 'start of month') AND day < date('now', '-3 hours', '+1 month', 'start of month') group by day) select COALESCE(expenses_by_daymonth.day, incomes_by_daymonth.day) as \"day\", IFNULL(\"total_income\", 0) as \"total_income\", IFNULL(\"total_expense\", 0) as \"total_expense\", (IFNULL(\"total_income\", 0) - IFNULL(\"total_expense\", 0)) as \"balance\" from \"expenses_by_daymonth\" full join \"incomes_by_daymonth\" on expenses_by_daymonth.day = incomes_by_daymonth.day order by day"
     }
   },
   "enums": {},
