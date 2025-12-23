@@ -26,12 +26,13 @@ import {
 
 import { toast } from "sonner";
 import { formatter } from "@/lib/utils";
-import { Operation } from "@/lib/definitions";
+import { ExpenseLimit } from "@/lib/definitions";
 import { OperationActionState } from "@/actions/definitions";
 import { useRouter } from "next/navigation";
 import CategorySelector from "./categorySelector";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "../ui/switch";
+import { ExpenseLimitActionState } from "@/app/saidas/limites/actions/definitions";
 
 // Defines the props for the FormDialog component
 
@@ -49,11 +50,11 @@ interface Props {
   dialogTitle: string;
   dialogDescription: string;
   buttonText: string;
-  operation: Operation | undefined;
+  limit: ExpenseLimit | undefined;
   actionFunction: (
-    prevState: OperationActionState | undefined,
+    prevState: ExpenseLimitActionState | undefined,
     formData: FormData
-  ) => Promise<OperationActionState>;
+  ) => Promise<ExpenseLimitActionState>;
 }
 
 export default function LimitDialog({
@@ -62,24 +63,30 @@ export default function LimitDialog({
   dialogTitle,
   dialogDescription,
   buttonText,
-  operation,
+  limit,
   actionFunction,
 }: Props) {
   //console.log(operation)
 
   // States used by calendar selector propover
-  const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(
-    operation?.date ? new Date(operation?.date) : new Date()
+  const [startDateOpen, setStartDateOpen] = useState(false);
+  const [startDate, setStartDate] = useState<Date | undefined>(
+    limit?.start_date ? new Date(limit?.start_date) : new Date()
   );
 
-  const [selected, setSelected] = useState(operation?.is_paid ?? true);
+  const [endDateOpen, setEndDateOpen] = useState(false);
+  const [endDate, setEndDate] = useState<Date | undefined>(
+    limit?.end_date ? new Date(limit?.end_date) : new Date()
+  );
+
+  // State for switch for is_paid field
+  const [selected, setSelected] = useState(limit?.recursive ?? true);
 
   // State to control dialog open/close
   const [dialogOpen, setDialogOpen] = useState(false);
 
   // controls the currency formatin of valor field
-  const [rawValor, setRawValor] = useState<number>(operation?.value || 0);
+  const [rawValor, setRawValor] = useState<number>(limit?.value || 0);
 
   const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -107,7 +114,7 @@ export default function LimitDialog({
       console.log("Action successful, closing dialog.");
       toast.success(state.message);
 
-      router.refresh();
+      //router.refresh();
 
       setTimeout(() => {
         setDialogOpen(false);
@@ -121,12 +128,12 @@ export default function LimitDialog({
 
   return (
     <Dialog
-      key={operation?.id || "new"}
+      key={limit?.id || "new"}
       open={dialogOpen}
       onOpenChange={setDialogOpen}
     >
       <DialogTrigger asChild>
-        <Button disabled={true} variant={buttonVariation}>{openDialogText}</Button>
+        <Button variant={buttonVariation}>{openDialogText}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-106.25">
         <form action={formAction}>
@@ -136,14 +143,13 @@ export default function LimitDialog({
           </DialogHeader>
           <div className="flex flex-col md:grid gap-4 mt-10">
             <div className="md:grid gap-3">
-              <input type="hidden" name="id" value={operation?.id || ""} />
+              <input type="hidden" name="id" value={limit?.id || ""} />
 
               <Label htmlFor="name">Nome</Label>
               <Input
-                className="mt-4"
                 id="name"
                 name="name"
-                defaultValue={operation?.name || ""}
+                defaultValue={limit?.name || ""}
               />
               {!state?.success && (
                 <p className="text-sm text-red-500">
@@ -151,40 +157,27 @@ export default function LimitDialog({
                 </p>
               )}
             </div>
-            <div className="md:grid gap-3">
-              <Label htmlFor="description">Descrição (opcional)</Label>
-              <Input
-                className="mt-4"
-                id="description"
-                name="description"
-                defaultValue={operation?.description || ""}
-              />
-              {!state?.success && (
-                <p className="text-sm text-red-500">
-                  {state?.errors?.description || ""}
-                </p>
-              )}
-            </div>
+            
             <div className="md:grid gap-3">
               <div className="flex flex-col md:flex-row justify-between gap-4">
                 <div className="flex flex-col gap-3">
-                  <Label htmlFor="date" className="px-1">
-                    Data
+                  <Label htmlFor="start_date" className="px-1">
+                    Data de início
                   </Label>
                   <input
                     type="hidden"
-                    name="date"
-                    value={date ? date.toISOString().split("T")[0] : ""}
+                    name="start_date"
+                    value={startDate ? startDate.toISOString().split("T")[0] : ""}
                   />
-                  <Popover open={open} onOpenChange={setOpen}>
+                  <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        id="date"
-                        className="md:w-48 justify-between font-normal"
+                        id="start_date"
+                        className="md:w-40 justify-between font-normal"
                       >
-                        {date
-                          ? date.toLocaleDateString("pt-BR")
+                        {startDate
+                          ? startDate.toLocaleDateString("pt-BR")
                           : "Selecione a data"}
                         <ChevronDownIcon />
                       </Button>
@@ -195,11 +188,49 @@ export default function LimitDialog({
                     >
                       <Calendar
                         mode="single"
-                        selected={date}
+                        selected={startDate}
                         captionLayout="dropdown"
                         onSelect={(date) => {
-                          setDate(date);
-                          setOpen(false);
+                          setStartDate(date);
+                          setStartDateOpen(false);
+                        }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <Label htmlFor="end_date" className="px-1">
+                    Data fim
+                  </Label>
+                  <input
+                    type="hidden"
+                    name="end_date"
+                    value={endDate ? endDate.toISOString().split("T")[0] : ""}
+                  />
+                  <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        id="end_date"
+                        className="md:w-40 justify-between font-normal"
+                      >
+                        {endDate
+                          ? endDate.toLocaleDateString("pt-BR")
+                          : "Selecione a data"}
+                        <ChevronDownIcon />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      className="w-auto overflow-hidden p-0"
+                      align="start"
+                    >
+                      <Calendar
+                        mode="single"
+                        selected={endDate}
+                        captionLayout="dropdown"
+                        onSelect={(date) => {
+                          setEndDate(date);
+                          setEndDateOpen(false);
                         }}
                       />
                     </PopoverContent>
@@ -210,28 +241,7 @@ export default function LimitDialog({
                     {state?.errors?.date || ""}
                   </p>
                 )}
-                <div className="flex flex-col gap-3">
-                  <Label htmlFor="time" className="px-1">
-                    Hora
-                  </Label>
-                  <Input
-                    type="time"
-                    name="time"
-                    defaultValue={
-                      operation?.date
-                        ? new Date(operation?.date || "").toLocaleTimeString(
-                            "pt-BR",
-                            { hour12: false }
-                          )
-                        : new Date().toLocaleTimeString("pt-BR", {
-                            hour12: false,
-                          })
-                    }
-                    id="time"
-                    step="1"
-                    className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                  />
-                </div>
+                
               </div>
             </div>
           </div>
@@ -264,24 +274,24 @@ export default function LimitDialog({
                 <Label htmlFor="category_id">Categoria</Label>
 
                 <CategorySelector
-                  category_id={operation?.category_id || undefined}
-                  is_income={operation?.is_income ?? true}
+                  category_id={limit?.category_id || undefined}
+                  is_income={false}
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <Label htmlFor="is_paid_switch">Pago</Label>
+                <Label htmlFor="recursive_switch">Recursivo</Label>
 
                 <Switch
-                  name="is_paid_switch"
+                  name="recursive_switch"
                   checked={selected}
                   onCheckedChange={(checked) => setSelected(checked)}
-                  id="is_paid"
+                  id="recursive"
                 />
 
                 <input
                   type="hidden"
-                  name="is_paid"
+                  name="recursive"
                   value={selected ? "true" : "false"}
                 />
               </div>
@@ -299,6 +309,20 @@ export default function LimitDialog({
               </p>
             )}
           </div>
+
+          <div className="md:grid gap-3">
+              <Label htmlFor="description">Descrição (opcional)</Label>
+              <Input
+                id="description"
+                name="description"
+                defaultValue={limit?.description || ""}
+              />
+              {!state?.success && (
+                <p className="text-sm text-red-500">
+                  {state?.errors?.description || ""}
+                </p>
+              )}
+            </div>
 
           <DialogFooter className="mt-12">
             <DialogClose className="w-1/2" asChild>

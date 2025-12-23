@@ -1,9 +1,9 @@
 import { db } from "..";
-import { expenselimitTable, InsertExpenseLimit } from "../schema";
+import { expenselimitTable, ExpenseLimitWithCategoryView, InsertExpenseLimit } from "../schema";
 
 export async function getExpensesLimit()
 {
-    return db.select().from(expenselimitTable)
+    return db.select().from(ExpenseLimitWithCategoryView)
 }
 
 export async function InsertExpensesLimit(values: InsertExpenseLimit)

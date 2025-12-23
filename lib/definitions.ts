@@ -19,9 +19,11 @@ export type ExpenseLimit = {
   name?: string;
   description?: string | null;
   value?: number | null;
+  recursive?: boolean | null;
   start_date: Date | null;
   end_date: Date | null;
   category_id?: number | null;
+  category_name?: string | null;
   created_at?: Date;
   updated_at?: Date | null;
 };
