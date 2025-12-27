@@ -407,6 +407,20 @@
       "when": 1766439907474,
       "tag": "0057_wonderful_lionheart",
       "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "6",
+      "when": 1766520083800,
+      "tag": "0058_numerous_wraith",
+      "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "6",
+      "when": 1766859098044,
+      "tag": "0059_acoustic_storm",
+      "breakpoints": true
     }
   ]
 }

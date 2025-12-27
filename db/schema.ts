@@ -1,4 +1,4 @@
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import {
   integer,
   sqliteTable,
@@ -51,6 +51,25 @@ export const expenselimitTable = sqliteTable('expense_limit', {
     () => new Date()
   ),
 })
+
+export const ExpenseLimitWithCategoryView = sqliteView(
+  "vw_expense_limit_with_category"
+).as((qb) =>
+  qb
+    .select({
+      id: expenselimitTable.id,
+      name: expenselimitTable.name,
+      description: expenselimitTable.description,
+      value: expenselimitTable.value,
+      recursive: expenselimitTable.recursive,
+      start_date: expenselimitTable.start_date,
+      end_date: expenselimitTable.end_date,
+      category_id: expenselimitTable.category_id,
+      category_name: sql<string>`category.name`.as("category_name"),
+    })
+    .from(expenselimitTable)
+    .leftJoin(categoryTable, sql`expense_limit.category_id = category.id`)
+);
 
 export const operationTable = sqliteTable("operation", {
   id: integer().primaryKey({ autoIncrement: true }),
