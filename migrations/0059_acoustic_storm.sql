@@ -1,0 +1,2 @@
+DROP VIEW `vw_expense_limit_with_category`;--> statement-breakpoint
+CREATE VIEW `vw_expense_limit_with_category` AS select "expense_limit"."id", "expense_limit"."name", "expense_limit"."description", "expense_limit"."value", "expense_limit"."recursive", "expense_limit"."start_date", "expense_limit"."end_date", "expense_limit"."category_id", category.name as "category_name" from "expense_limit" left join "category" on expense_limit.category_id = category.id;

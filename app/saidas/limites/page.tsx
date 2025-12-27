@@ -12,7 +12,7 @@ const page = async () => {
   } catch (error) {
     return <ErrorLoading />;
   }
-  //console.log(data);
+  console.log(data);
 
   return (
     <div>

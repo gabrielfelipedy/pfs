@@ -66,10 +66,10 @@ export const columns: ColumnDef<ExpenseLimit>[] = [
       );
     },
     cell: ({ row }) => {
-      const isPaid = row.getValue("recursive");
-      const variant = isPaid ? "text-green-600" : "text-red-600";
+      const recursive = row.getValue("recursive");
+      const variant = recursive ? "text-green-600" : "text-red-600";
 
-      return <div className={variant}>{isPaid ? <Check /> : <X />}</div>;
+      return <div className={variant}>{recursive ? <Check /> : <X />}</div>;
     },
   },
   {
@@ -148,8 +148,8 @@ export const columns: ColumnDef<ExpenseLimit>[] = [
           <LimitDialog
             openDialogText={<Pencil />}
             buttonVariation="outline"
-            dialogTitle="Atualizar Gasto"
-            dialogDescription="Atualize as informações do gasto"
+            dialogTitle="Atualizar Limite"
+            dialogDescription="Atualize as informações do limite"
             buttonText="Atualizar"
             limit={row.original}
             actionFunction={updateExpenseLimit}

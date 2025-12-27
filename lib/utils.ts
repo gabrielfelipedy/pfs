@@ -15,6 +15,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+
+// converts from -3 timezone to UTC time (HH:MM:SS)
+
 export function utcMinus3ToUtc(time: string): string {
   if (!time || typeof time !== "string") {
     throw new Error("Invalid time format");
@@ -27,6 +30,9 @@ export function utcMinus3ToUtc(time: string): string {
 
   return date.toISOString().substring(11, 19);
 }
+
+
+// Replaces the timem into the timestamp string from another time given in the function's paramter
 
 export function replaceUTCTime(utcTimestamp: string, time: string): string {
   const date = new Date(utcTimestamp);

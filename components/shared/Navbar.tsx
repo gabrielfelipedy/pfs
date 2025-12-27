@@ -23,7 +23,7 @@ const Navbar = ({ linksClassName }: Props) => {
       </div>
 
       <div className="flex gap-3">
-        <ModeToggle />
+        {/* <ModeToggle /> */}
 
         <Link href='/settings'>
         <Button variant="outline" size="icon">

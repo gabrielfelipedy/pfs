@@ -14,13 +14,15 @@ const Login = () => {
   >(login, undefined);
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen mt-[-60] w-full">
+    <div className="flex flex-col justify-center items-center h-screen] w-full">
+      <div className="mt-30">
       <p className="text-2xl font-bold">Faça login para continuar</p>
       <form
         action={loginAction}
-        className="rounded-lg p-4 max-w-[5
-  700px] mt-6"
+        className="w-full flex justify-center"
       >
+
+        <div className="w-[350px] mt-20">
         <Label htmlFor="name">Username</Label>
         <Input className="mt-4" name="username" />
 
@@ -44,7 +46,9 @@ const Login = () => {
           {pending && <Spinner />}
           {pending ? "Validando" : "Login"}
         </Button>
+        </div>
       </form>
+    </div>
     </div>
   );
 };

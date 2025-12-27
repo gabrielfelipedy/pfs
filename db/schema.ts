@@ -61,6 +61,7 @@ export const ExpenseLimitWithCategoryView = sqliteView(
       name: expenselimitTable.name,
       description: expenselimitTable.description,
       value: expenselimitTable.value,
+      recursive: expenselimitTable.recursive,
       start_date: expenselimitTable.start_date,
       end_date: expenselimitTable.end_date,
       category_id: expenselimitTable.category_id,
