@@ -9,6 +9,8 @@ import {
   CardTitle,
 } from "../ui/card";
 import { formatter } from "@/lib/utils";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 interface Props {
   title: string;
@@ -23,6 +25,15 @@ const RadialBarChart = ({
   data,
   maxValue,
 }: Props) => {
+
+    const { theme, resolvedTheme } = useTheme()
+    const [isDark, setIsDark] = useState(false)
+
+    useEffect(() => {
+        setIsDark(resolvedTheme === 'dark' || theme === 'dark')
+    }, [theme, resolvedTheme])
+
+
   const option = {
     polar: {
       radius: ["80%", "100%"],
@@ -55,8 +66,8 @@ const RadialBarChart = ({
         top: "middle",
         style: {
           text: `${Math.round((data / maxValue) * 100)}%`, // Your center label
+          fill: isDark ? "#ffffff" : "#333333",
           textAlign: "center",
-          fill: "#333",
           fontSize: 18,
           fontWeight: "bold",
         },
@@ -95,7 +106,7 @@ const RadialBarChart = ({
 
           <div>
             <p className="font-bold text-[1.2rem]">{title}</p>
-            <p className="text-[0.9rem] text-black/70 dark:text-white-70">
+            <p className="text-[0.9rem] text-black/70 dark:text-white/70">
               {formatter.format(data / 100)} de{" "}
               {formatter.format(maxValue / 100)}
             </p>

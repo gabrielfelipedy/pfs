@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactCharts from "echarts-for-react";
 import { formatter } from "@/lib/utils";
 import {
@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { useTheme } from "next-themes";
 
 interface Props {
   title: string;
@@ -42,6 +43,13 @@ const Area = ({ title, description, className, data }: Props) => {
     balances.push(item.balance);
   });
 
+  const { theme, resolvedTheme } = useTheme()
+    const [isDark, setIsDark] = useState(false)
+
+    useEffect(() => {
+        setIsDark(resolvedTheme === 'dark' || theme === 'dark')
+    }, [theme, resolvedTheme])
+
   const option = {
     tooltip: {
       trigger: "axis",
@@ -50,11 +58,17 @@ const Area = ({ title, description, className, data }: Props) => {
     xAxis: {
       type: "category",
       data: days,
+      axisLabel: {
+        color: isDark ? "#ffffff" : "#333333"
+      }
     },
     legend: {
       data: [
     {
       name: 'Entradas',
+      textStyle: {
+        color: isDark ? "#ffffff" : "#333333"
+      },
       itemStyle: {
         color: '#54FF76' // Specifically sets the icon color
       },
@@ -62,6 +76,9 @@ const Area = ({ title, description, className, data }: Props) => {
     },
     {
       name: 'Gastos',
+      textStyle: {
+        color: isDark ? "#ffffff" : "#333333"
+      },
       itemStyle: {
         color: '#FF5454'
       },
@@ -82,6 +99,7 @@ const Area = ({ title, description, className, data }: Props) => {
       },
 
       axisLabel: {
+        color: isDark ? "#ffffff" : "#333333",
         // format value as currency
         formatter: (value: number) => formatter.format(value),
       },

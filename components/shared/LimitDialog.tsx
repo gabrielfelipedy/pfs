@@ -197,7 +197,6 @@ export default function LimitDialog({
                         mode="range"
                         selected={dateRange}
                         captionLayout="dropdown"
-                        numberOfMonths={2}
                         onSelect={setDateRange}
                       />
                     </PopoverContent>

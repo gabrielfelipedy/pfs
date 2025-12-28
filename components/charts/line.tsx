@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactCharts from "echarts-for-react";
 import { ChartData } from "@/lib/definitions";
 import { formatter } from "@/lib/utils";
@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { useTheme } from "next-themes";
 
 interface Props {
   title: string;
@@ -22,6 +23,12 @@ interface Props {
 const Line = ({ title, description, className, data }: Props) => {
 
   //console.log(data)
+  const { theme, resolvedTheme } = useTheme()
+    const [isDark, setIsDark] = useState(false)
+
+    useEffect(() => {
+        setIsDark(resolvedTheme === 'dark' || theme === 'dark')
+    }, [theme, resolvedTheme])
 
   const result = {
     date: data.map((item) =>
@@ -43,6 +50,9 @@ const Line = ({ title, description, className, data }: Props) => {
     xAxis: {
       type: "category",
       data: result.date,
+      axisLabel: {
+        color: isDark ? "#ffffff" : "#333333"
+      }
     },
     toolbox: {
       feature: {
@@ -72,6 +82,7 @@ const Line = ({ title, description, className, data }: Props) => {
       },
       axisLabel: {
         // Formats the axis labels
+        color: isDark ? "#ffffff" : "#333333",
         formatter: (value: number) => formatter.format(value),
       },
     },
