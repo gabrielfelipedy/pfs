@@ -57,7 +57,7 @@ const RadialBarChart = ({
           text: `${Math.round((data / maxValue) * 100)}%`, // Your center label
           textAlign: "center",
           fill: "#333",
-          fontSize: 20,
+          fontSize: 18,
           fontWeight: "bold",
         },
       },
@@ -88,14 +88,14 @@ const RadialBarChart = ({
       <CardContent className="pl-0">
         <div className="grid grid-cols-2 items-center">
           <ReactCharts
-            style={{ height: "100px" }}
+            style={{ height: "90px", width: '100%' }}
             option={option}
         
           />
 
           <div>
-            <p className="font-bold text-[1.3rem]">{title}</p>
-            <p className="text-[1rem] text-black/70 dark:text-white-70">
+            <p className="font-bold text-[1.2rem]">{title}</p>
+            <p className="text-[0.9rem] text-black/70 dark:text-white-70">
               {formatter.format(data / 100)} de{" "}
               {formatter.format(maxValue / 100)}
             </p>

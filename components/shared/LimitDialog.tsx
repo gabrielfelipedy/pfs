@@ -323,11 +323,11 @@ export default function LimitDialog({
             )}
           </div>
 
-          <DialogFooter className="mt-12">
-            <DialogClose className="w-1/2" asChild>
+          <DialogFooter className="mt-12 w-full">
+            <DialogClose className="w-full md:w-1/2" asChild>
               <Button variant="outline">Cancelar</Button>
             </DialogClose>
-            <Button className="w-1/2" disabled={pending}>
+            <Button className="w-full md:w-1/2" disabled={pending}>
               {pending && <Spinner />}
               {pending ? "Validando" : buttonText}
             </Button>

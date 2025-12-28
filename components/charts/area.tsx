@@ -45,14 +45,29 @@ const Area = ({ title, description, className, data }: Props) => {
   const option = {
     tooltip: {
       trigger: "axis",
-      valueFormatter: (value: number) => formatter.format(value),
+      valueFormatter: (value: number) => formatter.format(value)
     },
     xAxis: {
       type: "category",
       data: days,
     },
     legend: {
-      data: ["Entradas", "Gastos"],
+      data: [
+    {
+      name: 'Entradas',
+      itemStyle: {
+        color: '#54FF76' // Specifically sets the icon color
+      },
+      icon:  'circle'
+    },
+    {
+      name: 'Gastos',
+      itemStyle: {
+        color: '#FF5454'
+      },
+      icon:  'circle'
+    }
+  ]
     },
     toolbox: {
       feature: {
@@ -77,8 +92,13 @@ const Area = ({ title, description, className, data }: Props) => {
         data: totalIncomes,
         type: "line",
         smooth: true,
+        showSymbol: false,
+        lineStyle: {
+      width: 0, // This removes the line
+    },
         areaStyle: {
-          color: '#54FF76'
+          color: '#54FF76',
+          opacity: 0.6
         },
       },
       {
@@ -86,8 +106,13 @@ const Area = ({ title, description, className, data }: Props) => {
         data: totalExpenses,
         type: "line",
         smooth: true,
+        showSymbol: false,
+        lineStyle: {
+      width: 0, // This removes the line
+    },
         areaStyle: {
-          color: '#FF5454'
+          color: '#FF5454',
+          opacity: 0.6
         },
       } /* ,
       {
