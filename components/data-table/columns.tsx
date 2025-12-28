@@ -141,8 +141,8 @@ export const columns: ColumnDef<Operation>[] = [
           <FormDialog
             openDialogText={<Pencil />}
             buttonVariation="outline"
-            dialogTitle="Atualizar Gasto"
-            dialogDescription="Atualize as informações do gasto"
+            dialogTitle={`Atualizar ${row.original.is_income ? 'Entrada' : 'Gasto'}`}
+            dialogDescription={`Atualize as informações ${row.original.is_income ? 'da Entrada' : 'do Gasto'}`}
             buttonText="Atualizar"
             operation={row.original}
             actionFunction={row.original.is_income ? updateIncome : updateSaida}

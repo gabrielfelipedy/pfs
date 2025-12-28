@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-
+import { useTheme } from "next-themes";
 
 interface Props {
   title: string;
@@ -21,6 +21,9 @@ interface Props {
 }
 
 const Pie = ({ title, description, className, totalValue, data }: Props) => {
+  const { theme, resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark" || theme === "dark";
+
   const option = {
     tooltip: {
       trigger: "item",
@@ -29,6 +32,9 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
     legend: {
       bottom: "bottom",
       left: "center",
+      textStyle: {
+        color: isDark ? "#ffffff" : "#333333",
+      },
     },
     toolbox: {
       feature: {
@@ -40,11 +46,6 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
         type: "pie",
         radius: ["60%", "100%"],
         avoidLabelOverlap: false,
-        itemStyle: {
-          borderRadius: 10,
-          borderColor: "#fff",
-          borderWidth: 2,
-        },
         label: {
           show: false,
           position: "center",
@@ -54,9 +55,13 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
             `${((data.value / totalValue) * 100).toFixed(2)} %`,
         },
         emphasis: {
+          scale: false,
           label: {
             show: true,
             fontSize: 20,
+            fontWeight: "bold",
+            textBorderWidth: 0,
+            color: isDark ? "#ffffff" : "#333333",
             formatter: (data: OperationBalance) =>
               `${((data.value / totalValue) * 100).toFixed(2)} %`,
           },

@@ -10,6 +10,8 @@ import { Operation } from "@/lib/definitions";
 import { getBalanceEvolution, getOperationEvolution } from "@/db/queries/operation";
 import Resume from "@/components/resume/resume";
 import Line from "@/components/charts/line";
+import Bar from "@/components/charts/bar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const emptyExpenseOperation: Operation = {
   is_income: false,
@@ -63,12 +65,29 @@ export default async function Home() {
         data={transformedBalanceEvolution}
       />
 
-        <Area
+      <Tabs defaultValue="area">
+        <TabsList>
+          <TabsTrigger value="area">Gráfico de Área</TabsTrigger>
+          <TabsTrigger value="bar">Gráfico de Barra</TabsTrigger>
+        </TabsList>
+        <TabsContent value="area">
+            <Area
           title="Evolução de gastos"
           description="Ao longo do mês atual"
           data={transformedData}
         />
+        </TabsContent>
 
+        <TabsContent value="bar">
+          <Bar
+          title="Evolução de gastos"
+          description="Ao longo do mês atual"
+          data={transformedData}
+        />
+        </TabsContent>
+        </Tabs>
+
+      
         <div className="mt-10 flex gap-5">
           {/* <CreateSaidaDialog /> */}
           <FormDialog

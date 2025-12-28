@@ -2,6 +2,7 @@
 
 import { useActionState, useState, useEffect, ReactNode } from "react";
 import { ChevronDownIcon } from "lucide-react";
+import { addDays } from 'date-fns';
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +34,7 @@ import CategorySelector from "./categorySelector";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "../ui/switch";
 import { ExpenseLimitActionState } from "@/app/(main)/saidas/limites/actions/definitions";
+import { DateRange } from "react-day-picker";
 
 // Defines the props for the FormDialog component
 
@@ -71,14 +73,12 @@ export default function LimitDialog({
   //console.log(operation)
 
   // States used by calendar selector propover
-  const [startDateOpen, setStartDateOpen] = useState(false);
-  const [startDate, setStartDate] = useState<Date | undefined>(
-    limit?.start_date ? new Date(limit?.start_date) : new Date()
-  );
-
-  const [endDateOpen, setEndDateOpen] = useState(false);
-  const [endDate, setEndDate] = useState<Date | undefined>(
-    limit?.end_date ? new Date(limit?.end_date) : new Date()
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(
+    {
+      from: limit?.start_date ? new Date(limit?.start_date) : new Date(),
+      to: limit?.end_date ? new Date(limit?.end_date) : addDays(new Date(), 1)
+    }
   );
 
   // State for switch for is_paid field
@@ -160,25 +160,32 @@ export default function LimitDialog({
               <div className="flex flex-col md:flex-row justify-between gap-4">
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="start_date" className="px-1">
-                    Data de início
+                    Invervalo de tempo
                   </Label>
                   <input
                     type="hidden"
                     name="start_date"
                     value={
-                      startDate ? startDate.toISOString().split("T")[0] : ""
+                      dateRange?.from ? dateRange?.from.toISOString().split("T")[0] : ""
                     }
                   />
-                  <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
+
+                  <input
+                    type="hidden"
+                    name="end_date"
+                    value={dateRange?.to ? dateRange?.to.toISOString().split("T")[0] : ""}
+                  />
+
+                  <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         id="start_date"
-                        className="md:w-40 justify-between font-normal"
+                        className="w-full justify-between font-normal"
                       >
-                        {startDate
-                          ? startDate.toLocaleDateString("pt-BR")
-                          : "Selecione a data"}
+                        {dateRange
+                          ? `${dateRange?.from?.toLocaleDateString("pt-BR")}   -   ${dateRange?.to?.toLocaleDateString("pt-BR")}`
+                          : "Selecione o intervalo"}
                         <ChevronDownIcon />
                       </Button>
                     </PopoverTrigger>
@@ -187,55 +194,15 @@ export default function LimitDialog({
                       align="start"
                     >
                       <Calendar
-                        mode="single"
-                        selected={startDate}
+                        mode="range"
+                        selected={dateRange}
                         captionLayout="dropdown"
-                        onSelect={(date) => {
-                          setStartDate(date);
-                          setStartDateOpen(false);
-                        }}
+                        onSelect={setDateRange}
                       />
                     </PopoverContent>
                   </Popover>
                 </div>
-                <div className="flex flex-col gap-3">
-                  <Label htmlFor="end_date" className="px-1">
-                    Data fim
-                  </Label>
-                  <input
-                    type="hidden"
-                    name="end_date"
-                    value={endDate ? endDate.toISOString().split("T")[0] : ""}
-                  />
-                  <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        id="end_date"
-                        className="md:w-40 justify-between font-normal"
-                      >
-                        {endDate
-                          ? endDate.toLocaleDateString("pt-BR")
-                          : "Selecione a data"}
-                        <ChevronDownIcon />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      className="w-auto overflow-hidden p-0"
-                      align="start"
-                    >
-                      <Calendar
-                        mode="single"
-                        selected={endDate}
-                        captionLayout="dropdown"
-                        onSelect={(date) => {
-                          setEndDate(date);
-                          setEndDateOpen(false);
-                        }}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
+                
                 {!state?.success && (
                   <p className="text-sm text-red-500">
                     {state?.errors?.date || ""}
@@ -323,11 +290,11 @@ export default function LimitDialog({
             )}
           </div>
 
-          <DialogFooter className="mt-12">
-            <DialogClose className="w-1/2" asChild>
+          <DialogFooter className="mt-12 w-full">
+            <DialogClose className="w-full md:w-1/2" asChild>
               <Button variant="outline">Cancelar</Button>
             </DialogClose>
-            <Button className="w-1/2" disabled={pending}>
+            <Button className="w-full md:w-1/2" disabled={pending}>
               {pending && <Spinner />}
               {pending ? "Validando" : buttonText}
             </Button>

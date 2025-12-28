@@ -99,7 +99,7 @@ export async function updateIncome(prevState: OperationActionState | undefined, 
     value: Number(formData.get("value")),
     is_paid: formData.get("is_paid") === "true",
     is_income: true,
-    category_id: Number(formData.get("categoria_id")),
+    category_id: Number(formData.get("category_id")),
   });
 
   if (!validationResult.success) {
