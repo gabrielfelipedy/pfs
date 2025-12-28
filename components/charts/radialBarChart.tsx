@@ -3,14 +3,10 @@
 import ReactCharts from "echarts-for-react";
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+  CardContent
 } from "../ui/card";
 import { formatter } from "@/lib/utils";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 
 interface Props {
   title: string;
@@ -19,20 +15,9 @@ interface Props {
   maxValue: number;
 }
 
-const RadialBarChart = ({
-  title,
-  className,
-  data,
-  maxValue,
-}: Props) => {
-
-    const { theme, resolvedTheme } = useTheme()
-    const [isDark, setIsDark] = useState(false)
-
-    useEffect(() => {
-        setIsDark(resolvedTheme === 'dark' || theme === 'dark')
-    }, [theme, resolvedTheme])
-
+const RadialBarChart = ({ title, className, data, maxValue }: Props) => {
+  const { theme, resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark" || theme === "dark";
 
   const option = {
     polar: {
@@ -99,9 +84,8 @@ const RadialBarChart = ({
       <CardContent className="pl-0">
         <div className="grid grid-cols-2 items-center">
           <ReactCharts
-            style={{ height: "90px", width: '100%' }}
+            style={{ height: "90px", width: "100%" }}
             option={option}
-        
           />
 
           <div>

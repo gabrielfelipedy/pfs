@@ -11,8 +11,6 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-
 
 interface Props {
   title: string;
@@ -23,13 +21,8 @@ interface Props {
 }
 
 const Pie = ({ title, description, className, totalValue, data }: Props) => {
-
-  const { theme, resolvedTheme } = useTheme()
-    const [isDark, setIsDark] = useState(false)
-
-    useEffect(() => {
-        setIsDark(resolvedTheme === 'dark' || theme === 'dark')
-    }, [theme, resolvedTheme])
+  const { theme, resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark" || theme === "dark";
 
   const option = {
     tooltip: {
@@ -40,8 +33,8 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
       bottom: "bottom",
       left: "center",
       textStyle: {
-      color: isDark ? "#ffffff" : "#333333",
-    },
+        color: isDark ? "#ffffff" : "#333333",
+      },
     },
     toolbox: {
       feature: {
@@ -66,9 +59,9 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
           label: {
             show: true,
             fontSize: 20,
-            fontWeight: 'bold',
-            textBorderWidth: 0, 
-          color: isDark ? "#ffffff" : "#333333",
+            fontWeight: "bold",
+            textBorderWidth: 0,
+            color: isDark ? "#ffffff" : "#333333",
             formatter: (data: OperationBalance) =>
               `${((data.value / totalValue) * 100).toFixed(2)} %`,
           },

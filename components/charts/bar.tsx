@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import ReactCharts from "echarts-for-react";
 import { formatter } from "@/lib/utils";
 import {
@@ -44,11 +43,7 @@ const Bar = ({ title, description, className, data }: Props) => {
   });
 
   const { theme, resolvedTheme } = useTheme();
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    setIsDark(resolvedTheme === "dark" || theme === "dark");
-  }, [theme, resolvedTheme]);
+  const isDark = resolvedTheme === "dark" || theme === "dark";
 
   const option = {
     tooltip: {

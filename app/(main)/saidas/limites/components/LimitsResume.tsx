@@ -1,9 +1,6 @@
-import { ExpenseLimit, OperationBalance } from "@/lib/definitions";
+import { ExpenseLimit } from "@/lib/definitions";
 import { ExpenseProprtion } from "../page";
-import { Progress } from "@/components/ui/progress";
-import { formatter } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign } from "lucide-react";
+
 import RadialBarChart from "@/components/charts/radialBarChart";
 
 interface Props {

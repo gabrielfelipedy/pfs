@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import ReactCharts from "echarts-for-react";
 import { ChartData } from "@/lib/definitions";
 import { formatter } from "@/lib/utils";
@@ -21,21 +20,16 @@ interface Props {
 }
 
 const Line = ({ title, description, className, data }: Props) => {
-
   //console.log(data)
-  const { theme, resolvedTheme } = useTheme()
-    const [isDark, setIsDark] = useState(false)
-
-    useEffect(() => {
-        setIsDark(resolvedTheme === 'dark' || theme === 'dark')
-    }, [theme, resolvedTheme])
+  const { theme, resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark" || theme === "dark";
 
   const result = {
     date: data.map((item) =>
       new Date(item.date).toLocaleDateString("pt-BR", {
         month: "short",
         day: "numeric",
-        timeZone: 'UTC'
+        timeZone: "UTC",
       })
     ),
     total_value: data.map((item) => item.total_value),
@@ -51,8 +45,8 @@ const Line = ({ title, description, className, data }: Props) => {
       type: "category",
       data: result.date,
       axisLabel: {
-        color: isDark ? "#ffffff" : "#333333"
-      }
+        color: isDark ? "#ffffff" : "#333333",
+      },
     },
     toolbox: {
       feature: {
@@ -60,21 +54,21 @@ const Line = ({ title, description, className, data }: Props) => {
       },
     },
     visualMap: {
-        top: 50,
-        right: 10,
-        pieces: [
-          {
-            gt: 0,
-            lte: 10000,
-            color: '#54FF76'
-          },
-          {
-            gt: -1000,
-            lte: 0,
-            color: '#FF5454'
-          }
-        ]
-      },
+      top: 50,
+      right: 10,
+      pieces: [
+        {
+          gt: 0,
+          lte: 10000,
+          color: "#54FF76",
+        },
+        {
+          gt: -1000,
+          lte: 0,
+          color: "#FF5454",
+        },
+      ],
+    },
     yAxis: {
       type: "value",
       splitLine: {
@@ -91,7 +85,7 @@ const Line = ({ title, description, className, data }: Props) => {
         data: result.total_value,
         type: "line",
         smooth: true,
-        areaStyle: {}
+        areaStyle: {},
       },
     ],
   };
