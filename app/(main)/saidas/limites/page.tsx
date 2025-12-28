@@ -8,13 +8,19 @@ import LimitsResume from "./components/LimitsResume";
 import { getExpensesProportion } from "@/db/queries/expense";
 import { OperationBalance } from "@/lib/definitions";
 
+export type ExpenseProprtion = {
+  category_id: number | null;
+  category_name: string;
+  total: number;
+};
+
 const page = async () => {
   let expense_limits;
   let expense_proportion;
 
   try {
     expense_limits = await getExpensesLimit();
-    expense_proportion = await getExpensesProportion() as unknown as OperationBalance[]
+    expense_proportion = await getExpensesProportion();
   } catch (error) {
     return <ErrorLoading />;
   }
@@ -23,9 +29,17 @@ const page = async () => {
 
   return (
     <div>
-      <LimitsResume expenseLimits={expense_limits} expensesBalance={expense_proportion}/>
+
+      <h1 className="title">Limites por categoria</h1>
+
+      <LimitsResume
+      className="mt-10"
+        expenseLimits={expense_limits}
+        expensesBalance={expense_proportion}
+      />
 
       <LimitDialog
+        className="mt-10"
         openDialogText="Novo limite de gasto"
         dialogTitle="Limite de gasto"
         dialogDescription="Preencha as informações do limite"

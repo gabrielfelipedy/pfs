@@ -37,6 +37,7 @@ import { ExpenseLimitActionState } from "@/app/(main)/saidas/limites/actions/def
 // Defines the props for the FormDialog component
 
 interface Props {
+  className?: string,
   openDialogText: string | ReactNode;
   buttonVariation?:
     | "link"
@@ -58,6 +59,7 @@ interface Props {
 }
 
 export default function LimitDialog({
+  className,
   openDialogText,
   buttonVariation,
   dialogTitle,
@@ -132,7 +134,7 @@ export default function LimitDialog({
       open={dialogOpen}
       onOpenChange={setDialogOpen}
     >
-      <DialogTrigger asChild>
+      <DialogTrigger className={className} asChild>
         <Button variant={buttonVariation}>{openDialogText}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-106.25">

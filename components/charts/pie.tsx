@@ -68,8 +68,8 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
     ],
   };
 
-  console.log(totalValue)
-  console.log(data)
+  //console.log(totalValue)
+  //console.log(data)
 
   return (
     <Card className={`${className} w-full`}>

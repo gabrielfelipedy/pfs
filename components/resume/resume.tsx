@@ -60,7 +60,7 @@ const Resume = async ({ className }: Props) => {
         />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full ">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full">
         <CardResume
           title="Entradas mensais"
           icon={<TrendingUpIcon className="h-4 w-4 text-muted-foreground" />}
