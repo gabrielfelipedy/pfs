@@ -13,7 +13,7 @@ import { updateSaida } from "@/actions/saida-actions";
 import { updateIncome } from "@/actions/entrada-actions";
 import { Badge } from "../ui/badge";
 import LimitDialog from "../shared/LimitDialog";
-import { updateExpenseLimit } from "@/app/saidas/limites/actions/limits";
+import { updateExpenseLimit } from "@/app/(main)/saidas/limites/actions/limits";
 
 export const columns: ColumnDef<ExpenseLimit>[] = [
   {

@@ -1,15 +1,15 @@
 import MonthlySaidas from "./monthlySaidas";
-import FormDialog from "../../components/shared/FormDialog";
+import FormDialog from "../../../components/shared/FormDialog";
 import { createSaida } from "@/actions/saida-actions";
 import { Operation } from "@/lib/definitions";
 import OperationDataTable from "@/components/data-table/columns";
 import { getExpenses } from "@/db/queries/expense";
 import ErrorLoading from "@/components/error/ErrorLoading";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 const emptyOperation: Operation = {
-  is_income: false
+  is_income: false,
 };
 
 const Saidas = async () => {
@@ -19,7 +19,7 @@ const Saidas = async () => {
     const result = await getExpenses();
     data = result;
   } catch (error) {
-    return <ErrorLoading />
+    return <ErrorLoading />;
   }
   //console.log(data)
 

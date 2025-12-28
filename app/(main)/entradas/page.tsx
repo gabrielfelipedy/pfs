@@ -1,4 +1,4 @@
-import FormDialog from "../../components/shared/FormDialog";
+import FormDialog from "../../../components/shared/FormDialog";
 import { createEntrada } from "@/actions/entrada-actions";
 import { Operation } from "@/lib/definitions";
 import OperationDataTable from "@/components/data-table/columns";

@@ -32,7 +32,7 @@ import { useRouter } from "next/navigation";
 import CategorySelector from "./categorySelector";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "../ui/switch";
-import { ExpenseLimitActionState } from "@/app/saidas/limites/actions/definitions";
+import { ExpenseLimitActionState } from "@/app/(main)/saidas/limites/actions/definitions";
 
 // Defines the props for the FormDialog component
 
@@ -146,18 +146,14 @@ export default function LimitDialog({
               <input type="hidden" name="id" value={limit?.id || ""} />
 
               <Label htmlFor="name">Nome</Label>
-              <Input
-                id="name"
-                name="name"
-                defaultValue={limit?.name || ""}
-              />
+              <Input id="name" name="name" defaultValue={limit?.name || ""} />
               {!state?.success && (
                 <p className="text-sm text-red-500">
                   {state?.errors?.name || ""}
                 </p>
               )}
             </div>
-            
+
             <div className="md:grid gap-3">
               <div className="flex flex-col md:flex-row justify-between gap-4">
                 <div className="flex flex-col gap-3">
@@ -167,7 +163,9 @@ export default function LimitDialog({
                   <input
                     type="hidden"
                     name="start_date"
-                    value={startDate ? startDate.toISOString().split("T")[0] : ""}
+                    value={
+                      startDate ? startDate.toISOString().split("T")[0] : ""
+                    }
                   />
                   <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
                     <PopoverTrigger asChild>
@@ -241,7 +239,6 @@ export default function LimitDialog({
                     {state?.errors?.date || ""}
                   </p>
                 )}
-                
               </div>
             </div>
           </div>
@@ -311,18 +308,18 @@ export default function LimitDialog({
           </div>
 
           <div className="md:grid gap-3">
-              <Label htmlFor="description">Descrição (opcional)</Label>
-              <Input
-                id="description"
-                name="description"
-                defaultValue={limit?.description || ""}
-              />
-              {!state?.success && (
-                <p className="text-sm text-red-500">
-                  {state?.errors?.description || ""}
-                </p>
-              )}
-            </div>
+            <Label htmlFor="description">Descrição (opcional)</Label>
+            <Input
+              id="description"
+              name="description"
+              defaultValue={limit?.description || ""}
+            />
+            {!state?.success && (
+              <p className="text-sm text-red-500">
+                {state?.errors?.description || ""}
+              </p>
+            )}
+          </div>
 
           <DialogFooter className="mt-12">
             <DialogClose className="w-1/2" asChild>

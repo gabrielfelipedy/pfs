@@ -23,11 +23,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <header className="flex justify-center">
-          <Navbar />
-          </header>
-
-          <main className="px-6 md:px-20 mt-30 md:mt-40">
+          <main className="px-6 md:px-20">
             {children}
             <Toaster />
           </main>
