@@ -275,6 +275,21 @@ export const expenseBalanceView = sqliteView("vw_expense_balance").as((qb) =>
     .orderBy(expenseWithCategoryView.category_id)
 );
 
+export const incomeBalanceView = sqliteView("vw_income_balance").as((qb) =>
+  qb
+    .select({
+      category_id: incomeWithCategoryView.category_id,
+      category_name: incomeWithCategoryView.category_name,
+      total: sql<number>`CAST(SUM(value) AS INTEGER)`.as("total"),
+    })
+    .from(incomeWithCategoryView)
+    .where(
+      sql`date(date, 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month') AND date(date, 'unixepoch', '-3 hours') < date('now', '-3 hours' , '+1 month', 'start of month')`
+    )
+    .groupBy(incomeWithCategoryView.category_id)
+    .orderBy(incomeWithCategoryView.category_id)
+);
+
 export const generalBalanceView = sqliteView("vw_general_balance").as((qb) =>
   qb
     .select({

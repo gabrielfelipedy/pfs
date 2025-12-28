@@ -6,7 +6,7 @@ import { LimitsDataTable } from "@/components/data-table/LimitDataTable";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import LimitsResume from "./components/LimitsResume";
 import { getExpensesProportion } from "@/db/queries/expense";
-import { transformOperationsProportion } from "@/lib/utils";
+import { OperationBalance } from "@/lib/definitions";
 
 const page = async () => {
   let expense_limits;
@@ -14,21 +14,16 @@ const page = async () => {
 
   try {
     expense_limits = await getExpensesLimit();
-    const {
-      rows: [saidaProportion],
-    } = await getExpensesProportion();
-    expense_proportion = saidaProportion;
+    expense_proportion = await getExpensesProportion() as unknown as OperationBalance[]
   } catch (error) {
     return <ErrorLoading />;
   }
 
   //console.log(expense_limits);
-  const transformedExpensesProportion =
-    transformOperationsProportion(expense_proportion);
 
   return (
     <div>
-      <LimitsResume expenseLimits={expense_limits} expensesBalance={transformedExpensesProportion}/>
+      <LimitsResume expenseLimits={expense_limits} expensesBalance={expense_proportion}/>
 
       <LimitDialog
         openDialogText="Novo limite de gasto"

@@ -1,8 +1,6 @@
 "use client";
 
-import React from "react";
 import ReactCharts from "echarts-for-react";
-import { ChartData, DataProportion } from "@/lib/definitions";
 import { formatter } from "@/lib/utils";
 import {
   Card,
@@ -11,13 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { OperationBalance } from "@/lib/definitions";
 
 interface Props {
   title: string;
   description: string;
   className?: string;
   totalValue: number;
-  data: DataProportion[];
+  data: OperationBalance[];
 }
 
 const TreeMap = ({ title, description, className, totalValue, data }: Props) => {

@@ -6,7 +6,7 @@ import {
   TrendingUpIcon,
   UsersIcon,
 } from "lucide-react";
-import { getMonthlyIncomes } from "@/db/queries/income";
+import { getMonthlyIncomes } from "@/db/queries/incomes";
 import ErrorLoading from "../error/ErrorLoading";
 import CardResume from "./card-resume";
 import {
@@ -20,7 +20,7 @@ interface Props {
   className?: string;
 }
 
-const Resume = async ({className}: Props) => {
+const Resume = async ({ className }: Props) => {
   let total;
   let daily_data;
   let weekly_data;

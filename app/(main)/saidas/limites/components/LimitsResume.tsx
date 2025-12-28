@@ -1,9 +1,8 @@
-import { DataProportion, ExpenseLimit } from '@/lib/definitions'
-import React from 'react'
+import { ExpenseLimit, OperationBalance } from '@/lib/definitions'
 
 interface Props {
     expenseLimits: ExpenseLimit[]
-    expensesBalance: DataProportion[]
+    expensesBalance: OperationBalance[]
 }
 
 const LimitsResume = ({expenseLimits, expensesBalance}: Props) => {

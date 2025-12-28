@@ -37,8 +37,9 @@ export type Category = {
 
 export type ChartData = { total_value: number; date: string };
 
-export type DataProportion = {
-  name: string;
+export type OperationBalance = {
+  category_id?: number | null;
+  name: string | null;
   value: number;
 };
 

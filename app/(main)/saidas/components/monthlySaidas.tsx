@@ -1,6 +1,6 @@
 import {
   getExpensesEvolution,
-  getExpensesProportion,
+  getExpensesProportion
 } from "@/db/queries/expense";
 
 import Line from "@/components/charts/line";
@@ -9,7 +9,7 @@ import ErrorLoading from "@/components/error/ErrorLoading";
 import Radar from "@/components/charts/radar";
 import TreeMap from "@/components/charts/treemap";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { transformOperationsProportion } from "@/lib/utils";
+import { calculateBalancesSum } from "@/lib/utils";
 
 interface Props {
   className?: string;
@@ -17,17 +17,10 @@ interface Props {
 
 const MonthlySaidas = async ({ className }: Props) => {
   let expense_data;
-  let expense_proportion;
+  let raw_expense_proportion;
   try {
-    const data = await getExpensesEvolution();
-    //console.log(data)
-    expense_data = data;
-
-    const {
-      rows: [saidaProportion],
-    } = await getExpensesProportion();
-    expense_proportion = saidaProportion;
-    //console.log(saidaProportion)
+    expense_data = await getExpensesEvolution();
+    raw_expense_proportion = await getExpensesProportion();
   } catch (error) {
     console.error(error);
     return <ErrorLoading />;
@@ -39,9 +32,12 @@ const MonthlySaidas = async ({ className }: Props) => {
   }));
   //console.log(transformedData)
 
-  const transformedExpenseProportion = transformOperationsProportion(expense_proportion)
-
-  //console.log(transformedSaidaProportion);
+  const expense_proportion = raw_expense_proportion.map((item) => ({
+    name: (item.category_name as string) ?? "Sem categoria",
+    value: Number(item.total),
+  }));
+  expense_proportion.sort((a, b) => b.value - a.value);
+  //console.log(expense_proportion)
 
   return (
     <div
@@ -64,24 +60,23 @@ const MonthlySaidas = async ({ className }: Props) => {
           <Pie
             title="Gastos por categoria"
             description="Ao longo do mês atual"
-            totalValue={Number(expense_proportion.total_sum)}
-            data={transformedExpenseProportion}
+            totalValue={calculateBalancesSum(expense_proportion)}
+            data={expense_proportion}
           />
         </TabsContent>
         <TabsContent value="radar">
           <Radar
             title="Gastos por categoria"
             description="Ao longo do mês atual"
-            totalValue={Number(expense_proportion.total_sum)}
-            data={transformedExpenseProportion}
+            data={expense_proportion}
           />
         </TabsContent>
         <TabsContent value="tree">
           <TreeMap
             title="Gastos por categoria"
             description="Ao longo do mês atual"
-            totalValue={Number(expense_proportion.total_sum)}
-            data={transformedExpenseProportion}
+            totalValue={calculateBalancesSum(expense_proportion)}
+            data={expense_proportion}
           />
         </TabsContent>
       </Tabs>

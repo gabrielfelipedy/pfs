@@ -2,6 +2,7 @@ import { desc, sql } from "drizzle-orm";
 import { db } from "..";
 import {
   generalBalanceView,
+  incomeBalanceView,
   incomeWithCategoryView,
   totalIncomesByDayByMonth,
 } from "../schema";
@@ -23,5 +24,5 @@ export async function getIncomesEvolution() {
 }
 
 export async function getIncomesProportion() {
-  return await db.run(sql`SELECT * FROM vw_income_balance`);
+  return db.select().from(incomeBalanceView);
 }

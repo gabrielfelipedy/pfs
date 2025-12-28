@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
 import ReactCharts from "echarts-for-react";
-import { ChartData, DataProportion } from "@/lib/definitions";
+import { OperationBalance } from "@/lib/definitions";
 import { formatter } from "@/lib/utils";
 import {
   Card,
@@ -12,12 +11,13 @@ import {
   CardTitle,
 } from "../ui/card";
 
+
 interface Props {
   title: string;
   description: string;
   className?: string;
   totalValue: number;
-  data: DataProportion[];
+  data: OperationBalance[];
 }
 
 const Pie = ({ title, description, className, totalValue, data }: Props) => {
@@ -50,14 +50,14 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
           position: "center",
           alignTo: "none",
           overflow: "breakAll",
-          formatter: (data: DataProportion) =>
+          formatter: (data: OperationBalance) =>
             `${((data.value / totalValue) * 100).toFixed(2)} %`,
         },
         emphasis: {
           label: {
             show: true,
             fontSize: 20,
-            formatter: (data: DataProportion) =>
+            formatter: (data: OperationBalance) =>
               `${((data.value / totalValue) * 100).toFixed(2)} %`,
           },
         },
@@ -67,6 +67,9 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
       },
     ],
   };
+
+  console.log(totalValue)
+  console.log(data)
 
   return (
     <Card className={`${className} w-full`}>
