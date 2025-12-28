@@ -4,19 +4,42 @@ import { createExpenseLimit } from "./actions/limits";
 import { getExpensesLimit } from "@/db/queries/limits";
 import { LimitsDataTable } from "@/components/data-table/LimitDataTable";
 import ErrorLoading from "@/components/error/ErrorLoading";
+import LimitsResume from "./components/LimitsResume";
+import { getExpensesProportion } from "@/db/queries/expense";
+import { OperationBalance } from "@/lib/definitions";
+
+export type ExpenseProprtion = {
+  category_id: number | null;
+  category_name: string;
+  total: number;
+};
 
 const page = async () => {
-  let data;
+  let expense_limits;
+  let expense_proportion;
+
   try {
-    data = await getExpensesLimit();
+    expense_limits = await getExpensesLimit();
+    expense_proportion = await getExpensesProportion();
   } catch (error) {
     return <ErrorLoading />;
   }
-  console.log(data);
+
+  //console.log(expense_limits);
 
   return (
     <div>
+
+      <h1 className="title">Limites por categoria</h1>
+
+      <LimitsResume
+      className="mt-10"
+        expenseLimits={expense_limits}
+        expensesBalance={expense_proportion}
+      />
+
       <LimitDialog
+        className="mt-10"
         openDialogText="Novo limite de gasto"
         dialogTitle="Limite de gasto"
         dialogDescription="Preencha as informações do limite"
@@ -25,7 +48,7 @@ const page = async () => {
         actionFunction={createExpenseLimit}
       />
 
-      <LimitsDataTable limits={data} />
+      <LimitsDataTable limits={expense_limits} />
 
       <p>Definir limite total</p>
       <p>Limites por categoria</p>

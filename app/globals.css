@@ -138,4 +138,8 @@
     font-optical-sizing: auto;
     font-style: normal;
   }
+
+  .title {
+    @apply text-[2.2rem] md:text-[3.2rem] font-bold;
+  }
 }

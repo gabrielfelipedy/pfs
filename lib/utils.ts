@@ -1,5 +1,7 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { OperationBalance } from "./definitions";
+
 
 export const formatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -12,9 +14,16 @@ export function capitalizeFirstLetter(text: string | null): string {
 }
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
+export function calculateBalancesSum(data: OperationBalance[]) {
+  return Number(
+    data.reduce((acc, curr) => {
+      return acc + curr.value;
+    }, 0)
+  );
+}
 
 // converts from -3 timezone to UTC time (HH:MM:SS)
 
@@ -30,7 +39,6 @@ export function utcMinus3ToUtc(time: string): string {
 
   return date.toISOString().substring(11, 19);
 }
-
 
 // Replaces the timem into the timestamp string from another time given in the function's paramter
 

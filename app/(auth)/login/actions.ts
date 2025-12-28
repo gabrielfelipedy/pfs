@@ -1,7 +1,7 @@
 "use server";
 
 import { createSession } from "@/lib/session";
-import { LoginFormSchema } from "../../lib/definitions";
+import { LoginFormSchema } from "../../../lib/definitions";
 import { redirect } from "next/navigation";
 import * as bcrypt from "bcrypt";
 import { getAuth } from "@/db/auth";
@@ -20,8 +20,10 @@ export type LoginActionState =
       };
     };
 
-export async function login(prevState: LoginActionState | undefined, formData: FormData): Promise<LoginActionState> {
-
+export async function login(
+  prevState: LoginActionState | undefined,
+  formData: FormData
+): Promise<LoginActionState> {
   const validationResult = LoginFormSchema.safeParse(
     Object.fromEntries(formData)
   );
