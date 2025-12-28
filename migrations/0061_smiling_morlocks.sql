@@ -1,0 +1,2 @@
+DROP VIEW `vw_expense_balance`;--> statement-breakpoint
+CREATE VIEW `vw_expense_balance` AS select "category_id", "category_name", CAST(SUM(value) AS INTEGER) as "total" from "vw_expense_with_category" where date(date, 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month') AND date(date, 'unixepoch', '-3 hours') < date('now', '-3 hours' , '+1 month', 'start of month') group by "vw_expense_with_category"."category_id" order by "vw_expense_with_category"."category_id";

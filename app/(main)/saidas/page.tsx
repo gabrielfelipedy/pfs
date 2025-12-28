@@ -1,4 +1,4 @@
-import MonthlySaidas from "./monthlySaidas";
+import MonthlySaidas from "./components/monthlySaidas";
 import FormDialog from "../../../components/shared/FormDialog";
 import { createSaida } from "@/actions/saida-actions";
 import { Operation } from "@/lib/definitions";

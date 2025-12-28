@@ -6,6 +6,7 @@ import Radar from "@/components/charts/radar";
 import TreeMap from "@/components/charts/treemap";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { transformOperationsProportion } from "@/lib/utils";
 
 interface Props {
   className?: string;
@@ -34,22 +35,7 @@ const MonthlyEntradas = async ({ className }: Props) => {
     total_value: item.total_value / 100,
   }));
 
-  let transformedSaidaProportion;
-
-  try {
-    transformedSaidaProportion = Object.entries(income_proportion)
-      .filter(([key]) => key !== "total_sum")
-      .map(([key, val]) => ({
-        name: key.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase()),
-        value: Number(val),
-      }));
-
-    transformedSaidaProportion.sort((a, b) => b.value - a.value);
-
-    //console.log(transformedSaidaProportion);
-  } catch (error) {
-    return <div className="p-4 text-red-500">Erro ao processar dados.</div>;
-  }
+  const transformedIncomeProportion = transformOperationsProportion(income_proportion)
 
   return (
     <div
@@ -72,7 +58,7 @@ const MonthlyEntradas = async ({ className }: Props) => {
             title="Evolução de entradas mensal"
             description="Ao longo do mês atual"
             totalValue={Number(income_proportion.total_sum)}
-            data={transformedSaidaProportion}
+            data={transformedIncomeProportion}
           />
         </TabsContent>
         <TabsContent value="radar">
@@ -80,7 +66,7 @@ const MonthlyEntradas = async ({ className }: Props) => {
             title="Evolução de entradas mensal"
             description="Ao longo do mês atual"
             totalValue={Number(income_proportion.total_sum)}
-            data={transformedSaidaProportion}
+            data={transformedIncomeProportion}
           />
         </TabsContent>
 
@@ -89,7 +75,7 @@ const MonthlyEntradas = async ({ className }: Props) => {
             title="Evolução de entradas mensal"
             description="Ao longo do mês atual"
             totalValue={Number(income_proportion.total_sum)}
-            data={transformedSaidaProportion}
+            data={transformedIncomeProportion}
           />
         </TabsContent>
       </Tabs>

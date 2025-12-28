@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { Row } from "@libsql/client";
 
 export const formatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -50,4 +51,23 @@ export function replaceUTCTime(utcTimestamp: string, time: string): string {
   date.setUTCHours(hour, minute, second, 0);
 
   return date.toISOString();
+}
+
+
+export function transformOperationsProportion(operations_proportion: Row) {
+  try {
+    const transformedOperationsProportion = Object.entries(operations_proportion)
+      .filter(([key]) => key !== "total_sum")
+      .map(([key, val]) => ({
+        name: key.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase()),
+        value: Number(val),
+      }));
+
+    transformedOperationsProportion.sort((a, b) => b.value - a.value);
+    return transformedOperationsProportion
+
+    //console.log(transformedOperationsProportion);
+  } catch (error) {
+    return []
+  }
 }

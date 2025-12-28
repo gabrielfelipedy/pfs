@@ -9,6 +9,7 @@ import ErrorLoading from "@/components/error/ErrorLoading";
 import Radar from "@/components/charts/radar";
 import TreeMap from "@/components/charts/treemap";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { transformOperationsProportion } from "@/lib/utils";
 
 interface Props {
   className?: string;
@@ -38,22 +39,7 @@ const MonthlySaidas = async ({ className }: Props) => {
   }));
   //console.log(transformedData)
 
-  let transformedSaidaProportion;
-
-  try {
-    transformedSaidaProportion = Object.entries(expense_proportion)
-      .filter(([key]) => key !== "total_sum")
-      .map(([key, val]) => ({
-        name: key.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase()),
-        value: Number(val),
-      }));
-
-    transformedSaidaProportion.sort((a, b) => b.value - a.value);
-
-    //console.log(transformedSaidaProportion);
-  } catch (error) {
-    return <ErrorLoading />;
-  }
+  const transformedExpenseProportion = transformOperationsProportion(expense_proportion)
 
   //console.log(transformedSaidaProportion);
 
@@ -79,7 +65,7 @@ const MonthlySaidas = async ({ className }: Props) => {
             title="Gastos por categoria"
             description="Ao longo do mês atual"
             totalValue={Number(expense_proportion.total_sum)}
-            data={transformedSaidaProportion}
+            data={transformedExpenseProportion}
           />
         </TabsContent>
         <TabsContent value="radar">
@@ -87,7 +73,7 @@ const MonthlySaidas = async ({ className }: Props) => {
             title="Gastos por categoria"
             description="Ao longo do mês atual"
             totalValue={Number(expense_proportion.total_sum)}
-            data={transformedSaidaProportion}
+            data={transformedExpenseProportion}
           />
         </TabsContent>
         <TabsContent value="tree">
@@ -95,7 +81,7 @@ const MonthlySaidas = async ({ className }: Props) => {
             title="Gastos por categoria"
             description="Ao longo do mês atual"
             totalValue={Number(expense_proportion.total_sum)}
-            data={transformedSaidaProportion}
+            data={transformedExpenseProportion}
           />
         </TabsContent>
       </Tabs>
