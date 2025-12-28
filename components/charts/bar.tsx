@@ -24,7 +24,7 @@ interface Props {
   }[];
 }
 
-const Area = ({ title, description, className, data }: Props) => {
+const Bar = ({ title, description, className, data }: Props) => {
   const days: string[] = [];
   const totalIncomes: number[] = [];
   const totalExpenses: number[] = [];
@@ -108,30 +108,14 @@ const Area = ({ title, description, className, data }: Props) => {
       {
         name: "Entradas",
         data: totalIncomes,
-        type: "line",
-        color: "#54FF76",
-        smooth: true,
-        showSymbol: false,
-        lineStyle: {
-          width: 0, // This removes the line
-        },
-        areaStyle: {
-          opacity: 0.6,
-        },
+        type: "bar",
+        color: '#54FF76'
       },
       {
         name: "Gastos",
         data: totalExpenses,
-        type: "line",
-        color: "#FF5454",
-        smooth: true,
-        showSymbol: false,
-        lineStyle: {
-          width: 0, // This removes the line
-        },
-        areaStyle: {
-          opacity: 0.6,
-        },
+        type: "bar",
+        color: '#FF5454'
       } /* ,
       {
         data: balances,
@@ -158,4 +142,4 @@ const Area = ({ title, description, className, data }: Props) => {
   );
 };
 
-export default Area;
+export default Bar;
