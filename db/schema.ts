@@ -290,24 +290,32 @@ export const incomeBalanceView = sqliteView("vw_income_balance").as((qb) =>
     .orderBy(incomeWithCategoryView.category_id)
 );
 
-export const generalBalanceView = sqliteView("vw_general_balance").as((qb) =>
-  qb
-    .select({
-      total_incomes: sql<number>`CAST(${sql.raw(
-        "vw_income_balance.total_sum"
-      )} AS INTEGER)`.as("total_incomes"),
-      total_expenses: sql<number>`CAST(${sql.raw(
-        "vw_expense_balance.total_sum"
-      )} AS INTEGER)`.as("total_expenses"),
+export const generalBalanceView = sqliteView("vw_general_balance").as((qb) => {
 
-      balance: sql<number>`CAST(${sql.raw(
-        "vw_income_balance.total_sum"
-      )} - ${sql.raw("vw_expense_balance.total_sum")} AS INTEGER)`.as(
-        "balance"
-      ),
+  const incomes = qb.$with("incomes").as(
+    qb.select({
+      total_incomes: sql<number>`COALESCE(SUM(total), 0)`.as("total_incomes")
     })
-    .from(sql.raw("vw_income_balance"))
-    .fullJoin(sql.raw("vw_expense_balance"), sql`1=1`)
+    .from(incomeBalanceView)
+  )
+
+  const expenses = qb.$with("expenses").as(
+    qb.select({
+      total_expenses: sql<number>`COALESCE(SUM(total), 0)`.as("total_expenses")
+    })
+    .from(expenseBalanceView)
+  )
+
+  return qb
+    .with(incomes, expenses)
+    .select({
+      total_incomes: sql<number>`incomes.total_incomes`.as("total_incomes"),
+      total_expenses: sql<number>`expenses.total_expenses`.as("total_expenses"),
+      balance: sql<number>`incomes.total_incomes - expenses.total_expenses`.as("balance")
+    })
+    .from(incomes)
+    .leftJoin(expenses, sql`1=1`)
+  }
 );
 
 export const balanceEvolutionView = sqliteView("vw_balance_evolution").as(
