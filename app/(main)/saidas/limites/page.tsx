@@ -1,12 +1,9 @@
 import LimitDialog from "@/components/shared/LimitDialog";
-import React from "react";
 import { createExpenseLimit } from "./actions/limits";
-import { getExpensesLimit } from "@/db/queries/limits";
+import { getExpensesLimitBalance } from "@/db/queries/limits";
 import { LimitsDataTable } from "@/components/data-table/LimitDataTable";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import LimitsResume from "./components/LimitsResume";
-import { getExpensesProportion } from "@/db/queries/expense";
-import { OperationBalance } from "@/lib/definitions";
 
 export type ExpenseProprtion = {
   category_id: number | null;
@@ -15,12 +12,10 @@ export type ExpenseProprtion = {
 };
 
 const page = async () => {
-  let expense_limits;
-  let expense_proportion;
+  let data
 
   try {
-    expense_limits = await getExpensesLimit();
-    expense_proportion = await getExpensesProportion();
+    data = await getExpensesLimitBalance()
   } catch (error) {
     return <ErrorLoading />;
   }
@@ -34,8 +29,7 @@ const page = async () => {
 
       <LimitsResume
       className="mt-10"
-        expenseLimits={expense_limits}
-        expensesBalance={expense_proportion}
+        data={data}
       />
 
       <LimitDialog
@@ -48,7 +42,7 @@ const page = async () => {
         actionFunction={createExpenseLimit}
       />
 
-      <LimitsDataTable limits={expense_limits} />
+      <LimitsDataTable limits={data} />
 
       <p>Definir limite total</p>
       <p>Limites por categoria</p>

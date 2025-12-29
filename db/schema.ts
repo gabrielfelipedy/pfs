@@ -291,32 +291,36 @@ export const incomeBalanceView = sqliteView("vw_income_balance").as((qb) =>
 );
 
 export const generalBalanceView = sqliteView("vw_general_balance").as((qb) => {
-
   const incomes = qb.$with("incomes").as(
-    qb.select({
-      total_incomes: sql<number>`COALESCE(SUM(total), 0)`.as("total_incomes")
-    })
-    .from(incomeBalanceView)
-  )
+    qb
+      .select({
+        total_incomes: sql<number>`COALESCE(SUM(total), 0)`.as("total_incomes"),
+      })
+      .from(incomeBalanceView)
+  );
 
   const expenses = qb.$with("expenses").as(
-    qb.select({
-      total_expenses: sql<number>`COALESCE(SUM(total), 0)`.as("total_expenses")
-    })
-    .from(expenseBalanceView)
-  )
+    qb
+      .select({
+        total_expenses: sql<number>`COALESCE(SUM(total), 0)`.as(
+          "total_expenses"
+        ),
+      })
+      .from(expenseBalanceView)
+  );
 
   return qb
     .with(incomes, expenses)
     .select({
       total_incomes: sql<number>`incomes.total_incomes`.as("total_incomes"),
       total_expenses: sql<number>`expenses.total_expenses`.as("total_expenses"),
-      balance: sql<number>`incomes.total_incomes - expenses.total_expenses`.as("balance")
+      balance: sql<number>`incomes.total_incomes - expenses.total_expenses`.as(
+        "balance"
+      ),
     })
     .from(incomes)
-    .leftJoin(expenses, sql`1=1`)
-  }
-);
+    .leftJoin(expenses, sql`1=1`);
+});
 
 export const balanceEvolutionView = sqliteView("vw_balance_evolution").as(
   (qb) => {
@@ -349,6 +353,37 @@ export const balanceEvolutionView = sqliteView("vw_balance_evolution").as(
       .from(dailySum)
       .orderBy(asc(dailySum.day));
   }
+);
+
+export const expenseLimitBalanceView = sqliteView(
+  "vw_expense_limit_balance"
+).as((qb) =>
+  qb
+    .select({
+      id: ExpenseLimitWithCategoryView.id,
+      name: ExpenseLimitWithCategoryView.name,
+      value: ExpenseLimitWithCategoryView.value,
+      recursive: ExpenseLimitWithCategoryView.recursive,
+      start_date: ExpenseLimitWithCategoryView.start_date,
+      end_date: ExpenseLimitWithCategoryView.end_date,
+      category_id:
+        sql<number>`"vw_expense_limit_with_category"."category_id"`.as(
+          "category_id"
+        ),
+      category_name:
+        sql<string>`"vw_expense_limit_with_category"."category_name"`.as(
+          "category_name"
+        ),
+      spend: expenseBalanceView.total,
+    })
+    .from(ExpenseLimitWithCategoryView)
+    .leftJoin(
+      expenseBalanceView,
+      eq(
+        ExpenseLimitWithCategoryView.category_id,
+        expenseBalanceView.category_id
+      )
+    )
 );
 
 // ********* TOTAL INCOMES BY PERIOD **************

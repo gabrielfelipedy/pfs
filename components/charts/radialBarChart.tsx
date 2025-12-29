@@ -75,6 +75,8 @@ const RadialBarChart = ({ title, className, data, maxValue }: Props) => {
     },
   };
 
+  const restante = maxValue - data
+
   return (
     <Card className={`${className}`}>
       {/* <CardHeader>
@@ -90,10 +92,11 @@ const RadialBarChart = ({ title, className, data, maxValue }: Props) => {
 
           <div>
             <p className="font-bold text-[1.2rem]">{title}</p>
-            <p className="text-[0.9rem] text-black/70 dark:text-white/70">
-              {formatter.format(data / 100)} de{" "}
+            <p className="text-[1rem] font-bold text-black/70 dark:text-white/70">
+              {formatter.format(data / 100)} /{" "}
               {formatter.format(maxValue / 100)}
             </p>
+            <p className="text-[0.9rem] text-black/70 dark:text-white/70">{formatter.format(restante/100)} {restante >= 0 ? 'restantes' : 'negativo'}</p>
           </div>
         </div>
       </CardContent>

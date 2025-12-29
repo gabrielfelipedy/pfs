@@ -197,6 +197,7 @@ export default function FormDialog({
                         mode="single"
                         selected={date}
                         captionLayout="dropdown"
+                        toYear={2030}
                         onSelect={(date) => {
                           setDate(date);
                           setOpen(false);

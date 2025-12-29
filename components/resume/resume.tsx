@@ -46,7 +46,7 @@ const Resume = async ({ className }: Props) => {
     return <ErrorLoading />;
   }
 
-  console.log(balance);
+  //console.log(balance);
 
   return (
     <div className={`${className} w-full py-6 flex flex-col gap-5`}>
