@@ -1,10 +1,15 @@
 import { eq } from "drizzle-orm";
 import { db } from "..";
-import { expenselimitTable, ExpenseLimitWithCategoryView, InsertExpenseLimit, SelectExpenseLimit } from "../schema";
+import { expenseLimitBalanceView, expenselimitTable, ExpenseLimitWithCategoryView, InsertExpenseLimit, SelectExpenseLimit } from "../schema";
 
 export async function getExpensesLimit()
 {
     return db.select().from(ExpenseLimitWithCategoryView)
+}
+
+export async function getExpensesLimitBalance()
+{
+    return db.select().from(expenseLimitBalanceView)
 }
 
 export async function InsertExpensesLimit(values: InsertExpenseLimit)

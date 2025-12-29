@@ -1,0 +1,3 @@
+DROP VIEW `vw_expense_limit_balance`;--> statement-breakpoint
+CREATE VIEW `vw_expense_limit_balance` AS select "vw_expense_limit_with_category"."id", "vw_expense_limit_with_category"."name", "vw_expense_limit_with_category"."value", "vw_expense_limit_with_category"."recursive", "vw_expense_limit_with_category"."start_date", "vw_expense_limit_with_category"."end_date", "vw_expense_limit_with_category"."category_id", ExpenseLimitWithCategoryView.category_name as "category_name", expenseBalanceView.total as "spend" from "vw_expense_limit_with_category" left join "vw_expense_balance" on ExpenseLimitWithCategoryView.category_id = expenseBalanceView
+    .category_id;

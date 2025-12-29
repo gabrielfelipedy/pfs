@@ -449,6 +449,48 @@
       "when": 1766899170571,
       "tag": "0063_red_aqueduct",
       "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "6",
+      "when": 1766977682549,
+      "tag": "0064_deep_starjammers",
+      "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "6",
+      "when": 1766977758308,
+      "tag": "0065_familiar_pride",
+      "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "6",
+      "when": 1766977903358,
+      "tag": "0066_wandering_hellfire_club",
+      "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "6",
+      "when": 1766978174821,
+      "tag": "0067_hard_maggott",
+      "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "6",
+      "when": 1766978317651,
+      "tag": "0068_simple_sebastian_shaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "6",
+      "when": 1766978739389,
+      "tag": "0069_chemical_blockbuster",
+      "breakpoints": true
     }
   ]
 }

@@ -26,6 +26,7 @@ export type ExpenseLimit = {
   category_name?: string | null;
   created_at?: Date;
   updated_at?: Date | null;
+  spend?: number | null;
 };
 
 export type Category = {
