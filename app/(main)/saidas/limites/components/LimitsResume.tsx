@@ -22,6 +22,8 @@ const LimitsResume = ({ className, expenseLimits, expensesBalance }: Props) => {
     spend: balanceMap.get(item.category_id ?? 0) ?? 0,
   }));
 
+  console.log(mergedData)
+
   return (
     <div className={`${className} w-full py-6 flex flex-col gap-5`}>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 w-full ">
