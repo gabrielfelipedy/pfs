@@ -1,0 +1,2 @@
+DROP VIEW `vw_expense_with_category`;--> statement-breakpoint
+CREATE VIEW `vw_expense_with_category` AS select "id", "name", "description", "value", "date", "is_paid", "is_income", "category_id", "category_name", "payment_method_id", "payment_method_name" from "vw_operation_with_category" where "vw_operation_with_category"."is_income" = 0;
