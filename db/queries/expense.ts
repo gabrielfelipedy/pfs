@@ -1,5 +1,5 @@
 import { desc, sql } from "drizzle-orm";
-import { db } from "..";
+import { db } from ".";
 import {
   expenseBalanceView,
   expenseWithCategoryView,

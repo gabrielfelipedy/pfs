@@ -10,6 +10,8 @@ export type Operation = {
   is_income?: boolean | null;
   category_id?: number | null;
   category_name?: string | null;
+  payment_method_id?: number | null;
+  payment_method_name?: string | null;
   created_at?: Date;
   updated_at?: Date | null;
 };
@@ -34,7 +36,17 @@ export type Category = {
   name: string;
   description: string;
   is_income: boolean;
+  created_at?: Date;
+  updated_at?: Date | null;
 };
+
+export type PaymentMethod = {
+  id?: number;
+  name: string;
+  description: string;
+  created_at?: Date;
+  updated_at?: Date | null;
+}
 
 export type ChartData = { total_value: number; date: string };
 

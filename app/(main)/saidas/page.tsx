@@ -1,8 +1,8 @@
 import MonthlySaidas from "./components/monthlySaidas";
-import FormDialog from "../../../components/shared/FormDialog";
-import { createSaida } from "@/actions/saida-actions";
+import FormDialog from "../../../components/dialogs/FormDialog";
+import { createSaida } from "@/actions/expense-actions";
 import { Operation } from "@/lib/definitions";
-import OperationDataTable from "@/components/data-table/columns";
+import OperationDataTable from "@/components/data-table/OperationDataTable";
 import { getExpenses } from "@/db/queries/expense";
 import ErrorLoading from "@/components/error/ErrorLoading";
 

@@ -1,5 +1,5 @@
 import ErrorLoading from "../error/ErrorLoading";
-import OperationDataTable from "./columns";
+import OperationDataTable from "./OperationDataTable";
 import { getOperations } from "@/db/queries/operation";
 
 export default async function DataTablePage() {
@@ -8,9 +8,8 @@ export default async function DataTablePage() {
   try {
     const result = await getOperations();
     data = result;
-
   } catch (error) {
-    return <ErrorLoading />
+    return <ErrorLoading />;
   }
 
   return (

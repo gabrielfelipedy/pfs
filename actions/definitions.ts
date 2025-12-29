@@ -15,6 +15,12 @@ export const OperationSchema = z.object({
 
     return val;
   }, z.number().int().positive({ message: "Category ID must be a positive integer" }).nullable()),
+  payment_method_id: z.preprocess((val) => {
+    if (val === undefined || (typeof val === "number" && isNaN(val)))
+      return null;
+
+    return val;
+  }, z.number().int().positive({ message: "Category ID must be a positive integer" }).nullable()).optional(),
 });
 
 export type OperationActionState =
@@ -32,5 +38,6 @@ export type OperationActionState =
         value?: string[];
         is_paid?: string[];
         category_id?: string[];
+        payment_method_id?: string[];
       };
     };

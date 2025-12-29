@@ -3,11 +3,14 @@
 import DataTablePage from "@/components/data-table/DataTablePage";
 import Area from "@/components/charts/area";
 import ErrorLoading from "@/components/error/ErrorLoading";
-import FormDialog from "@/components/shared/FormDialog";
-import { createEntrada } from "@/actions/entrada-actions";
-import { createSaida } from "@/actions/saida-actions";
+import FormDialog from "@/components/dialogs/FormDialog";
+import { createEntrada } from "@/actions/income-actions";
+import { createSaida } from "@/actions/expense-actions";
 import { Operation } from "@/lib/definitions";
-import { getBalanceEvolution, getOperationEvolution } from "@/db/queries/operation";
+import {
+  getBalanceEvolution,
+  getOperationEvolution,
+} from "@/db/queries/operation";
 import Resume from "@/components/resume/resume";
 import Line from "@/components/charts/line";
 import Bar from "@/components/charts/bar";
@@ -27,8 +30,7 @@ export default async function Home() {
 
   try {
     operation_data = await getOperationEvolution();
-    balance_evolution = await getBalanceEvolution()
-
+    balance_evolution = await getBalanceEvolution();
   } catch (error) {
     console.error(error);
     return <ErrorLoading />;
@@ -43,7 +45,7 @@ export default async function Home() {
 
   const transformedBalanceEvolution = balance_evolution.map((item) => ({
     date: item.day,
-    total_value: item.balance / 100
+    total_value: item.balance / 100,
   }));
 
   //console.log(transformedData)
@@ -58,36 +60,34 @@ export default async function Home() {
       <Resume className="mt-10" />
 
       <div className="mt-8 flex flex-col gap-5">
-
         <Line
-        title="Evolução do saldo"
-        description="Ao longo do mês atual"
-        data={transformedBalanceEvolution}
-      />
+          title="Evolução do saldo"
+          description="Ao longo do mês atual"
+          data={transformedBalanceEvolution}
+        />
 
-      <Tabs defaultValue="area">
-        <TabsList>
-          <TabsTrigger value="area">Gráfico de Área</TabsTrigger>
-          <TabsTrigger value="bar">Gráfico de Barra</TabsTrigger>
-        </TabsList>
-        <TabsContent value="area">
+        <Tabs defaultValue="area">
+          <TabsList>
+            <TabsTrigger value="area">Gráfico de Área</TabsTrigger>
+            <TabsTrigger value="bar">Gráfico de Barra</TabsTrigger>
+          </TabsList>
+          <TabsContent value="area">
             <Area
-          title="Evolução de gastos"
-          description="Ao longo do mês atual"
-          data={transformedData}
-        />
-        </TabsContent>
+              title="Evolução de gastos"
+              description="Ao longo do mês atual"
+              data={transformedData}
+            />
+          </TabsContent>
 
-        <TabsContent value="bar">
-          <Bar
-          title="Evolução de gastos"
-          description="Ao longo do mês atual"
-          data={transformedData}
-        />
-        </TabsContent>
+          <TabsContent value="bar">
+            <Bar
+              title="Evolução de gastos"
+              description="Ao longo do mês atual"
+              data={transformedData}
+            />
+          </TabsContent>
         </Tabs>
 
-      
         <div className="mt-10 flex gap-5">
           {/* <CreateSaidaDialog /> */}
           <FormDialog

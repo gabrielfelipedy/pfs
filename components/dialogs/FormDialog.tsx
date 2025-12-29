@@ -29,9 +29,10 @@ import { formatter } from "@/lib/utils";
 import { Operation } from "@/lib/definitions";
 import { OperationActionState } from "@/actions/definitions";
 import { useRouter } from "next/navigation";
-import CategorySelector from "./categorySelector";
+import CategorySelector from "../shared/categorySelector";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "../ui/switch";
+import PaymentMethodSelector from "../shared/paymentMethodSelector";
 
 // Defines the props for the FormDialog component
 
@@ -151,20 +152,7 @@ export default function FormDialog({
                 </p>
               )}
             </div>
-            <div className="md:grid gap-3">
-              <Label htmlFor="description">Descrição</Label>
-              <Input
-                className="mt-4"
-                id="description"
-                name="description"
-                defaultValue={operation?.description || ""}
-              />
-              {!state?.success && (
-                <p className="text-sm text-red-500">
-                  {state?.errors?.description || ""}
-                </p>
-              )}
-            </div>
+
             <div className="md:grid gap-3">
               <div className="flex flex-col md:flex-row justify-between gap-4">
                 <div className="flex flex-col gap-3">
@@ -253,21 +241,6 @@ export default function FormDialog({
                 />
                 {/* 2. DATA INPUT: Hidden, has the "name", sends the raw integer */}
                 <input type="hidden" name="value" value={rawValor} />
-
-                {!state?.success && (
-                  <p className="text-sm text-red-500">
-                    {state?.errors?.value || ""}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="category_id">Categoria</Label>
-
-                <CategorySelector
-                  category_id={operation?.category_id || undefined}
-                  is_income={operation?.is_income ?? true}
-                />
               </div>
 
               <div className="flex flex-col gap-2">
@@ -289,14 +262,62 @@ export default function FormDialog({
             </div>
 
             {!state?.success && (
+              <>
+              <p className="text-sm text-red-500">
+                {state?.errors?.value || ""}
+              </p>
+
+              <p className="text-sm text-red-500">
+                {state?.errors?.is_paid || ""}
+              </p>
+              </>
+            )}
+
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="category_id">Categoria</Label>
+
+                <CategorySelector
+                  category_id={operation?.category_id || undefined}
+                  is_income={operation?.is_income ?? true}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="payment_method_id">Método de pagamento</Label>
+
+                <PaymentMethodSelector
+                  payment_method_id={operation?.payment_method_id || undefined}
+                />
+              </div>
+            </div>
+
+            {!state?.success && (
+              <>
               <p className="text-sm text-red-500">
                 {state?.errors?.category_id || ""}
               </p>
+
+              <p className="text-sm text-red-500">
+                {state?.errors?.payment_method_id || ""}
+              </p>
+              </>
             )}
 
+           
+          </div>
+
+          <div className="md:grid gap-3">
+            <Label htmlFor="description">Descrição (opcional)</Label>
+            <Input
+              className="mt-4"
+              id="description"
+              name="description"
+              defaultValue={operation?.description || ""}
+            />
             {!state?.success && (
               <p className="text-sm text-red-500">
-                {state?.errors?.is_paid || ""}
+                {state?.errors?.description || ""}
               </p>
             )}
           </div>
