@@ -48,7 +48,7 @@ export type PaymentMethod = {
   updated_at?: Date | null;
 }
 
-export type ChartData = { total_value: number; date: string };
+export type ChartData = { value: number; date: string };
 
 export type OperationBalance = {
   category_id?: number | null;

@@ -1,11 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import {
-  ActivityIcon,
-  DollarSignIcon,
-  TrendingDownIcon,
-  TrendingUpIcon,
-  UsersIcon,
-} from "lucide-react";
+import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { getMonthlyIncomes } from "@/db/queries/incomes";
 import ErrorLoading from "../error/ErrorLoading";
 import CardResume from "./card-resume";
@@ -15,38 +8,43 @@ import {
   getWeeklyExpenses,
 } from "@/db/queries/expense";
 import { getMonthlyBalance } from "@/db/queries/balance";
+import { Operation } from "@/lib/definitions";
+import { isSameWeek, isToday } from "date-fns";
+import { calculateIncomes } from "@/lib/date";
 
 interface Props {
+  operations: Operation[];
   className?: string;
+  children?: React.ReactNode;
 }
 
-const Resume = async ({ className }: Props) => {
-  let total;
-  let daily_data;
-  let weekly_data;
-  let monthly_data;
-  let balance;
+const calculateBalance = (operations: Operation[]) => {
+  let balance = 0;
+  operations.forEach((operation) => {
+    if (operation.is_income) {
+      balance += operation.value ?? 0;
+    } else {
+      balance -= operation.value ?? 0;
+    }
+  });
+  return balance;
+};
 
-  try {
-    const [result] = await getMonthlyIncomes();
-    total = result;
+const calculateExpenses = (operations: Operation[]) => {
+  let total = 0;
+  operations.forEach((operation) => {
+    if (!operation.is_income) {
+      total += operation.value ?? 0;
+    }
+  });
+  return total;
+};
 
-    const [daily_result] = await getDailyExpenses();
-    daily_data = daily_result;
-
-    const [weekly_result] = await getWeeklyExpenses();
-    weekly_data = weekly_result;
-
-    const [monthly_result] = await getMonthlyExpenses();
-    monthly_data = monthly_result;
-
-    const [balance_data] = await getMonthlyBalance();
-    balance = balance_data;
-  } catch (error) {
-    return <ErrorLoading />;
-  }
-
+const Resume = async ({ operations, className, children }: Props) => {
   //console.log(balance);
+  const balance = calculateBalance(operations);
+  const incomes = calculateIncomes(operations);
+  const expenses = calculateExpenses(operations);
 
   return (
     <div className={`${className} w-full py-6 flex flex-col gap-5`}>
@@ -54,41 +52,28 @@ const Resume = async ({ className }: Props) => {
         <CardResume
           title="Saldo mensal"
           icon={<TrendingUpIcon className="h-4 w-4 text-muted-foreground" />}
-          data={balance.balance}
+          data={balance}
           subtext="No último mês"
-          is_income={balance.balance > 0}
+          is_income={balance > 0}
         />
-      </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full">
         <CardResume
           title="Entradas mensais"
           icon={<TrendingUpIcon className="h-4 w-4 text-muted-foreground" />}
-          data={total.total_incomes}
+          data={incomes}
           subtext="No último mês"
           is_income={true}
         />
-
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full">
         <CardResume
           title="Gastos mensais"
           icon={<TrendingDownIcon className="h-4 w-4 text-muted-foreground" />}
-          data={monthly_data.total_value}
+          data={expenses}
           subtext="No último mês"
         />
 
-        <CardResume
-          title="Gastos semanais"
-          icon={<TrendingDownIcon className="h-4 w-4 text-muted-foreground" />}
-          data={weekly_data.total_value}
-          subtext="No último mês"
-        />
-
-        <CardResume
-          title="Gastos diários"
-          icon={<TrendingDownIcon className="h-4 w-4 text-muted-foreground" />}
-          data={daily_data.total_value}
-          subtext="No último mês"
-        />
+        {children}
       </div>
     </div>
   );
