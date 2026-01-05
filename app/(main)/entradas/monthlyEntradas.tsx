@@ -9,34 +9,22 @@ import Radar from "@/components/charts/radar";
 import TreeMap from "@/components/charts/treemap";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBalancesSum } from "@/lib/utils";
+import { Operation } from "@/lib/definitions";
+import {
+  calculateIncomeEvolution,
+  calculateOperationProportion,
+} from "@/lib/operation";
 
 interface Props {
+  incomes: Operation[];
   className?: string;
 }
 
-const MonthlyEntradas = async ({ className }: Props) => {
-  let income_data;
-  let raw_income_proportion;
+const MonthlyEntradas = async ({ incomes, className }: Props) => {
 
-  try {
-    income_data = await getIncomesEvolution();
-    raw_income_proportion = await getIncomesProportion();
-  } catch (error) {
-    console.error(error);
-    //console.log(income_proportion)
-    return <ErrorLoading />;
-  }
-
-  const transformedData = income_data.map((item) => ({
-    ...item,
-    total_value: item.total_value / 100,
-  }));
-
-  const income_proportion = raw_income_proportion.map((item) => ({
-    name: (item.category_name as string) ?? "Sem categoria",
-    value: Number(item.total),
-  }));
-  income_proportion.sort((a, b) => b.value - a.value);
+  const income_proportion = calculateOperationProportion(incomes);
+  const total = calculateBalancesSum(income_proportion);
+  const income_evolution = calculateIncomeEvolution(incomes);
 
   return (
     <div
@@ -45,7 +33,7 @@ const MonthlyEntradas = async ({ className }: Props) => {
       <Line
         title="Evolução de entradas mensal"
         description="Ao longo do mês atual"
-        data={transformedData}
+        data={income_evolution}
       />
 
       <Tabs defaultValue="pie" className="lg:w-1/2">
@@ -58,7 +46,7 @@ const MonthlyEntradas = async ({ className }: Props) => {
           <Pie
             title="Evolução de entradas mensal"
             description="Ao longo do mês atual"
-            totalValue={calculateBalancesSum(income_proportion)}
+            totalValue={total}
             data={income_proportion}
           />
         </TabsContent>
@@ -74,7 +62,7 @@ const MonthlyEntradas = async ({ className }: Props) => {
           <TreeMap
             title="Evolução de entradas mensal"
             description="Ao longo do mês atual"
-            totalValue={calculateBalancesSum(income_proportion)}
+            totalValue={total}
             data={income_proportion}
           />
         </TabsContent>

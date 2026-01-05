@@ -1,22 +1,21 @@
 //import Image from "next/image";
 
-import DataTablePage from "@/components/data-table/DataTablePage";
 import Area from "@/components/charts/area";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import FormDialog from "@/components/dialogs/FormDialog";
 import { createEntrada } from "@/actions/income-actions";
 import { createSaida } from "@/actions/expense-actions";
-import { ChartData, Operation } from "@/lib/definitions";
-import { getOperationEvolution, getOperations } from "@/db/queries/operation";
+import { Operation } from "@/lib/definitions";
+import { getOperations } from "@/db/queries/operation";
 import Resume from "@/components/resume/resume";
 import Line from "@/components/charts/line";
 import Bar from "@/components/charts/bar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { startOfDay } from "date-fns";
 import CardResume from "@/components/resume/card-resume";
 import { TrendingDownIcon } from "lucide-react";
-import { calculateDailyExpenses, calculateWeeklyExpenses } from "@/lib/date";
+import { calculateDailyExpenses, calculateWeeklyExpenses, formatMonthYear } from "@/lib/date";
 import OperationDataTable from "@/components/data-table/OperationDataTable";
+import { calculateBalanceEvolution, calculateOperationEvolution, filterOperationsByMonth, getAvaliableMonths } from "@/lib/operation";
 
 const emptyExpenseOperation: Operation = {
   is_income: false,
@@ -26,112 +25,6 @@ const emptyIncomeOperation: Operation = {
   is_income: true,
 };
 
-const getAvaliableMonths = (operations: Operation[]) => {
-  const monthsSet = new Set<string>();
-  operations.forEach((operation) => {
-    if (operation.date) {
-      const date = new Date(operation.date);
-      const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
-
-      monthsSet.add(monthYear);
-    }
-  });
-  return Array.from(monthsSet).reverse();
-};
-
-const filterOperationsByMonth = (
-  operations: Operation[],
-  month: string
-): Operation[] => {
-  return operations.filter((operation) => {
-    if (operation.date) {
-      const date = new Date(operation.date);
-      const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
-      return monthYear === month;
-    }
-    return false;
-  });
-};
-
-function formatMonthYear(input: string): string {
-  // Split "12-2025" into [12, 2025]
-  const [month, year] = input.split("-").map(Number);
-
-  // Create a date object (Note: months are 0-indexed in JS, so subtract 1)
-  const date = new Date(year, month - 1);
-
-  // Format using Intl for Portuguese (pt-BR)
-  const formatted = new Intl.DateTimeFormat("pt-BR", {
-    month: "long",
-    year: "numeric",
-  }).format(date);
-
-  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
-}
-
-const calculateBalanceEvolution = (operations: Operation[]) => {
-  //console.log(operations)
-
-  const balanceMap = new Map<string, ChartData>();
-  let total_incomes = 0;
-
-  operations.reverse().forEach((operation) => {
-    const date = startOfDay(new Date(operation.date ?? ""));
-    const key = date.toISOString().split("T")[0];
-
-    const value = operation.value ?? 0;
-
-    if (operation.is_income) {
-      total_incomes += value;
-    } else {
-      total_incomes -= value;
-    }
-
-    balanceMap.set(key, { date: key, value: total_incomes / 100 });
-  });
-
-  //console.log(Array.from(balanceMap.values()));
-  return Array.from(balanceMap.values());
-};
-
-const calculateOperationEvolution = (operations: Operation[]) => {
-  //console.log(operations)
-
-  const balanceMap = new Map<
-    string,
-    { date: string; total_incomes: number; total_expenses: number }
-  >();
-
-  operations.reverse().forEach((operation) => {
-    const date = startOfDay(new Date(operation.date ?? ""));
-    const key = date.toISOString().split("T")[0];
-
-    const current_value = balanceMap.get(key) ?? {
-      date: key,
-      total_incomes: 0,
-      total_expenses: 0,
-    };
-
-    const value = operation.value ?? 0;
-
-    if (operation.is_income) {
-      balanceMap.set(key, {
-        date: key,
-        total_incomes: current_value.total_incomes + value,
-        total_expenses: current_value.total_expenses,
-      });
-    } else {
-      balanceMap.set(key, {
-        date: key,
-        total_incomes: current_value.total_incomes,
-        total_expenses: current_value.total_expenses + value,
-      });
-    }
-  });
-
-  console.log(Array.from(balanceMap.values()));
-  return Array.from(balanceMap.values());
-};
 
 export default async function Home() {
   let operations;
@@ -165,7 +58,7 @@ export default async function Home() {
         </TabsList>
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
-            <p className="text-slate-500 dark:text-gray-300 text-md md:text-md">
+            
               <Resume
                 operations={filterOperationsByMonth(operations, month)}
                 className="mt-10"
@@ -190,7 +83,7 @@ export default async function Home() {
                   />
                 </>
               </Resume>
-            </p>
+            
 
             <div className="mt-8 flex flex-col gap-5">
               <Line

@@ -37,3 +37,19 @@ export const calculateDailyExpenses = (operations: Operation[]) => {
   });
   return total;
 };
+
+export function formatMonthYear(input: string): string {
+  // Split "12-2025" into [12, 2025]
+  const [month, year] = input.split("-").map(Number);
+
+  // Create a date object (Note: months are 0-indexed in JS, so subtract 1)
+  const date = new Date(year, month - 1);
+
+  // Format using Intl for Portuguese (pt-BR)
+  const formatted = new Intl.DateTimeFormat("pt-BR", {
+    month: "long",
+    year: "numeric",
+  }).format(date);
+
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+}
