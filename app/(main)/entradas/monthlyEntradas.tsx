@@ -1,10 +1,5 @@
-import {
-  getIncomesEvolution,
-  getIncomesProportion,
-} from "@/db/queries/incomes";
 import Line from "@/components/charts/line";
 import Pie from "@/components/charts/pie";
-import ErrorLoading from "@/components/error/ErrorLoading";
 import Radar from "@/components/charts/radar";
 import TreeMap from "@/components/charts/treemap";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

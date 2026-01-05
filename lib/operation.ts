@@ -74,7 +74,7 @@ export const calculateIncomeEvolution = (operations: Operation[]) => {
   });
 
   //console.log(Array.from(incomeMap.values()));
-  return Array.from(incomeMap.values());
+  return Array.from(incomeMap.values()).reverse();
 };
 
 export const calculateExpenseEvolution = (operations: Operation[]) => {
@@ -98,7 +98,7 @@ export const calculateExpenseEvolution = (operations: Operation[]) => {
   });
 
   //console.log(Array.from(expenseMap.values()));
-  return Array.from(expenseMap.values());
+  return Array.from(expenseMap.values()).reverse();
 };
 
 export const calculateOperationEvolution = (operations: Operation[]) => {
@@ -142,22 +142,22 @@ export const calculateOperationEvolution = (operations: Operation[]) => {
 
 export const calculateOperationProportion = (operations: Operation[]) => {
   //console.log(operations)
-  const balanceMap = new Map<string, OperationBalance>();
+  const proportionMap = new Map<string, OperationBalance>();
 
   operations.reverse().forEach((operation) => {
     const key = operation.category_id?.toString() ?? "Sem categoria";
 
-    const current_value = balanceMap.get(key) ?? {
+    const current_value = proportionMap.get(key) ?? {
       name: null,
       value: 0,
     };
 
-    balanceMap.set(key, {
+    proportionMap.set(key, {
       name: operation.category_name ?? "Sem categoria",
       value: current_value.value + (operation.value ?? 0),
     });
   });
 
-  console.log(Array.from(balanceMap.values()));
-  return Array.from(balanceMap.values());
+  const proportion = Array.from(proportionMap.values()).sort((a, b) => b.value - a.value);
+  return proportion
 };
