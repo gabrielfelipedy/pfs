@@ -1,15 +1,8 @@
 import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
-import { getMonthlyIncomes } from "@/db/queries/incomes";
-import ErrorLoading from "../error/ErrorLoading";
+
 import CardResume from "./card-resume";
-import {
-  getDailyExpenses,
-  getMonthlyExpenses,
-  getWeeklyExpenses,
-} from "@/db/queries/expense";
-import { getMonthlyBalance } from "@/db/queries/balance";
+
 import { Operation } from "@/lib/definitions";
-import { isSameWeek, isToday } from "date-fns";
 import { calculateIncomes } from "@/lib/date";
 
 interface Props {
