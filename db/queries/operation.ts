@@ -6,7 +6,6 @@ import {
   operationTable,
   operationWithCategoryView,
   SelectOperation,
-  totalOperationsByDayByMonth,
 } from "../schema";
 
 export async function getOperations() {
@@ -14,10 +13,6 @@ export async function getOperations() {
     .select()
     .from(operationWithCategoryView)
     .orderBy(desc(operationWithCategoryView.date));
-}
-
-export async function getOperationEvolution() {
-  return db.select().from(totalOperationsByDayByMonth);
 }
 
 export async function getBalanceEvolution() {

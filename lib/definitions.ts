@@ -21,7 +21,7 @@ export type ExpenseLimit = {
   name?: string;
   description?: string | null;
   value?: number | null;
-  recursive?: boolean | null;
+  recursive?: number | null;
   start_date: Date | null;
   end_date: Date | null;
   category_id?: number | null;
