@@ -31,6 +31,7 @@ export async function createSaida(prevState: OperationActionState | undefined, f
     is_paid: formData.get("is_paid") === "true",
     is_income: false,
     category_id: Number(formData.get("category_id")),
+    payment_method_id: Number(formData.get("payment_method_id")),
   });
 
   if (!validationResult.success) {
@@ -87,6 +88,7 @@ export async function updateSaida(prevState: OperationActionState | undefined, f
     is_paid: formData.get("is_paid") === "true",
     is_income: false,
     category_id: Number(formData.get("category_id")),
+    payment_method_id: Number(formData.get("payment_method_id")),
   });
 
   if (!validationResult.success) {

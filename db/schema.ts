@@ -1,4 +1,4 @@
-import { asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import {
   integer,
   sqliteTable,
@@ -6,11 +6,27 @@ import {
   text,
 } from "drizzle-orm/sqlite-core";
 
+// ********* TABLES **********
+
+const CREDIT_CARD_ID = 3;
+
 export const categoryTable = sqliteTable("category", {
   id: integer().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   description: text(),
   is_income: integer({ mode: "boolean" }).notNull(),
+  created_at: integer({ mode: "timestamp" })
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updated_at: integer("updated_at", { mode: "timestamp" }).$onUpdate(
+    () => new Date()
+  ),
+});
+
+export const paymentMethodTable = sqliteTable("payment_method", {
+  id: integer().primaryKey({ autoIncrement: true }),
+  name: text().notNull(),
+  description: text(),
   created_at: integer({ mode: "timestamp" })
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
@@ -43,6 +59,33 @@ export const expenselimitTable = sqliteTable("expense_limit", {
     onUpdate: "cascade",
     onDelete: "set null",
   }),
+  created_at: integer({ mode: "timestamp" })
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+  updated_at: integer("updated_at", { mode: "timestamp" }).$onUpdate(
+    () => new Date()
+  ),
+});
+
+export const operationTable = sqliteTable("operation", {
+  id: integer().primaryKey({ autoIncrement: true }),
+
+  name: text().notNull(),
+  description: text(),
+  value: integer(),
+  date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
+  is_paid: integer({ mode: "boolean" }),
+  is_income: integer({ mode: "boolean" }),
+
+  category_id: integer().references(() => categoryTable.id, {
+    onUpdate: "cascade",
+    onDelete: "set null",
+  }),
+
+  payment_method_id: integer().references(() => paymentMethodTable.id, {
+    onUpdate: "cascade",
+    onDelete: "set null",
+  }),
 
   created_at: integer({ mode: "timestamp" })
     .default(sql`(CURRENT_TIMESTAMP)`)
@@ -51,6 +94,24 @@ export const expenselimitTable = sqliteTable("expense_limit", {
     () => new Date()
   ),
 });
+
+// ****************** VIEWS ******************
+
+export const CreditCardExpensesView = sqliteView("vw_credit_card_expenses").as(
+  (qb) =>
+    qb
+      .select()
+      .from(operationTable)
+      .where(
+        and(
+          eq(operationTable.payment_method_id, CREDIT_CARD_ID),
+          sql`
+    date(${operationTable.date}, 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month')
+    AND date(${operationTable.date}, 'unixepoch', '-3 hours') < date('now', '-3 hours', '+1 month', 'start of month')
+  `
+        )
+      )
+);
 
 export const ExpenseLimitWithCategoryView = sqliteView(
   "vw_expense_limit_with_category"
@@ -71,29 +132,6 @@ export const ExpenseLimitWithCategoryView = sqliteView(
     .leftJoin(categoryTable, sql`expense_limit.category_id = category.id`)
 );
 
-export const operationTable = sqliteTable("operation", {
-  id: integer().primaryKey({ autoIncrement: true }),
-
-  name: text().notNull(),
-  description: text(),
-  value: integer(),
-  date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
-  is_paid: integer({ mode: "boolean" }),
-  is_income: integer({ mode: "boolean" }),
-  category_id: integer().references(() => categoryTable.id, {
-    onUpdate: "cascade",
-    onDelete: "set null",
-  }),
-
-  created_at: integer({ mode: "timestamp" })
-    .default(sql`(CURRENT_TIMESTAMP)`)
-    .notNull(),
-  updated_at: integer("updated_at", { mode: "timestamp" }).$onUpdate(
-    () => new Date()
-  ),
-});
-
-// **** VIEWS **** //
 export const incomeView = sqliteView("vw_income").as((qb) =>
   qb.select().from(operationTable).where(eq(operationTable.is_income, true))
 );
@@ -116,28 +154,26 @@ export const operationWithCategoryView = sqliteView(
       is_income: operationTable.is_income,
       category_id: operationTable.category_id,
       category_name: sql<string>`category.name`.as("category_name"),
+      payment_method_id: operationTable.payment_method_id,
+      payment_method_name: sql<string>`payment_method.name`.as(
+        "payment_method_name"
+      ),
     })
     .from(operationTable)
     .leftJoin(categoryTable, sql`operation.category_id = category.id`)
+    .leftJoin(
+      paymentMethodTable,
+      sql`operation.payment_method_id = payment_method.id`
+    )
 );
 
 export const expenseWithCategoryView = sqliteView(
   "vw_expense_with_category"
 ).as((qb) =>
   qb
-    .select({
-      id: expenseView.id,
-      name: expenseView.name,
-      description: expenseView.description,
-      value: expenseView.value,
-      date: expenseView.date,
-      is_paid: expenseView.is_paid,
-      is_income: expenseView.is_income,
-      category_id: expenseView.category_id,
-      category_name: sql<string>`category.name`.as("category_name"),
-    })
-    .from(expenseView)
-    .leftJoin(categoryTable, sql`vw_expense.category_id = category.id`)
+    .select()
+    .from(operationWithCategoryView)
+    .where(eq(operationWithCategoryView.is_income, false))
 );
 
 export const incomeWithCategoryView = sqliteView("vw_income_with_category").as(
@@ -273,6 +309,21 @@ export const expenseBalanceView = sqliteView("vw_expense_balance").as((qb) =>
     )
     .groupBy(expenseWithCategoryView.category_id)
     .orderBy(expenseWithCategoryView.category_id)
+);
+
+export const PaymentMethodBalanceView = sqliteView("vw_payment_method_balance").as((qb) =>
+  qb
+    .select({
+      payment_method_id: expenseWithCategoryView.payment_method_id,
+      payment_method_name: expenseWithCategoryView.payment_method_name,
+      total: sql<number>`CAST(SUM(value) AS INTEGER)`.as("total"),
+    })
+    .from(expenseWithCategoryView)
+    .where(
+      sql`date(date, 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month') AND date(date, 'unixepoch', '-3 hours') < date('now', '-3 hours' , '+1 month', 'start of month')`
+    )
+    .groupBy(expenseWithCategoryView.payment_method_id)
+    .orderBy(expenseWithCategoryView.payment_method_id)
 );
 
 export const incomeBalanceView = sqliteView("vw_income_balance").as((qb) =>

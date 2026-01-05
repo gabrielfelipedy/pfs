@@ -16,10 +16,9 @@ interface Props {
   description: string;
   className?: string;
   data: {
-    day: string;
-    total_income: number;
-    total_expense: number;
-    balance: number;
+    date: string;
+    total_incomes: number;
+    total_expenses: number;
   }[];
 }
 
@@ -31,15 +30,14 @@ const Area = ({ title, description, className, data }: Props) => {
 
   data.forEach((item) => {
     days.push(
-      new Date(item.day).toLocaleDateString("pt-BR", {
+      new Date(item.date).toLocaleDateString("pt-BR", {
         month: "short",
         day: "numeric",
         timeZone: "UTC",
       })
     );
-    totalIncomes.push(item.total_income);
-    totalExpenses.push(item.total_expense);
-    balances.push(item.balance);
+    totalIncomes.push(item.total_incomes / 100);
+    totalExpenses.push(item.total_expenses / 100);
   });
 
   const { theme, resolvedTheme } = useTheme();
@@ -127,13 +125,7 @@ const Area = ({ title, description, className, data }: Props) => {
         areaStyle: {
           opacity: 0.6,
         },
-      } /* ,
-      {
-        data: balances,
-        type: "line",
-        smooth: true,
-        areaStyle: {},
-      }, */,
+      }
     ],
   };
 

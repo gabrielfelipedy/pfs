@@ -32,7 +32,7 @@ const Line = ({ title, description, className, data }: Props) => {
         timeZone: "UTC",
       })
     ),
-    total_value: data.map((item) => item.total_value),
+    total_value: data.map((item) => item.value),
   };
   //console.log(result);
 
