@@ -16,6 +16,8 @@ export async function getExpensesLimitBalance() {
   return db.select().from(expenseLimitBalanceView);
 }
 
+// ********* CONSTRUCTIVE OPERATIONS *********
+
 export async function InsertExpensesLimit(values: InsertExpenseLimit) {
   return db.insert(expenselimitTable).values(values);
 }

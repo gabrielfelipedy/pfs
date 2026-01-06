@@ -17,6 +17,7 @@ export async function createExpenseLimit(
     start_date: replaceUTCTime(formData.get("start_date") as string, '00:00:00'),
     end_date: replaceUTCTime(formData.get("end_date") as string, '23:59:59'),
     category_id: Number(formData.get("category_id")),
+    period_id: Number(formData.get("period_id")),
   });
 
   if (!validationResult.success) {
@@ -28,7 +29,7 @@ export async function createExpenseLimit(
     };
   }
 
-  console.log(validationResult.data);
+  //console.log(validationResult.data);
   const result = await InsertExpensesLimit(validationResult.data);
 
   if (!result) {
@@ -63,6 +64,7 @@ export async function updateExpenseLimit(
     start_date: replaceUTCTime(formData.get("start_date") as string, '03:00:00'),
     end_date: replaceUTCTime(formData.get("end_date") as string, '03:00:00'),
     category_id: Number(formData.get("category_id")),
+    period_id: Number(formData.get("period_id")),
   });
 
   if (!validationResult.success) {

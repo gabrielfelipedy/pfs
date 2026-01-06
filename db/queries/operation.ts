@@ -1,7 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import { db } from ".";
 import {
-  balanceEvolutionView,
   InsertOperation,
   operationTable,
   operationWithCategoryView,
@@ -15,9 +14,6 @@ export async function getOperations() {
     .orderBy(desc(operationWithCategoryView.date));
 }
 
-export async function getBalanceEvolution() {
-  return db.select().from(balanceEvolutionView);
-}
 
 export async function deleteOperation(id: SelectOperation["id"]) {
   return db.delete(operationTable).where(eq(operationTable.id, id));

@@ -29,10 +29,10 @@ import { formatter } from "@/lib/utils";
 import { Operation } from "@/lib/definitions";
 import { OperationActionState } from "@/actions/definitions";
 import { useRouter } from "next/navigation";
-import CategorySelector from "../shared/categorySelector";
+import CategorySelector from "../selectors/categorySelector";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "../ui/switch";
-import PaymentMethodSelector from "../shared/paymentMethodSelector";
+import PaymentMethodSelector from "../selectors/paymentMethodSelector";
 
 // Defines the props for the FormDialog component
 
@@ -263,13 +263,13 @@ export default function FormDialog({
 
             {!state?.success && (
               <>
-              <p className="text-sm text-red-500">
-                {state?.errors?.value || ""}
-              </p>
+                <p className="text-sm text-red-500">
+                  {state?.errors?.value || ""}
+                </p>
 
-              <p className="text-sm text-red-500">
-                {state?.errors?.is_paid || ""}
-              </p>
+                <p className="text-sm text-red-500">
+                  {state?.errors?.is_paid || ""}
+                </p>
               </>
             )}
 
@@ -294,17 +294,15 @@ export default function FormDialog({
 
             {!state?.success && (
               <>
-              <p className="text-sm text-red-500">
-                {state?.errors?.category_id || ""}
-              </p>
+                <p className="text-sm text-red-500">
+                  {state?.errors?.category_id || ""}
+                </p>
 
-              <p className="text-sm text-red-500">
-                {state?.errors?.payment_method_id || ""}
-              </p>
+                <p className="text-sm text-red-500">
+                  {state?.errors?.payment_method_id || ""}
+                </p>
               </>
             )}
-
-           
           </div>
 
           <div className="md:grid gap-3">

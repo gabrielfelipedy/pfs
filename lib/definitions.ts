@@ -21,11 +21,12 @@ export type ExpenseLimit = {
   name?: string;
   description?: string | null;
   value?: number | null;
-  recursive?: number | null;
   start_date: Date | null;
   end_date: Date | null;
   category_id?: number | null;
   category_name?: string | null;
+  period_id?: number | null;
+  period_name?: string | null;
   created_at?: Date;
   updated_at?: Date | null;
   spend?: number | null;
@@ -44,6 +45,14 @@ export type PaymentMethod = {
   id?: number;
   name: string;
   description: string;
+  created_at?: Date;
+  updated_at?: Date | null;
+}
+
+export type Period = {
+  id?: number;
+  name: string;
+  description?: string | null;
   created_at?: Date;
   updated_at?: Date | null;
 }

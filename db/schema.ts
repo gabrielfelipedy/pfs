@@ -23,6 +23,16 @@ export const categoryTable = sqliteTable("category", {
   ),
 });
 
+export const periodTable = sqliteTable("period", {
+  id: integer().primaryKey({ autoIncrement: true }),
+  name: text().notNull(),
+  description: text(),
+  created_at: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`).notNull(),
+  updated_at: integer("updated_at", { mode: "timestamp" }).$onUpdate(
+    () => new Date()
+  ),
+});
+
 export const paymentMethodTable = sqliteTable("payment_method", {
   id: integer().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
@@ -52,14 +62,19 @@ export const expenselimitTable = sqliteTable("expense_limit", {
   name: text().notNull(),
   description: text(),
   value: integer(),
-  recursive: integer(),
-  // 0 - Not recursive, 1 - Daily, 2 - Weekly, 3 - Monthly, 4 - Yearly
+
   start_date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
   end_date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
+
   category_id: integer().references(() => categoryTable.id, {
     onUpdate: "cascade",
     onDelete: "set null",
   }),
+  period_id: integer().references(() => periodTable.id, {
+    onUpdate: "cascade",
+    onDelete: "set null",
+  }),
+
   created_at: integer({ mode: "timestamp" })
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
@@ -77,10 +92,13 @@ export const operationTable = sqliteTable("operation", {
   date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
   is_paid: integer({ mode: "boolean" }),
   is_income: integer({ mode: "boolean" }),
-  recursive: integer(),
-  // 0 - Not recursive, 1 - Daily, 2 - Weekly, 3 - Monthly, 4 - Yearly
 
   category_id: integer().references(() => categoryTable.id, {
+    onUpdate: "cascade",
+    onDelete: "set null",
+  }),
+
+  period_id: integer().references(() => periodTable.id, {
     onUpdate: "cascade",
     onDelete: "set null",
   }),
@@ -125,14 +143,16 @@ export const ExpenseLimitWithCategoryView = sqliteView(
       name: expenselimitTable.name,
       description: expenselimitTable.description,
       value: expenselimitTable.value,
-      recursive: expenselimitTable.recursive,
       start_date: expenselimitTable.start_date,
       end_date: expenselimitTable.end_date,
       category_id: expenselimitTable.category_id,
       category_name: sql<string>`category.name`.as("category_name"),
+      period_id: expenselimitTable.period_id,
+      period_name: sql<string>`period.name`.as("period_name"),
     })
     .from(expenselimitTable)
     .leftJoin(categoryTable, sql`expense_limit.category_id = category.id`)
+    .leftJoin(periodTable, sql`expense_limit.period_id = period.id`)
 );
 
 export const incomeView = sqliteView("vw_income").as((qb) =>
@@ -155,9 +175,10 @@ export const operationWithCategoryView = sqliteView(
       date: operationTable.date,
       is_paid: operationTable.is_paid,
       is_income: operationTable.is_income,
-      recursive: operationTable.recursive,
+      period_id: operationTable.period_id,
       category_id: operationTable.category_id,
       category_name: sql<string>`category.name`.as("category_name"),
+      period_name: sql<string>`period.name`.as("period_name"),
       payment_method_id: operationTable.payment_method_id,
       payment_method_name: sql<string>`payment_method.name`.as(
         "payment_method_name"
@@ -169,6 +190,7 @@ export const operationWithCategoryView = sqliteView(
       paymentMethodTable,
       sql`operation.payment_method_id = payment_method.id`
     )
+    .leftJoin(periodTable, sql`operation.period_id = period.id`)
 );
 
 export const expenseWithCategoryView = sqliteView(
@@ -184,10 +206,9 @@ export const incomeWithCategoryView = sqliteView("vw_income_with_category").as(
   (qb) =>
     qb
       .select()
-    .from(operationWithCategoryView)
-    .where(eq(operationWithCategoryView.is_income, true))
+      .from(operationWithCategoryView)
+      .where(eq(operationWithCategoryView.is_income, true))
 );
-
 
 // ********* BALANCES ****************
 
@@ -206,7 +227,9 @@ export const expenseBalanceView = sqliteView("vw_expense_balance").as((qb) =>
     .orderBy(expenseWithCategoryView.category_id)
 );
 
-export const PaymentMethodBalanceView = sqliteView("vw_payment_method_balance").as((qb) =>
+/* export const PaymentMethodBalanceView = sqliteView(
+  "vw_payment_method_balance"
+).as((qb) =>
   qb
     .select({
       payment_method_id: expenseWithCategoryView.payment_method_id,
@@ -266,9 +289,9 @@ export const generalBalanceView = sqliteView("vw_general_balance").as((qb) => {
     })
     .from(incomes)
     .leftJoin(expenses, sql`1=1`);
-});
+}); */
 
-export const balanceEvolutionView = sqliteView("vw_balance_evolution").as(
+/* export const balanceEvolutionView = sqliteView("vw_balance_evolution").as(
   (qb) => {
     const dailySum = qb.$with("expenses_by_daymonth").as(
       qb
@@ -299,7 +322,7 @@ export const balanceEvolutionView = sqliteView("vw_balance_evolution").as(
       .from(dailySum)
       .orderBy(asc(dailySum.day));
   }
-);
+); */
 
 export const expenseLimitBalanceView = sqliteView(
   "vw_expense_limit_balance"
@@ -309,7 +332,7 @@ export const expenseLimitBalanceView = sqliteView(
       id: ExpenseLimitWithCategoryView.id,
       name: ExpenseLimitWithCategoryView.name,
       value: ExpenseLimitWithCategoryView.value,
-      recursive: ExpenseLimitWithCategoryView.recursive,
+      period_id: ExpenseLimitWithCategoryView.period_id,
       start_date: ExpenseLimitWithCategoryView.start_date,
       end_date: ExpenseLimitWithCategoryView.end_date,
       category_id:
@@ -319,6 +342,10 @@ export const expenseLimitBalanceView = sqliteView(
       category_name:
         sql<string>`"vw_expense_limit_with_category"."category_name"`.as(
           "category_name"
+        ),
+      period_name:
+        sql<string>`"vw_expense_limit_with_category"."period_name"`.as(
+          "period_name"
         ),
       spend: expenseBalanceView.total,
     })
@@ -331,7 +358,6 @@ export const expenseLimitBalanceView = sqliteView(
       )
     )
 );
-
 
 export type InsertCategory = typeof categoryTable.$inferInsert;
 export type SelectCategory = typeof categoryTable.$inferSelect;

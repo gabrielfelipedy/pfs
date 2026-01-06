@@ -547,6 +547,41 @@
       "when": 1767644308515,
       "tag": "0077_ancient_hellion",
       "breakpoints": true
+    },
+    {
+      "idx": 78,
+      "version": "6",
+      "when": 1767707535846,
+      "tag": "0078_fantastic_wolfpack",
+      "breakpoints": true
+    },
+    {
+      "idx": 79,
+      "version": "6",
+      "when": 1767707614271,
+      "tag": "0079_red_roughhouse",
+      "breakpoints": true
+    },
+    {
+      "idx": 80,
+      "version": "6",
+      "when": 1767707725345,
+      "tag": "0080_mushy_jamie_braddock",
+      "breakpoints": true
+    },
+    {
+      "idx": 81,
+      "version": "6",
+      "when": 1767708049638,
+      "tag": "0081_public_hobgoblin",
+      "breakpoints": true
+    },
+    {
+      "idx": 82,
+      "version": "6",
+      "when": 1767708132936,
+      "tag": "0082_brainy_psynapse",
+      "breakpoints": true
     }
   ]
 }

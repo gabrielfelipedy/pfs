@@ -5,7 +5,7 @@ import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 
 import { Category } from "@/lib/definitions";
 import { capitalizeFirstLetter } from "@/lib/utils";
-import { fetchCategoriesAction } from "@/actions/category-actions";
+import { fetchCategoriesAction } from "@/actions/selectors";
 
 interface Props {
   category_id: number | undefined;
