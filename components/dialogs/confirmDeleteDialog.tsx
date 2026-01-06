@@ -22,12 +22,14 @@ import { deleteOperationAction } from "@/actions/operation-actions";
 import { OperationActionState } from "@/actions/definitions";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../ui/spinner";
+import { Operation } from "@/lib/definitions";
+import { formatter } from "@/lib/utils";
 
 interface Props {
-  id: number | undefined;
+  operation: Operation;
 }
 
-export default function ConfirmDeleteDialog({ id }: Props) {
+export default function ConfirmDeleteDialog({ operation }: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const [state, deleteOperationAc, pending] = useActionState<
@@ -55,7 +57,7 @@ export default function ConfirmDeleteDialog({ id }: Props) {
   }, [state, router]);
 
   return (
-    <AlertDialog key={id} open={dialogOpen} onOpenChange={setDialogOpen}>
+    <AlertDialog key={operation.id} open={dialogOpen} onOpenChange={setDialogOpen}>
       <AlertDialogTrigger asChild>
         <Button variant="destructive">
           <Trash />
@@ -64,11 +66,11 @@ export default function ConfirmDeleteDialog({ id }: Props) {
       <AlertDialogContent className="sm:max-w-106.25">
         <form action={deleteOperationAc}>
           <AlertDialogHeader>
-            <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
-            <AlertDialogDescription>Confirme a deleção</AlertDialogDescription>
+            <AlertDialogTitle>Confirme a deleção</AlertDialogTitle>
+                        <AlertDialogDescription>Deletando a transação {operation.name} de {formatter.format((operation.value ?? 0) / 100)}</AlertDialogDescription>
           </AlertDialogHeader>
 
-          <input type="hidden" name="id" value={id} />
+          <input type="hidden" name="id" value={operation.id} />
 
           <AlertDialogFooter className="mt-12">
             <AlertDialogCancel className="w-1/2" asChild>

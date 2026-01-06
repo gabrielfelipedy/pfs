@@ -10,7 +10,7 @@ interface Props {
 
 const navLinks = [
   {
-    href: "/",
+    href: "/dashboard",
     name: "Dashboard",
   },
   {

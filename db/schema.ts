@@ -23,6 +23,16 @@ export const categoryTable = sqliteTable("category", {
   ),
 });
 
+export const periodTable = sqliteTable("period", {
+  id: integer().primaryKey({ autoIncrement: true }),
+  name: text().notNull(),
+  description: text(),
+  created_at: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`).notNull(),
+  updated_at: integer("updated_at", { mode: "timestamp" }).$onUpdate(
+    () => new Date()
+  ),
+});
+
 export const paymentMethodTable = sqliteTable("payment_method", {
   id: integer().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
@@ -52,13 +62,19 @@ export const expenselimitTable = sqliteTable("expense_limit", {
   name: text().notNull(),
   description: text(),
   value: integer(),
-  recursive: integer({ mode: "boolean" }).notNull(),
+
   start_date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
   end_date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
+
   category_id: integer().references(() => categoryTable.id, {
     onUpdate: "cascade",
     onDelete: "set null",
   }),
+  period_id: integer().references(() => periodTable.id, {
+    onUpdate: "cascade",
+    onDelete: "set null",
+  }),
+
   created_at: integer({ mode: "timestamp" })
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
@@ -78,6 +94,11 @@ export const operationTable = sqliteTable("operation", {
   is_income: integer({ mode: "boolean" }),
 
   category_id: integer().references(() => categoryTable.id, {
+    onUpdate: "cascade",
+    onDelete: "set null",
+  }),
+
+  period_id: integer().references(() => periodTable.id, {
     onUpdate: "cascade",
     onDelete: "set null",
   }),
@@ -122,14 +143,16 @@ export const ExpenseLimitWithCategoryView = sqliteView(
       name: expenselimitTable.name,
       description: expenselimitTable.description,
       value: expenselimitTable.value,
-      recursive: expenselimitTable.recursive,
       start_date: expenselimitTable.start_date,
       end_date: expenselimitTable.end_date,
       category_id: expenselimitTable.category_id,
       category_name: sql<string>`category.name`.as("category_name"),
+      period_id: expenselimitTable.period_id,
+      period_name: sql<string>`period.name`.as("period_name"),
     })
     .from(expenselimitTable)
     .leftJoin(categoryTable, sql`expense_limit.category_id = category.id`)
+    .leftJoin(periodTable, sql`expense_limit.period_id = period.id`)
 );
 
 export const incomeView = sqliteView("vw_income").as((qb) =>
@@ -152,8 +175,10 @@ export const operationWithCategoryView = sqliteView(
       date: operationTable.date,
       is_paid: operationTable.is_paid,
       is_income: operationTable.is_income,
+      period_id: operationTable.period_id,
       category_id: operationTable.category_id,
       category_name: sql<string>`category.name`.as("category_name"),
+      period_name: sql<string>`period.name`.as("period_name"),
       payment_method_id: operationTable.payment_method_id,
       payment_method_name: sql<string>`payment_method.name`.as(
         "payment_method_name"
@@ -165,6 +190,7 @@ export const operationWithCategoryView = sqliteView(
       paymentMethodTable,
       sql`operation.payment_method_id = payment_method.id`
     )
+    .leftJoin(periodTable, sql`operation.period_id = period.id`)
 );
 
 export const expenseWithCategoryView = sqliteView(
@@ -179,119 +205,9 @@ export const expenseWithCategoryView = sqliteView(
 export const incomeWithCategoryView = sqliteView("vw_income_with_category").as(
   (qb) =>
     qb
-      .select({
-        id: incomeView.id,
-        name: incomeView.name,
-        description: incomeView.description,
-        value: incomeView.value,
-        date: incomeView.date,
-        is_paid: incomeView.is_paid,
-        is_income: incomeView.is_income,
-        category_id: incomeView.category_id,
-        category_name: sql<string>`category.name`.as("category_name"),
-      })
-      .from(incomeView)
-      .leftJoin(categoryTable, sql`vw_income.category_id = category.id`)
-);
-
-// *** TOTAL EXPENSES BY PERIOD
-
-export const totalExpensesByDayByMonth = sqliteView(
-  "vw_total_expense_by_daymonth"
-).as((qb) =>
-  qb
-    .select({
-      date: sql<string>`date(${expenseView.date}, 'unixepoch', '-3 hours')`.as(
-        "date"
-      ),
-      total_value: sql<number>`CAST(SUM(${expenseView.value}) AS INTEGER)`.as(
-        "total_value"
-      ),
-    })
-    .from(expenseView)
-    .where(
-      sql`
-    date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month')
-    AND date(${expenseView.date}, 'unixepoch', '-3 hours') < date('now', '-3 hours', '+1 month', 'start of month')
-  `
-    )
-    .groupBy(sql`date(${expenseView.date}, 'unixepoch', '-3 hours')`)
-    .orderBy(sql`date(${expenseView.date}, 'unixepoch', '-3 hours')`)
-);
-
-export const totalExpensesByDay = sqliteView("vw_total_expense_by_day").as(
-  (qb) =>
-    qb
-      .select({
-        total_value: sql<number>`CAST(SUM(${expenseView.value}) AS INTEGER)`.as(
-          "total_value"
-        ),
-      })
-      .from(expenseView)
-      .where(
-        sql`
-     date(${expenseView.date}, 'unixepoch', '-3 hours') = date('now', '-3 hours')`
-      )
-);
-
-export const totalExpensesByWeek = sqliteView("vw_total_expense_by_week").as(
-  (qb) =>
-    qb
-      .select({
-        day: sql<string>`date(date, 'unixepoch', '-3 hours')`.as("day"),
-        total_value: sql<number>`CAST(SUM(${expenseView.value}) AS INTEGER)`.as(
-          "total_value"
-        ),
-      })
-      .from(expenseView)
-      .where(
-        sql`
-    day >= date('now', '-3 hours', '+1 day', 'weekday 0', '-7 days')
-    AND day < date('now', '-3 hours', '+1 day', 'weekday 0')
-  `
-      )
-);
-
-export const totalExpensesByMonth = sqliteView("vw_total_expense_by_month").as(
-  (qb) =>
-    qb
-      .select({
-        total_value: sql<number>`CAST(SUM(${expenseView.value}) AS INTEGER)`.as(
-          "total_value"
-        ),
-      })
-      .from(expenseView)
-      .where(
-        sql`
-    date(${expenseView.date}, 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month')
-    AND date(${expenseView.date}, 'unixepoch', '-3 hours') < date('now', '-3 hours', '+1 month', 'start of month')
-  `
-      )
-);
-
-// *** TOTAL INCOMES BY PERIOD
-
-export const totalIncomesByDayByMonth = sqliteView(
-  "vw_total_income_by_daymonth"
-).as((qb) =>
-  qb
-    .select({
-      date: sql<string>`date(${incomeView.date}, 'unixepoch', '-3 hours')`.as(
-        "date"
-      ),
-      total_value: sql<number>`CAST(SUM(${incomeView.value}) AS INTEGER)`.as(
-        "total_value"
-      ),
-    })
-    .from(incomeView)
-    .where(
-      sql`
-    date(${incomeView.date}, 'unixepoch', '-3 hours') >= date('now', '-3 hours', 'start of month')
-    AND date(${incomeView.date}, 'unixepoch', '-3 hours') < date('now', '-3 hours', '+1 month', 'start of month')
-  `
-    )
-    .groupBy(sql`date(${incomeView.date}, 'unixepoch', '-3 hours')`)
-    .orderBy(sql`date(${incomeView.date}, 'unixepoch', '-3 hours')`)
+      .select()
+      .from(operationWithCategoryView)
+      .where(eq(operationWithCategoryView.is_income, true))
 );
 
 // ********* BALANCES ****************
@@ -311,7 +227,9 @@ export const expenseBalanceView = sqliteView("vw_expense_balance").as((qb) =>
     .orderBy(expenseWithCategoryView.category_id)
 );
 
-export const PaymentMethodBalanceView = sqliteView("vw_payment_method_balance").as((qb) =>
+/* export const PaymentMethodBalanceView = sqliteView(
+  "vw_payment_method_balance"
+).as((qb) =>
   qb
     .select({
       payment_method_id: expenseWithCategoryView.payment_method_id,
@@ -371,9 +289,9 @@ export const generalBalanceView = sqliteView("vw_general_balance").as((qb) => {
     })
     .from(incomes)
     .leftJoin(expenses, sql`1=1`);
-});
+}); */
 
-export const balanceEvolutionView = sqliteView("vw_balance_evolution").as(
+/* export const balanceEvolutionView = sqliteView("vw_balance_evolution").as(
   (qb) => {
     const dailySum = qb.$with("expenses_by_daymonth").as(
       qb
@@ -404,7 +322,7 @@ export const balanceEvolutionView = sqliteView("vw_balance_evolution").as(
       .from(dailySum)
       .orderBy(asc(dailySum.day));
   }
-);
+); */
 
 export const expenseLimitBalanceView = sqliteView(
   "vw_expense_limit_balance"
@@ -414,7 +332,7 @@ export const expenseLimitBalanceView = sqliteView(
       id: ExpenseLimitWithCategoryView.id,
       name: ExpenseLimitWithCategoryView.name,
       value: ExpenseLimitWithCategoryView.value,
-      recursive: ExpenseLimitWithCategoryView.recursive,
+      period_id: ExpenseLimitWithCategoryView.period_id,
       start_date: ExpenseLimitWithCategoryView.start_date,
       end_date: ExpenseLimitWithCategoryView.end_date,
       category_id:
@@ -424,6 +342,10 @@ export const expenseLimitBalanceView = sqliteView(
       category_name:
         sql<string>`"vw_expense_limit_with_category"."category_name"`.as(
           "category_name"
+        ),
+      period_name:
+        sql<string>`"vw_expense_limit_with_category"."period_name"`.as(
+          "period_name"
         ),
       spend: expenseBalanceView.total,
     })
@@ -436,68 +358,6 @@ export const expenseLimitBalanceView = sqliteView(
       )
     )
 );
-
-// ********* TOTAL INCOMES BY PERIOD **************
-
-export const totalOperationsByDayByMonth = sqliteView(
-  "vw_total_operation_by_daymonth"
-).as((qb) => {
-  const expensesByDayByMonth = qb.$with("expenses_by_daymonth").as(
-    qb
-      .select({
-        date: sql<string>`date(date, 'unixepoch', '-3 hours')`.as("day"),
-        total_expense: sql<number>`CAST(SUM(value) AS INTEGER)`.as(
-          "total_expense"
-        ),
-      })
-      .from(expenseView)
-      .where(
-        sql`day >= date('now', '-3 hours', 'start of month') AND day < date('now', '-3 hours', '+1 month', 'start of month')`
-      )
-      .groupBy(sql`day`)
-  );
-
-  const icomesByDayByMonth = qb.$with("incomes_by_daymonth").as(
-    qb
-      .select({
-        date: sql<string>`date(date, 'unixepoch', '-3 hours')`.as("day"),
-        total_income: sql<number>`CAST(SUM(value) AS INTEGER)`.as(
-          "total_income"
-        ),
-      })
-      .from(incomeView)
-      .where(
-        sql`day >= date('now', '-3 hours', 'start of month') AND day < date('now', '-3 hours', '+1 month', 'start of month')`
-      )
-      .groupBy(sql`day`)
-  );
-
-  return qb
-    .with(expensesByDayByMonth, icomesByDayByMonth)
-    .select({
-      day: sql<string>`COALESCE(expenses_by_daymonth.day, incomes_by_daymonth.day)`.as(
-        "day"
-      ),
-      total_income:
-        sql<number>`IFNULL(${icomesByDayByMonth.total_income}, 0)`.as(
-          "total_income"
-        ),
-      total_expense:
-        sql<number>`IFNULL(${expensesByDayByMonth.total_expense}, 0)`.as(
-          "total_expense"
-        ),
-      balance:
-        sql<number>`(IFNULL(${icomesByDayByMonth.total_income}, 0) - IFNULL(${expensesByDayByMonth.total_expense}, 0))`.as(
-          "balance"
-        ),
-    })
-    .from(expensesByDayByMonth)
-    .fullJoin(
-      icomesByDayByMonth,
-      eq(sql`expenses_by_daymonth.day`, sql`incomes_by_daymonth.day`)
-    )
-    .orderBy(sql`day`);
-});
 
 export type InsertCategory = typeof categoryTable.$inferInsert;
 export type SelectCategory = typeof categoryTable.$inferSelect;

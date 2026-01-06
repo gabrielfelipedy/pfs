@@ -75,9 +75,7 @@ const Line = ({ title, description, className, data }: Props) => {
         show: false,
       },
       axisLabel: {
-        // Formats the axis labels
-        color: isDark ? "#ffffff" : "#333333",
-        formatter: (value: number) => formatter.format(value),
+        show: false
       },
     },
     series: [

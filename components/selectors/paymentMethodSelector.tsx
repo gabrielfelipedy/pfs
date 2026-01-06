@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 
 import { PaymentMethod } from "@/lib/definitions";
-import { fetchPaymentMethodsAction } from "@/actions/payment-method-actions";
+import { fetchPaymentMethodsAction } from "@/actions/selectors";
+;
 
 interface Props {
   payment_method_id: number | undefined;

@@ -14,6 +14,13 @@ export const ExpenseLimitSchema = z.object({
 
     return val;
   }, z.number().int().positive({ message: "Category ID must be a positive integer" }).nullable()),
+
+  period_id: z.preprocess((val) => {
+    if (val === undefined || (typeof val === "number" && isNaN(val)))
+      return null;
+
+    return val;
+  }, z.number().int().positive({ message: "Period ID must be a positive integer" }).nullable()),
 });
 
 export type ExpenseLimitActionState =
@@ -28,7 +35,7 @@ export type ExpenseLimitActionState =
         name?: string[];
         description?: string[];
         value?: string[];
-        recursive?: string[];
+        period_id?: string[];
         start_date?: string[];
         end_date?: string[];
         category_id?: string[];

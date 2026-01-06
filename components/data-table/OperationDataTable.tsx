@@ -7,7 +7,7 @@ import { X, Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "../ui/button";
 import { capitalizeFirstLetter, formatter } from "@/lib/utils";
 import { Pencil } from "lucide-react";
-import ConfirmDeleteDialog from "@/components/shared/confirmDeleteDialog";
+import ConfirmDeleteDialog from "@/components/dialogs/confirmDeleteDialog";
 import FormDialog from "@/components/dialogs/FormDialog";
 import { Operation } from "@/lib/definitions";
 import { updateSaida } from "@/actions/expense-actions";
@@ -178,7 +178,7 @@ export const columns: ColumnDef<Operation>[] = [
             actionFunction={row.original.is_income ? updateIncome : updateSaida}
           />
           {/* <UpdateSaidaDialog operation={row.original} /> */}
-          <ConfirmDeleteDialog id={row.original.id} />
+          <ConfirmDeleteDialog operation={row.original} />
         </div>
       );
     },
