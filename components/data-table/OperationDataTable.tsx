@@ -178,7 +178,7 @@ export const columns: ColumnDef<Operation>[] = [
             actionFunction={row.original.is_income ? updateIncome : updateSaida}
           />
           {/* <UpdateSaidaDialog operation={row.original} /> */}
-          <ConfirmDeleteDialog id={row.original.id} />
+          <ConfirmDeleteDialog operation={row.original} />
         </div>
       );
     },

@@ -32,7 +32,7 @@ import PeriodSelector from "../selectors/periodSelector";
 
 interface Props {
   className?: string;
-  openDialogText: string | ReactNode;
+  children?: ReactNode;
   buttonVariation?:
     | "link"
     | "default"
@@ -54,7 +54,7 @@ interface Props {
 
 export default function LimitDialog({
   className,
-  openDialogText,
+  children,
   buttonVariation,
   dialogTitle,
   dialogDescription,
@@ -115,7 +115,7 @@ export default function LimitDialog({
       onOpenChange={setDialogOpen}
     >
       <DialogTrigger className={className} asChild>
-        <Button variant={buttonVariation}>{openDialogText}</Button>
+        <Button variant={buttonVariation}>{children}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-106.25">
         <form action={formAction}>

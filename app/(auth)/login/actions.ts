@@ -60,9 +60,9 @@ export async function login(
   }
 
   await createSession(username);
-  redirect("/");
-
+  redirect("/dashboard");
   return { success: true, message: "Login Sucessfully" };
+  
 }
 
 export async function logout() {}

@@ -51,13 +51,12 @@ const page = async () => {
 
             <LimitDialog
               className="mt-10"
-              openDialogText="Novo limite de gasto"
               dialogTitle="Limite de gasto"
               dialogDescription="Preencha as informações do limite"
               buttonText="Adicionar"
               limit={undefined}
               actionFunction={createExpenseLimit}
-            />
+            >Criar novo limite</LimitDialog>
 
             <LimitsDataTable limits={data} />
           </TabsContent>

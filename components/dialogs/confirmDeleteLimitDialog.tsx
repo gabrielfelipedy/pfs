@@ -18,24 +18,24 @@ import {
 } from "@/components/ui/alert-dialog"
 
 import { toast } from "sonner";
-import { deleteOperationAction } from "@/actions/operation-actions";
-import { OperationActionState } from "@/actions/definitions";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../ui/spinner";
-import { Operation } from "@/lib/definitions";
+import { ExpenseLimit } from "@/lib/definitions";
+import { ExpenseLimitActionState } from "@/app/(main)/saidas/limites/actions/definitions";
+import { deleteLimitAction } from "@/app/(main)/saidas/limites/actions/limits";
 import { formatter } from "@/lib/utils";
 
 interface Props {
-  operation: Operation;
+  expenseLimit: ExpenseLimit;
 }
 
-export default function ConfirmDeleteDialog({ operation }: Props) {
+export default function ConfirmDeleteLimitDialog({ expenseLimit }: Props) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const [state, deleteOperationAc, pending] = useActionState<
-    OperationActionState | undefined,
+  const [state, deleteLimit, pending] = useActionState<
+    ExpenseLimitActionState | undefined,
     FormData
-  >(deleteOperationAction, undefined);
+  >(deleteLimitAction, undefined);
 
   const router = useRouter();
 
@@ -57,20 +57,20 @@ export default function ConfirmDeleteDialog({ operation }: Props) {
   }, [state, router]);
 
   return (
-    <AlertDialog key={operation.id} open={dialogOpen} onOpenChange={setDialogOpen}>
+    <AlertDialog key={expenseLimit?.id} open={dialogOpen} onOpenChange={setDialogOpen}>
       <AlertDialogTrigger asChild>
         <Button variant="destructive">
           <Trash />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="sm:max-w-106.25">
-        <form action={deleteOperationAc}>
+        <form action={deleteLimit}>
           <AlertDialogHeader>
             <AlertDialogTitle>Confirme a deleção</AlertDialogTitle>
-                        <AlertDialogDescription>Deletando a transação {operation.name} de {formatter.format((operation.value ?? 0) / 100)}</AlertDialogDescription>
+            <AlertDialogDescription>Deletando o limite {expenseLimit.name} de {formatter.format((expenseLimit.value ?? 0) / 100)}</AlertDialogDescription>
           </AlertDialogHeader>
 
-          <input type="hidden" name="id" value={operation.id} />
+          <input type="hidden" name="id" value={expenseLimit?.id} />
 
           <AlertDialogFooter className="mt-12">
             <AlertDialogCancel className="w-1/2" asChild>

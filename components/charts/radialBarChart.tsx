@@ -1,21 +1,23 @@
 "use client";
 
 import ReactCharts from "echarts-for-react";
-import {
-  Card,
-  CardContent
-} from "../ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { formatter } from "@/lib/utils";
 import { useTheme } from "next-themes";
+import LimitDialog from "../dialogs/LimitDialog";
+import { updateExpenseLimit } from "@/app/(main)/saidas/limites/actions/limits";
+import { Pencil } from "lucide-react";
+import { ExpenseLimit } from "@/lib/definitions";
+import ConfirmDeleteDialog from "../dialogs/confirmDeleteDialog";
+import ConfirmDeleteLimitDialog from "../dialogs/confirmDeleteLimitDialog";
 
 interface Props {
   title: string;
   className?: string;
-  data: number;
-  maxValue: number;
+  expenseLimit: ExpenseLimit;
 }
 
-const RadialBarChart = ({ title, className, data, maxValue }: Props) => {
+const RadialBarChart = ({ title, className, expenseLimit }: Props) => {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark" || theme === "dark";
 
@@ -26,7 +28,7 @@ const RadialBarChart = ({ title, className, data, maxValue }: Props) => {
     visualMap: {
       show: false, // Hide the legend/slider
       min: 0,
-      max: maxValue,
+      max: expenseLimit.value,
       inRange: {
         // Define colors from "low" to "high"
         color: ["#52c41a", "#fadb14", "#ff4d4f"],
@@ -36,7 +38,7 @@ const RadialBarChart = ({ title, className, data, maxValue }: Props) => {
       show: false,
     },
     angleAxis: {
-      max: maxValue,
+      max: expenseLimit.value,
       startAngle: 90,
       show: false,
     },
@@ -50,7 +52,9 @@ const RadialBarChart = ({ title, className, data, maxValue }: Props) => {
         left: "center",
         top: "middle",
         style: {
-          text: `${Math.round((data / maxValue) * 100)}%`, // Your center label
+          text: `${Math.round(
+            ((expenseLimit.spend ?? 0) / (expenseLimit.value ?? 1)) * 100
+          )}%`, // Your center label
           fill: isDark ? "#ffffff" : "#333333",
           textAlign: "center",
           fontSize: 18,
@@ -60,7 +64,7 @@ const RadialBarChart = ({ title, className, data, maxValue }: Props) => {
     ],
     series: {
       type: "bar",
-      data: [data],
+      data: [expenseLimit.spend ?? 0],
       coordinateSystem: "polar",
       showBackground: true,
       backgroundStyle: {
@@ -75,14 +79,10 @@ const RadialBarChart = ({ title, className, data, maxValue }: Props) => {
     },
   };
 
-  const restante = maxValue - data
+  const restante = (expenseLimit.value ?? 0) - (expenseLimit.spend ?? 0);
 
   return (
     <Card className={`${className}`}>
-      {/* <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader> */}
       <CardContent className="pl-0">
         <div className="grid grid-cols-2 items-center">
           <ReactCharts
@@ -93,12 +93,30 @@ const RadialBarChart = ({ title, className, data, maxValue }: Props) => {
           <div>
             <p className="font-bold text-[1.2rem]">{title}</p>
             <p className="text-[1rem] font-bold text-black/70 dark:text-white/70">
-              {formatter.format(data / 100)} /{" "}
-              {formatter.format(maxValue / 100)}
+              {formatter.format((expenseLimit.spend ?? 0) / 100)} /{" "}
+              {formatter.format((expenseLimit.value ?? 0) / 100)}
             </p>
-            <p className="text-[0.9rem] text-black/70 dark:text-white/70">{formatter.format(restante/100)} {restante >= 0 ? 'restantes' : 'negativo'}</p>
+            <p className="text-[0.9rem] text-black/70 dark:text-white/70">
+              {formatter.format(restante / 100)}{" "}
+              {restante >= 0 ? "restantes" : "negativo"}
+            </p>
           </div>
         </div>
+
+        <div className="w-full flex justify-end gap-4 mt-8">
+           <LimitDialog
+            buttonVariation="outline"
+            dialogTitle="Atualizar Limite"
+            dialogDescription="Atualize as informações do limite"
+            buttonText="Atualizar"
+            limit={expenseLimit}
+            actionFunction={updateExpenseLimit}
+          >
+            <Pencil />
+          </LimitDialog>
+
+          <ConfirmDeleteLimitDialog expenseLimit={expenseLimit} />
+          </div>
       </CardContent>
     </Card>
   );

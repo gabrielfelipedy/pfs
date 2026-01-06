@@ -31,3 +31,7 @@ export async function updateDbExpenseLimit(
     .set(limit)
     .where(eq(expenselimitTable.id, id));
 }
+
+export async function deleteExpenseLimit(id: SelectExpenseLimit["id"]) {
+  return db.delete(expenselimitTable).where(eq(expenselimitTable.id, id));
+}

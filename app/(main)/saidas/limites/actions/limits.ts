@@ -2,7 +2,7 @@
 
 import { ExpenseLimitActionState, ExpenseLimitSchema } from "./definitions";
 import { revalidatePath } from "next/cache";
-import { InsertExpensesLimit, updateDbExpenseLimit } from "@/db/queries/limits";
+import { deleteExpenseLimit, InsertExpensesLimit, updateDbExpenseLimit } from "@/db/queries/limits";
 import { replaceUTCTime } from "@/lib/utils";
 
 export async function createExpenseLimit(
@@ -91,4 +91,40 @@ export async function updateExpenseLimit(
   revalidatePath('/saidas/limites')
 
   return { success: true, message: "Limite de gastos atualizado com sucesso" };
+}
+
+export async function deleteLimitAction(
+  prevState: ExpenseLimitActionState | undefined,
+  formData: FormData
+): Promise<ExpenseLimitActionState> {
+
+  const id = Number(formData.get("id"));
+
+  if (!id) {
+    return {
+      success: false,
+      errors: {
+        name: ["Invalid ID"],
+      },
+
+      message: "Invalid ID",
+    };
+  }
+
+  const result = await deleteExpenseLimit(id);
+
+  if (!result) {
+    return {
+      success: false,
+      errors: {
+        name: ["Erro ao deletar limite"],
+      },
+
+      message: "Erro ao deletar limite",
+    };
+  }
+
+  revalidatePath("/saidas/limites");
+
+  return { success: true, message: "Limite deletado com sucesso" };
 }

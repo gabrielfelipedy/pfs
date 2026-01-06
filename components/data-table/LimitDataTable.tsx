@@ -12,7 +12,7 @@ import { ExpenseLimit } from "@/lib/definitions";
 import { Badge } from "../ui/badge";
 import { updateExpenseLimit } from "@/app/(main)/saidas/limites/actions/limits";
 import LimitDialog from "../dialogs/LimitDialog";
-
+import ConfirmDeleteLimitDialog from "../dialogs/confirmDeleteLimitDialog";
 
 export const columns: ColumnDef<ExpenseLimit>[] = [
   {
@@ -98,16 +98,17 @@ export const columns: ColumnDef<ExpenseLimit>[] = [
       return (
         <div className="flex gap-4">
           <LimitDialog
-            openDialogText={<Pencil />}
             buttonVariation="outline"
             dialogTitle="Atualizar Limite"
             dialogDescription="Atualize as informações do limite"
             buttonText="Atualizar"
             limit={row.original}
             actionFunction={updateExpenseLimit}
-          />
+          >
+            <Pencil />
+          </LimitDialog>
           {/* <UpdateSaidaDialog operation={row.original} /> */}
-          <ConfirmDeleteDialog id={row.original.id} />
+          <ConfirmDeleteLimitDialog expenseLimit={row.original} />
         </div>
       );
     },

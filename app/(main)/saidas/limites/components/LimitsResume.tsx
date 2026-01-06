@@ -37,13 +37,39 @@ const LimitsResume = ({
 
   return (
     <div className={`${className} w-full py-6 flex flex-col gap-5`}>
+
+      <h1 className="text-2xl font-medium">Limites diários</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 w-full ">
-        {data.map((item) => (
+
+        {data.filter((item) => item.period_id === 1).map((item) => (
           <RadialBarChart
             key={item.id}
             title={item.name ?? ""}
-            data={item.spend ?? 0}
-            maxValue={item.value ?? 0}
+            expenseLimit={item}
+          />
+        ))}
+      </div>
+
+      <h1 className="text-2xl font-medium">Limites semanais</h1>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 w-full ">
+
+        {data.filter((item) => item.period_id === 2).map((item) => (
+          <RadialBarChart
+            key={item.id}
+            title={item.name ?? ""}
+            expenseLimit={item}
+          />
+        ))}
+      </div>
+
+      <h1 className="text-2xl font-medium">Limites mensais</h1>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 w-full ">
+
+        {data.filter((item) => item.period_id === 3).map((item) => (
+          <RadialBarChart
+            key={item.id}
+            title={item.name ?? ""}
+            expenseLimit={item}
           />
         ))}
       </div>
