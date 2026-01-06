@@ -92,9 +92,7 @@ const Area = ({ title, description, className, data }: Props) => {
       },
 
       axisLabel: {
-        color: isDark ? "#ffffff" : "#333333",
-        // format value as currency
-        formatter: (value: number) => formatter.format(value),
+        show: false
       },
     },
     series: [
