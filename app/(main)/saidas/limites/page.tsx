@@ -64,8 +64,7 @@ const page = async () => {
         ))}
       </Tabs>
 
-      <p>Definir limite total</p>
-      <p>Limites por categoria</p>
+      <p>Definir limite total (no category id)</p>
     </div>
   );
 };
