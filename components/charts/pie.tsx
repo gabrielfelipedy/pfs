@@ -30,8 +30,10 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
       valueFormatter: (value: number) => formatter.format(value / 100),
     },
     legend: {
-      bottom: "bottom",
-      left: "center",
+      show: false,
+      bottom: "auto",
+      left: "auto",
+      itemGap: 10,
       textStyle: {
         color: isDark ? "#ffffff" : "#333333",
       },
@@ -67,8 +69,8 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
           },
         },
         data: data,
-        startAngle: 185,
-        endAngle: 355,
+        startAngle: 0,
+        endAngle: 360,
       },
     ],
   };
@@ -77,7 +79,7 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
   //console.log(data)
 
   return (
-    <Card className={`${className} w-full`}>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

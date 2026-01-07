@@ -1,11 +1,10 @@
 import FormDialog from "../../../components/dialogs/FormDialog";
 import { createEntrada } from "@/actions/income-actions";
 import { Operation } from "@/lib/definitions";
-import OperationDataTable from "@/components/data-table/OperationDataTable";
 import MonthlyEntradas from "./monthlyEntradas";
 import { getIncomes } from "@/db/queries/incomes";
 import ErrorLoading from "@/components/error/ErrorLoading";
-import { filterOperationsByMonth, getAvaliableMonths } from "@/lib/operation";
+import { filterOperationsByMonth, getAvaliableMonths } from "@/lib/date";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
@@ -40,6 +39,7 @@ const Entradas = async () => {
         </TabsList>
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
+            
             <MonthlyEntradas
               incomes={filterOperationsByMonth(incomes, month)}
               className="mt-4"

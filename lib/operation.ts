@@ -1,31 +1,51 @@
-import { startOfDay } from "date-fns";
+import { isSameWeek, isToday, startOfDay } from "date-fns";
 import { ChartData, Operation, OperationBalance } from "./definitions";
 
-export const getAvaliableMonths = (operations: Operation[]) => {
-  const monthsSet = new Set<string>();
-  operations.forEach((operation) => {
-    if (operation.date) {
-      const date = new Date(operation.date);
-      const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
+export const INVESTIMENTO_CATEGORY_ID = 6;
 
-      monthsSet.add(monthYear);
-    }
+export const sumValuesOfOperations = (operations: Operation[]) => {
+  let total = 0;
+  operations.forEach((operation) => {
+    total += operation.value ?? 0;
   });
-  return Array.from(monthsSet).reverse();
+  return total;
 };
 
-export const filterOperationsByMonth = (
-  operations: Operation[],
-  month: string
-): Operation[] => {
-  return operations.filter((operation) => {
-    if (operation.date) {
-      const date = new Date(operation.date);
-      const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
-      return monthYear === month;
+export const calculateIncomes = (operations: Operation[]) => {
+  let total = 0;
+  operations.forEach((operation) => {
+    if (operation.is_income) {
+      total += operation.value ?? 0;
     }
-    return false;
   });
+  return total;
+};
+
+export const calculateWeeklyExpenses = (operations: Operation[]) => {
+  let total = 0;
+
+  operations.forEach((operation) => {
+    if (
+      !operation.is_income &&
+      isSameWeek(new Date(operation.date ?? ""), new Date(), {
+        weekStartsOn: 0,
+      })
+    ) {
+      total += operation.value ?? 0;
+    }
+  });
+  return total;
+};
+
+export const calculateDailyExpenses = (operations: Operation[]) => {
+  let total = 0;
+
+  operations.forEach((operation) => {
+    if (!operation.is_income && isToday(new Date(operation.date ?? ""))) {
+      total += operation.value ?? 0;
+    }
+  });
+  return total;
 };
 
 export const calculateBalanceEvolution = (operations: Operation[]) => {
@@ -34,7 +54,7 @@ export const calculateBalanceEvolution = (operations: Operation[]) => {
   const balanceMap = new Map<string, ChartData>();
   let total_incomes = 0;
 
-  operations.reverse().forEach((operation) => {
+  operations.forEach((operation) => {
     const date = startOfDay(new Date(operation.date ?? ""));
     const key = date.toISOString().split("T")[0];
 
@@ -53,12 +73,59 @@ export const calculateBalanceEvolution = (operations: Operation[]) => {
   return Array.from(balanceMap.values());
 };
 
-export const calculateIncomeEvolution = (operations: Operation[]) => {
+export const calculateOperationEvolution = (operations: Operation[]) => {
   //console.log(operations)
 
   const incomeMap = new Map<string, ChartData>();
 
   operations.reverse().forEach((operation) => {
+    const date = startOfDay(new Date(operation.date ?? ""));
+    const key = date.toISOString().split("T")[0];
+
+    const current_value = incomeMap.get(key) ?? { date: key, value: 0 };
+    const value = operation.value ?? 0;
+
+    incomeMap.set(key, {
+      date: key,
+      value: current_value.value + value / 100,
+    });
+  });
+
+  //console.log(Array.from(incomeMap.values()));
+  return Array.from(incomeMap.values()).reverse();
+};
+
+export const calculateCumulativeOperationEvolution = (
+  operations: Operation[]
+) => {
+  //console.log(operations)
+
+  const incomeMap = new Map<string, ChartData>();
+  let total = 0;
+
+  operations.reverse().forEach((operation) => {
+    const date = startOfDay(new Date(operation.date ?? ""));
+    const key = date.toISOString().split("T")[0];
+
+    const value = (operation.value ?? 0) / 100;
+    total += value;
+
+    incomeMap.set(key, {
+      date: key,
+      value: total,
+    });
+  });
+
+  //console.log(Array.from(incomeMap.values()));
+  return Array.from(incomeMap.values());
+};
+
+export const calculateIncomeEvolution = (operations: Operation[]) => {
+  //console.log(operations)
+
+  const incomeMap = new Map<string, ChartData>();
+
+  operations.forEach((operation) => {
     const date = startOfDay(new Date(operation.date ?? ""));
     const key = date.toISOString().split("T")[0];
 
@@ -74,7 +141,33 @@ export const calculateIncomeEvolution = (operations: Operation[]) => {
   });
 
   //console.log(Array.from(incomeMap.values()));
-  return Array.from(incomeMap.values()).reverse();
+  return Array.from(incomeMap.values());
+};
+
+export const calculateCumulativeIncomeEvolution = (operations: Operation[]) => {
+  //console.log(operations)
+
+  const incomeMap = new Map<string, ChartData>();
+  let total = 0;
+
+  operations.reverse().forEach((operation) => {
+    if (!operation.is_income) return;
+
+    const date = startOfDay(new Date(operation.date ?? ""));
+    const key = date.toISOString().split("T")[0];
+    // const current_value = incomeMap.get(key) ?? { date: key, value: 0 };
+    const value = operation.value ?? 0;
+
+    total += value / 100;
+
+    incomeMap.set(key, {
+      date: key,
+      value: total,
+    });
+  });
+
+  //console.log(Array.from(incomeMap.values()));
+  return Array.from(incomeMap.values());
 };
 
 export const calculateExpenseEvolution = (operations: Operation[]) => {
@@ -82,7 +175,7 @@ export const calculateExpenseEvolution = (operations: Operation[]) => {
 
   const expenseMap = new Map<string, ChartData>();
 
-  operations.reverse().forEach((operation) => {
+  operations.forEach((operation) => {
     const date = startOfDay(new Date(operation.date ?? ""));
     const key = date.toISOString().split("T")[0];
 
@@ -101,7 +194,40 @@ export const calculateExpenseEvolution = (operations: Operation[]) => {
   return Array.from(expenseMap.values());
 };
 
-export const calculateOperationEvolution = (operations: Operation[]) => {
+export const calculateCumulativeExpenseEvolution = (operations: Operation[]): ChartData[] => {
+  //console.log(operations)
+
+  const expenseMap = new Map<string, ChartData>();
+  let total = 0;
+
+  operations.forEach((operation) => {
+    if (operation.is_income) return;
+
+    const date = startOfDay(new Date(operation.date ?? ""));
+    const key = date.toISOString().split("T")[0];
+    // const current_value = expenseMap.get(key) ?? { date: key, value: 0 };
+    const value = operation.value ?? 0;
+
+    total += value / 100;
+
+    expenseMap.set(key, {
+      date: key,
+      value: total,
+    });
+  });
+
+  return Array.from(expenseMap.values());
+}
+
+export const filterInvestimentos = (operations: Operation[]) => {
+  return operations.filter(
+    (operation) => operation.category_id === INVESTIMENTO_CATEGORY_ID
+  );
+};
+
+export const calculateIncomesAndExpensesEvolution = (
+  operations: Operation[]
+) => {
   //console.log(operations)
 
   const balanceMap = new Map<
@@ -109,7 +235,7 @@ export const calculateOperationEvolution = (operations: Operation[]) => {
     { date: string; total_incomes: number; total_expenses: number }
   >();
 
-  operations.reverse().forEach((operation) => {
+  operations.forEach((operation) => {
     const date = startOfDay(new Date(operation.date ?? ""));
     const key = date.toISOString().split("T")[0];
 
@@ -158,8 +284,10 @@ export const calculateOperationProportion = (operations: Operation[]) => {
     });
   });
 
-  const proportion = Array.from(proportionMap.values()).sort((a, b) => b.value - a.value);
-  return proportion
+  const proportion = Array.from(proportionMap.values()).sort(
+    (a, b) => b.value - a.value
+  );
+  return proportion;
 };
 
 export const calculatePaymentMethodProportion = (operations: Operation[]) => {
@@ -167,7 +295,8 @@ export const calculatePaymentMethodProportion = (operations: Operation[]) => {
   const paymentMethodMap = new Map<string, OperationBalance>();
 
   operations.reverse().forEach((operation) => {
-    const key = operation.payment_method_id?.toString() ?? "Sem método de pagamento";
+    const key =
+      operation.payment_method_id?.toString() ?? "Sem método de pagamento";
 
     const current_value = paymentMethodMap.get(key) ?? {
       name: null,
@@ -180,6 +309,8 @@ export const calculatePaymentMethodProportion = (operations: Operation[]) => {
     });
   });
 
-  const paymentMethods = Array.from(paymentMethodMap.values()).sort((a, b) => b.value - a.value);
-  return paymentMethods
+  const paymentMethods = Array.from(paymentMethodMap.values()).sort(
+    (a, b) => b.value - a.value
+  );
+  return paymentMethods;
 };
