@@ -79,16 +79,12 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
   //console.log(data)
 
   return (
-    <Card className={className}>
+    <Card className={`${className} pb-6`}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ReactCharts
-          option={option}
-          style={{ height: "300px", width: "100%" }}
-        />
+      <CardContent className="p-0">
+        <ReactCharts option={option} />
       </CardContent>
     </Card>
   );

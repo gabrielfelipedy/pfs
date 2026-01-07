@@ -86,17 +86,20 @@ const Line = ({ title, description, className, data, chartColor }: Props) => {
         type: "line",
         smooth: true,
         areaStyle: {},
+        showSymbol: false,
+        lineStyle: {
+          width: 0, // This removes the line
+        },
       },
     ],
   };
 
   return (
-    <Card className={`${className} w-full`}>
+    <Card className={`${className} w-full pb-6`}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <ReactCharts option={option} />
       </CardContent>
     </Card>
