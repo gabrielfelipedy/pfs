@@ -5,7 +5,11 @@ import TreeMap from "@/components/charts/treemap";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBalancesSum } from "@/lib/utils";
 import { Operation } from "@/lib/definitions";
-import { calculateExpenseEvolution, calculateOperationProportion } from "@/lib/operation";
+import {
+  calculateExpenseEvolution,
+  calculateOperationProportion,
+  calculatePaymentMethodProportion,
+} from "@/lib/operation";
 
 interface Props {
   expenses: Operation[];
@@ -13,13 +17,18 @@ interface Props {
 }
 
 const MonthlySaidas = async ({ expenses, className }: Props) => {
+
+  const expense_evolution = calculateExpenseEvolution(expenses);
+
   const expense_proportion = calculateOperationProportion(expenses);
-    const total = calculateBalancesSum(expense_proportion);
-    const expense_evolution = calculateExpenseEvolution(expenses);
+  const expense_proportion_total = calculateBalancesSum(expense_proportion);
+
+  const payment_method_proportion = calculatePaymentMethodProportion(expenses);
+  const payment_method_proportion_total = calculateBalancesSum(payment_method_proportion);
 
   return (
     <div
-      className={`${className} flex flex-col lg:flex-row gap-4 w-full justify-between`}
+      className={`${className} flex flex-col gap-4 w-full justify-between`}
     >
       <Line
         title="Evolução de gastos"
@@ -27,7 +36,9 @@ const MonthlySaidas = async ({ expenses, className }: Props) => {
         data={expense_evolution}
       />
 
-      <Tabs defaultValue="pie" className="lg:w-1/2">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <Tabs defaultValue="pie">
         <TabsList>
           <TabsTrigger value="pie">Gráfico de Pizza</TabsTrigger>
           <TabsTrigger value="radar">Gráfico de Radar</TabsTrigger>
@@ -38,7 +49,7 @@ const MonthlySaidas = async ({ expenses, className }: Props) => {
           <Pie
             title="Gastos por categoria"
             description="Ao longo do mês atual"
-            totalValue={total}
+            totalValue={expense_proportion_total}
             data={expense_proportion}
           />
         </TabsContent>
@@ -53,11 +64,44 @@ const MonthlySaidas = async ({ expenses, className }: Props) => {
           <TreeMap
             title="Gastos por categoria"
             description="Ao longo do mês atual"
-            totalValue={total}
+            totalValue={expense_proportion_total}
             data={expense_proportion}
           />
         </TabsContent>
       </Tabs>
+
+      <Tabs defaultValue="pie">
+        <TabsList>
+          <TabsTrigger value="pie">Gráfico de Pizza</TabsTrigger>
+          <TabsTrigger value="radar">Gráfico de Radar</TabsTrigger>
+          <TabsTrigger value="tree">Gráfico de árvore</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="pie">
+          <Pie
+            title="Gastos por método de pagamento"
+            description="Ao longo do mês atual"
+            totalValue={payment_method_proportion_total}
+            data={payment_method_proportion}
+          />
+        </TabsContent>
+        <TabsContent value="radar">
+          <Radar
+            title="Gastos por  método de pagamento"
+            description="Ao longo do mês atual"
+            data={payment_method_proportion}
+          />
+        </TabsContent>
+        <TabsContent value="tree">
+          <TreeMap
+            title="Gastos por  método de pagamento"
+            description="Ao longo do mês atual"
+            totalValue={payment_method_proportion_total}
+            data={payment_method_proportion}
+          />
+        </TabsContent>
+      </Tabs>
+      </div>
     </div>
   );
 };

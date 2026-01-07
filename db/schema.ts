@@ -90,8 +90,9 @@ export const operationTable = sqliteTable("operation", {
   description: text(),
   value: integer(),
   date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
-  is_paid: integer({ mode: "boolean" }),
-  is_income: integer({ mode: "boolean" }),
+  
+  is_paid: integer({ mode: "boolean" }).default(false).notNull(),
+  is_income: integer({ mode: "boolean" }).default(false).notNull(),
 
   category_id: integer().references(() => categoryTable.id, {
     onUpdate: "cascade",

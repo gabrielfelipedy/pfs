@@ -98,7 +98,7 @@ export const calculateExpenseEvolution = (operations: Operation[]) => {
   });
 
   //console.log(Array.from(expenseMap.values()));
-  return Array.from(expenseMap.values()).reverse();
+  return Array.from(expenseMap.values());
 };
 
 export const calculateOperationEvolution = (operations: Operation[]) => {
@@ -160,4 +160,26 @@ export const calculateOperationProportion = (operations: Operation[]) => {
 
   const proportion = Array.from(proportionMap.values()).sort((a, b) => b.value - a.value);
   return proportion
+};
+
+export const calculatePaymentMethodProportion = (operations: Operation[]) => {
+  //console.log(operations)
+  const paymentMethodMap = new Map<string, OperationBalance>();
+
+  operations.reverse().forEach((operation) => {
+    const key = operation.payment_method_id?.toString() ?? "Sem método de pagamento";
+
+    const current_value = paymentMethodMap.get(key) ?? {
+      name: null,
+      value: 0,
+    };
+
+    paymentMethodMap.set(key, {
+      name: operation.payment_method_name ?? "Sem método de pagamento",
+      value: current_value.value + (operation.value ?? 0),
+    });
+  });
+
+  const paymentMethods = Array.from(paymentMethodMap.values()).sort((a, b) => b.value - a.value);
+  return paymentMethods
 };
