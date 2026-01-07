@@ -129,7 +129,7 @@ export const columns: ColumnDef<Operation>[] = [
     },
     cell: ({ row }) => {
       return (
-        <Badge>
+        <Badge variant="secondary">
           {capitalizeFirstLetter(row.original.category_name ?? "sem categoria")}
         </Badge>
       );
@@ -150,7 +150,9 @@ export const columns: ColumnDef<Operation>[] = [
     },
     cell: ({ row }) => {
       return (
-        <Badge>
+        <Badge
+        variant="secondary"
+        >
           {capitalizeFirstLetter(
             row.original.payment_method_name ?? "sem método de pagamento"
           )}

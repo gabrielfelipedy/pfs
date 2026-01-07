@@ -107,7 +107,7 @@ const Area = ({ title, description, className, data }: Props) => {
           width: 0, // This removes the line
         },
         areaStyle: {
-          opacity: 0.6,
+          opacity: 0.8,
         },
       },
       {
@@ -121,19 +121,18 @@ const Area = ({ title, description, className, data }: Props) => {
           width: 0, // This removes the line
         },
         areaStyle: {
-          opacity: 0.6,
+          opacity: 0.8,
         },
       }
     ],
   };
 
   return (
-    <Card className={`${className} w-full`}>
+    <Card className={`${className} w-full pb-0`}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <ReactCharts
           option={option}
           style={{ height: "300px", width: "100%" }}

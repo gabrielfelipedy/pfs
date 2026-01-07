@@ -43,12 +43,11 @@ export default async function Home() {
 
   return (
     <section className="mt-4 md:mt-20">
-      <h1 className="text-[2.2rem] md:text-[3.2rem] font-bold">Dashboard</h1>
-      <p className="text-slate-500 dark:text-gray-300 text-xl md:text-xl">
-        Visão geral das finanças
-      </p>
+      <h1 className="text-[2.2rem] md:text-[3rem] font-bold">Dashboard</h1>
+     
+     <p className="mt-6 text-sm text-[#cecece]">FILTRAR POR MÊS</p>
 
-      <Tabs className="mt-10" defaultValue={avaliableMonths.at(-1)}>
+      <Tabs className="mt-6" defaultValue={avaliableMonths.at(-1)}>
         <TabsList>
           {avaliableMonths.map((month) => (
             <TabsTrigger key={month} value={month}>
@@ -61,7 +60,7 @@ export default async function Home() {
             
               <Resume
                 operations={filterOperationsByMonth(operations, month)}
-                className="mt-10"
+                className="mt-2"
               >
                 <>
                   <CardResume
@@ -136,6 +135,7 @@ export default async function Home() {
                   dialogTitle="Adicionar Gasto"
                   dialogDescription="Preencha as informações do gasto"
                   buttonText="Adicionar"
+                  buttonVariation="destructive"
                   operation={emptyExpenseOperation}
                   actionFunction={createSaida}
                 />
