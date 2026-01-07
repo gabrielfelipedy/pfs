@@ -67,7 +67,7 @@ export default function ConfirmDeleteLimitDialog({ expenseLimit }: Props) {
         <form action={deleteLimit}>
           <AlertDialogHeader>
             <AlertDialogTitle>Confirme a deleção</AlertDialogTitle>
-            <AlertDialogDescription>Deletando o limite {expenseLimit.name} de {formatter.format((expenseLimit.value ?? 0) / 100)}</AlertDialogDescription>
+            <AlertDialogDescription>Limite {expenseLimit.name} de {formatter.format((expenseLimit.value ?? 0) / 100)}</AlertDialogDescription>
           </AlertDialogHeader>
 
           <input type="hidden" name="id" value={expenseLimit?.id} />

@@ -26,10 +26,6 @@ const navLinks = [
     name: "Limites de gastos",
   },
   {
-    href: "/saidas/credit",
-    name: "Cartão de crédito",
-  },
-  {
     href: "/invest",
     name: "Investimentos",
   },

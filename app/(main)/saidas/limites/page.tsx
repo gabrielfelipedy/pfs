@@ -1,7 +1,4 @@
-import LimitDialog from "@/components/dialogs/LimitDialog";
-import { createExpenseLimit } from "./actions/limits";
-import { getExpensesLimit, getExpensesLimitBalance } from "@/db/queries/limits";
-import { LimitsDataTable } from "@/components/data-table/LimitDataTable";
+import { getExpensesLimit } from "@/db/queries/limits";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import LimitsResume from "./components/LimitsResume";
 import { getExpenses } from "@/db/queries/expense";
@@ -17,12 +14,10 @@ export type ExpenseProprtion = {
 };
 
 const page = async () => {
-  let data;
   let expenses: Operation[];
   let limits: ExpenseLimit[]
 
   try {
-    data = await getExpensesLimitBalance();
     expenses = await getExpenses();
     limits = await getExpensesLimit();
   } catch (error) {
@@ -49,21 +44,10 @@ const page = async () => {
 
             <LimitsResume expenseLimits={limits} expensesProportion={calculateOperationProportion(filterOperationsByMonth(expenses, month))} className="mt-10" />
 
-            <LimitDialog
-              className="mt-10"
-              dialogTitle="Limite de gasto"
-              dialogDescription="Preencha as informações do limite"
-              buttonText="Adicionar"
-              limit={undefined}
-              actionFunction={createExpenseLimit}
-            >Criar novo limite</LimitDialog>
-
-            <LimitsDataTable limits={data} />
+         
           </TabsContent>
         ))}
       </Tabs>
-
-      <p>Definir limite total (no category id)</p>
     </div>
   );
 };

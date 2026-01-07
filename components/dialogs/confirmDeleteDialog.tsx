@@ -67,7 +67,7 @@ export default function ConfirmDeleteDialog({ operation }: Props) {
         <form action={deleteOperationAc}>
           <AlertDialogHeader>
             <AlertDialogTitle>Confirme a deleção</AlertDialogTitle>
-                        <AlertDialogDescription>Deletando a transação {operation.name} de {formatter.format((operation.value ?? 0) / 100)}</AlertDialogDescription>
+                        <AlertDialogDescription>Transação {operation.name} de {formatter.format((operation.value ?? 0) / 100)}</AlertDialogDescription>
           </AlertDialogHeader>
 
           <input type="hidden" name="id" value={operation.id} />

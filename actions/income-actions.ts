@@ -31,6 +31,7 @@ export async function createEntrada(prevState: OperationActionState | undefined,
     is_paid: formData.get("is_paid") === "true",
     is_income: true,
     category_id: Number(formData.get("category_id")),
+    payment_method_id: Number(formData.get("payment_method_id")),
   });
 
   if (!validationResult.success) {
@@ -67,7 +68,7 @@ export async function createEntrada(prevState: OperationActionState | undefined,
     };
   }
 
-  revalidatePath('/')
+  revalidatePath('/dashboard')
   revalidatePath('/entradas')
 
   return { success: true, message: "Entrada registrada com sucesso" };
@@ -100,6 +101,7 @@ export async function updateIncome(prevState: OperationActionState | undefined, 
     is_paid: formData.get("is_paid") === "true",
     is_income: true,
     category_id: Number(formData.get("category_id")),
+    payment_method_id: Number(formData.get("payment_method_id")),
   });
 
   if (!validationResult.success) {
@@ -124,7 +126,7 @@ export async function updateIncome(prevState: OperationActionState | undefined, 
     };
   }
 
-  revalidatePath('/')
+  revalidatePath('/dashboard')
   revalidatePath('/entradas')
 
   return { success: true, message: 'Entrada atualizada com sucesso' };

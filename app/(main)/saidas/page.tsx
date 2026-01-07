@@ -8,6 +8,7 @@ import ErrorLoading from "@/components/error/ErrorLoading";
 import { filterOperationsByMonth, getAvaliableMonths } from "@/lib/operation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatMonthYear } from "@/lib/date";
+import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
 
 export const dynamic = "force-dynamic";
 
@@ -57,7 +58,7 @@ const Saidas = async () => {
             </div>
 
             <div className="mt-2">
-              <OperationDataTable operations={expenses} />
+              <ReducedOperationDataTable operations={filterOperationsByMonth(expenses, month)} />
             </div>
           </TabsContent>
         ))}
