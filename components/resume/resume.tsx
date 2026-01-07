@@ -3,7 +3,7 @@ import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import CardResume from "./card-resume";
 
 import { Operation } from "@/lib/definitions";
-import { calculateIncomes } from "@/lib/date";
+import { calculateIncomes } from "@/lib/operation";
 
 interface Props {
   operations: Operation[];

@@ -3,7 +3,8 @@ import ErrorLoading from "@/components/error/ErrorLoading";
 import LimitsResume from "./components/LimitsResume";
 import { getExpenses } from "@/db/queries/expense";
 import { ExpenseLimit, Operation } from "@/lib/definitions";
-import { calculateOperationProportion, filterOperationsByMonth, getAvaliableMonths } from "@/lib/operation";
+import { calculateOperationProportion } from "@/lib/operation";
+import { filterOperationsByMonth, getAvaliableMonths } from "@/lib/date";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatMonthYear } from "@/lib/date";
 

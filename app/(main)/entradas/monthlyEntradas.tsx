@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBalancesSum } from "@/lib/utils";
 import { Operation } from "@/lib/definitions";
 import {
+  calculateCumulativeIncomeEvolution,
   calculateIncomeEvolution,
   calculateOperationProportion,
 } from "@/lib/operation";
@@ -16,22 +17,37 @@ interface Props {
 }
 
 const MonthlyEntradas = async ({ incomes, className }: Props) => {
-
   const income_proportion = calculateOperationProportion(incomes);
   const total = calculateBalancesSum(income_proportion);
-  const income_evolution = calculateIncomeEvolution(incomes);
 
   return (
     <div
-      className={`${className} flex flex-col lg:flex-row gap-4 w-full justify-between`}
+      className={`${className} grid grid-cols-1 lg:grid-cols-2 gap-4 w-full`}
     >
-      <Line
+      <Tabs defaultValue="1">
+        <TabsList>
+          <TabsTrigger value="1">Cumulativo</TabsTrigger>
+          <TabsTrigger value="0">Não Cumulativo</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="1">
+          <Line
         title="Evolução de entradas mensal"
         description="Ao longo do mês atual"
-        data={income_evolution}
+        data={calculateCumulativeIncomeEvolution(incomes)}
       />
+        </TabsContent>
+        <TabsContent value="0">
+          <Line
+        title="Evolução de entradas mensal"
+        description="Ao longo do mês atual"
+        data={calculateIncomeEvolution(incomes)}
+      />
+        </TabsContent>
+      </Tabs>
+      
 
-      <Tabs defaultValue="pie" className="lg:w-1/2">
+      <Tabs defaultValue="pie">
         <TabsList>
           <TabsTrigger value="pie">Gráfico de Pizza</TabsTrigger>
           <TabsTrigger value="radar">Gráfico de Radar</TabsTrigger>

@@ -1,42 +1,36 @@
 import { isSameWeek, isToday } from "date-fns";
 import { Operation } from "./definitions";
 
-export const calculateIncomes = (operations: Operation[]) => {
-  let total = 0;
+
+export const getAvaliableMonths = (operations: Operation[]) => {
+  const monthsSet = new Set<string>();
   operations.forEach((operation) => {
-    if (operation.is_income) {
-      total += operation.value ?? 0;
+    if (operation.date) {
+      const date = new Date(operation.date);
+      const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
+
+      monthsSet.add(monthYear);
     }
   });
-  return total;
+  return Array.from(monthsSet).reverse();
 };
 
-export const calculateWeeklyExpenses = (operations: Operation[]) => {
-  let total = 0;
-
-  operations.forEach((operation) => {
-    if (
-      !operation.is_income &&
-      isSameWeek(new Date(operation.date ?? ""), new Date(), {
-        weekStartsOn: 0,
-      })
-    ) {
-      total += operation.value ?? 0;
+export const filterOperationsByMonth = (
+  operations: Operation[],
+  month: string
+): Operation[] => {
+  return operations.filter((operation) => {
+    if (operation.date) {
+      const date = new Date(operation.date);
+      const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
+      return monthYear === month;
     }
-  });
-  return total;
+    return false;
+  }).sort((a, b) => {
+    return new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime();
+  })
 };
 
-export const calculateDailyExpenses = (operations: Operation[]) => {
-  let total = 0;
-
-  operations.forEach((operation) => {
-    if (!operation.is_income && isToday(new Date(operation.date ?? ""))) {
-      total += operation.value ?? 0;
-    }
-  });
-  return total;
-};
 
 export function formatMonthYear(input: string): string {
   // Split "12-2025" into [12, 2025]

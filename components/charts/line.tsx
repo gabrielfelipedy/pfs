@@ -17,9 +17,10 @@ interface Props {
   description: string;
   className?: string;
   data: ChartData[];
+  chartColor?: string;
 }
 
-const Line = ({ title, description, className, data }: Props) => {
+const Line = ({ title, description, className, data, chartColor }: Props) => {
   //console.log(data)
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark" || theme === "dark";
@@ -54,18 +55,19 @@ const Line = ({ title, description, className, data }: Props) => {
       },
     },
     visualMap: {
+      show: false,
       top: 50,
       right: 10,
       pieces: [
         {
           gt: 0,
-          lte: 10000,
-          color: "#54FF76",
+          lte: 9999999,
+          color: chartColor ?? "#54FF76",
         },
         {
-          gt: -1000,
+          gt: -9999999,
           lte: 0,
-          color: "#FF5454",
+          color: chartColor ?? "#FF5454",
         },
       ],
     },

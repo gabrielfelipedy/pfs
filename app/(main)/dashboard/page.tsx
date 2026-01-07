@@ -13,9 +13,9 @@ import Bar from "@/components/charts/bar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CardResume from "@/components/resume/card-resume";
 import { TrendingDownIcon } from "lucide-react";
-import { calculateDailyExpenses, calculateWeeklyExpenses, formatMonthYear } from "@/lib/date";
+import { calculateDailyExpenses, calculateWeeklyExpenses, calculateBalanceEvolution, calculateIncomesAndExpensesEvolution  } from "@/lib/operation";
 import OperationDataTable from "@/components/data-table/OperationDataTable";
-import { calculateBalanceEvolution, calculateOperationEvolution, filterOperationsByMonth, getAvaliableMonths } from "@/lib/operation";
+import { filterOperationsByMonth, getAvaliableMonths, formatMonthYear } from "@/lib/date";
 
 const emptyExpenseOperation: Operation = {
   is_income: false,
@@ -103,7 +103,7 @@ export default async function Home() {
                   <Area
                     title="Comparação de entradas e saídas"
                     description="Ao longo do mês atual"
-                    data={calculateOperationEvolution(
+                    data={calculateIncomesAndExpensesEvolution(
                       filterOperationsByMonth(operations, month)
                     )}
                   />
@@ -113,7 +113,7 @@ export default async function Home() {
                   <Bar
                     title="Comparação de entradas e saídas"
                     description="Ao longo do mês atual"
-                    data={calculateOperationEvolution(
+                    data={calculateIncomesAndExpensesEvolution(
                       filterOperationsByMonth(operations, month)
                     )}
                   />

@@ -1,3 +1,4 @@
+import { INVESTIMENTO_CATEGORY_ID } from "@/lib/operation";
 import { and, asc, eq, sql } from "drizzle-orm";
 import {
   integer,
@@ -162,6 +163,10 @@ export const incomeView = sqliteView("vw_income").as((qb) =>
 
 export const expenseView = sqliteView("vw_expense").as((qb) =>
   qb.select().from(operationTable).where(eq(operationTable.is_income, false))
+);
+
+export const investmentView = sqliteView("vw_investment").as((qb) =>
+  qb.select().from(operationTable).where(eq(operationTable.category_id, INVESTIMENTO_CATEGORY_ID))
 );
 
 export const operationWithCategoryView = sqliteView(
