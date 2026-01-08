@@ -21,6 +21,18 @@ export const calculateIncomes = (operations: Operation[]) => {
   return total;
 };
 
+// ******* WEEKLY AND DAILY EXPENSES ******** //
+
+export const filterWeeklyExpenses = (operations: Operation[]) => {
+  return operations.filter(
+    (operation) =>
+      !operation.is_income &&
+      isSameWeek(new Date(operation.date ?? ""), new Date(), {
+        weekStartsOn: 0,
+      })
+  );
+}
+
 export const calculateWeeklyExpenses = (operations: Operation[]) => {
   let total = 0;
 
@@ -36,6 +48,13 @@ export const calculateWeeklyExpenses = (operations: Operation[]) => {
   });
   return total;
 };
+
+export const filterDailyExpenses = (operations: Operation[]) => {
+  return operations.filter(
+    (operation) =>
+      !operation.is_income && isToday(new Date(operation.date ?? ""))
+  );
+}
 
 export const calculateDailyExpenses = (operations: Operation[]) => {
   let total = 0;
