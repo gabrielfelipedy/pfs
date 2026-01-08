@@ -41,7 +41,7 @@ const Resume = async ({ operations, className, children }: Props) => {
 
   return (
     <div className={`${className} w-full py-6 flex flex-col gap-5`}>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full ">
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-3 w-full ">
         <CardResume
           title="Saldo mensal"
           icon={<TrendingUpIcon className="h-4 w-4 text-muted-foreground" />}
@@ -57,8 +57,8 @@ const Resume = async ({ operations, className, children }: Props) => {
           subtext="No último mês"
           is_income={true}
         />
-      </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full">
+      
+     
         <CardResume
           title="Gastos mensais"
           icon={<TrendingDownIcon className="h-4 w-4 text-muted-foreground" />}
@@ -67,7 +67,7 @@ const Resume = async ({ operations, className, children }: Props) => {
         />
 
         {children}
-      </div>
+     </div>
     </div>
   );
 };

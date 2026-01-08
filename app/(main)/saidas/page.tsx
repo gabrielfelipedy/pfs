@@ -8,6 +8,14 @@ import { filterOperationsByMonth, getAvaliableMonths } from "@/lib/date";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
+import CardResume from "@/components/resume/card-resume";
+import { TrendingDownIcon } from "lucide-react";
+import { calculateDailyExpenses, calculateWeeklyExpenses, filterDailyExpenses, filterWeeklyExpenses } from "@/lib/operation";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { formatter } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 export const dynamic = "force-dynamic";
 
@@ -26,13 +34,69 @@ const Saidas = async () => {
   //console.log(expenses)
 
   const avaliableMonths = getAvaliableMonths(expenses);
+  const weekly_expenses = calculateWeeklyExpenses(expenses);
+  const daily_expenses = calculateDailyExpenses(expenses);
 
   return (
     <>
       <h1 className="text-[3rem] font-bold mt-10">Saídas</h1>
-      <p className="text-xl text-slate-600">Todos os registros de saídas</p>
 
-      <Tabs className="mt-10" defaultValue={avaliableMonths.at(-1)}>
+      <div className="mt-10 grid gap-4 grid-cols-1 lg:grid-cols-2 w-full ">
+
+        <Dialog>
+          <DialogTitle></DialogTitle>
+          <DialogTrigger asChild className="hover:scale-101 hover:cursor-pointer transition-all">
+            <CardResume
+              title="Gastos semanais"
+              icon={<TrendingDownIcon className="h-4 w-4 text-muted-foreground" />}
+              data={weekly_expenses}
+              subtext="Total de saídas registradas"
+              is_income={false}
+            />
+          </DialogTrigger>
+          <DialogContent className="w-screen">
+            <p>Gastos semanais</p>
+            <ScrollArea>
+              {filterWeeklyExpenses(expenses).map((weekExpense) => (
+                <div key={weekExpense.id}>
+                  <div className="flex justify-between"><p className="text-sm">{weekExpense.name}</p>
+                    <p className="text-sm">{formatter.format((weekExpense.value ?? 0) / 100)}</p></div>
+
+                  <Separator className="my-1" />
+                </div>
+              ))}
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog>
+          <DialogTrigger asChild className="hover:scale-101 hover:cursor-pointer transition-all">
+            <CardResume
+              title="Gastos diários"
+              icon={<TrendingDownIcon className="h-4 w-4 text-muted-foreground" />}
+              data={calculateDailyExpenses(expenses)}
+              subtext="Total de saídas registradas"
+              is_income={false}
+            />
+          </DialogTrigger>
+          <DialogContent>
+            <p>Gastos diários</p>
+            <ScrollArea>
+              {filterDailyExpenses(expenses).map((weekExpense) => (
+                <div key={weekExpense.id}>
+                  <div className="flex justify-between"><p className="text-sm">{weekExpense.name}</p>
+                    <p className="text-sm">{formatter.format((weekExpense.value ?? 0) / 100)}</p></div>
+
+                  <Separator className="my-1" />
+                </div>
+              ))}
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <p className="mt-10 text-sm text-[#cecece]">FILTRAR POR MÊS</p>
+      <Tabs className="mt-4" defaultValue={avaliableMonths.at(-1)}>
         <TabsList>
           {avaliableMonths.map((month) => (
             <TabsTrigger key={month} value={month}>
@@ -42,7 +106,7 @@ const Saidas = async () => {
         </TabsList>
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
-            <MonthlySaidas expenses={filterOperationsByMonth(expenses, month)} className="mt-4" />
+            <MonthlySaidas expenses={filterOperationsByMonth(expenses, month)} className="mt-10" />
 
             <div className="mt-10">
               {/* <CreateSaidaDialog /> */}

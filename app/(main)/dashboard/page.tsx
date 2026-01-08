@@ -62,7 +62,7 @@ export default async function Home() {
                 operations={filterOperationsByMonth(operations, month)}
                 className="mt-2"
               >
-                <>
+                {/* <>
                   <CardResume
                     title="Gastos semanais"
                     icon={
@@ -80,7 +80,7 @@ export default async function Home() {
                     data={daily_expenses}
                     subtext="No último mês"
                   />
-                </>
+                </> */}
               </Resume>
             
 
@@ -142,7 +142,7 @@ export default async function Home() {
               </div>
 
               <div className="mt-2">
-                <OperationDataTable operations={filterOperationsByMonth(operations, month)} />
+                <OperationDataTable operations={filterOperationsByMonth(operations, month).reverse()} />
               </div>
             </div>
           </TabsContent>

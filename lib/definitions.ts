@@ -35,7 +35,7 @@ export type ExpenseLimit = {
 export type Category = {
   id?: number;
   name: string;
-  description: string;
+  description?: string | null;
   is_income: boolean;
   created_at?: Date;
   updated_at?: Date | null;
