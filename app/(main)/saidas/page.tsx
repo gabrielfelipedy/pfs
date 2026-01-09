@@ -8,15 +8,8 @@ import { filterOperationsByMonth, getAvaliableMonths } from "@/lib/date";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
-import CardResume from "@/components/resume/card-resume";
-import { TrendingDownIcon } from "lucide-react";
-import { calculateWeeklyExpenses, filterWeeklyExpenses } from "@/lib/operation";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { formatter } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { DialogTitle } from "@radix-ui/react-dialog";
 import DailyExpenses from "./components/DailyExpenses";
+import WeeklyExpenses from "./components/WeeklyExpenses";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +17,7 @@ const emptyOperation: Operation = {
   is_income: false,
 };
 
-const Saidas = async () => {
+export default async function Saidas() {
   let expenses: Operation[];
 
   try {
@@ -35,7 +28,6 @@ const Saidas = async () => {
   //console.log(expenses)
 
   const avaliableMonths = getAvaliableMonths(expenses);
-  const weekly_expenses = calculateWeeklyExpenses(expenses);
 
   //console.log(filterWeeklyExpenses(expenses).reverse());
 
@@ -47,34 +39,7 @@ const Saidas = async () => {
 
         <div>
 
-          <Dialog>
-            <DialogTitle></DialogTitle>
-            <DialogTrigger asChild className="hover:cursor-pointer transition-all">
-              <CardResume
-                title="Gastos semanais"
-                icon={<TrendingDownIcon className="h-4 w-4 text-muted-foreground" />}
-                data={weekly_expenses}
-                subtext="Total de saídas registradas"
-                is_income={false}
-              />
-            </DialogTrigger>
-            <DialogContent className="w-screen">
-              <p>Gastos semanais</p>
-              <ScrollArea>
-                {filterWeeklyExpenses(expenses).map((weekExpense) => (
-                  <div key={weekExpense.id}>
-                    <div className="grid grid-cols-3 w-full "><p className="text-sm">{weekExpense.name}</p>
-
-                      <p className="text-sm text-center">{weekExpense.date?.toLocaleDateString('pt-BR')}</p>
-
-                      <p className="text-sm text-end">{formatter.format((weekExpense.value ?? 0) / 100)}</p></div>
-
-                    <Separator className="my-1" />
-                  </div>
-                ))}
-              </ScrollArea>
-            </DialogContent>
-          </Dialog>
+          <WeeklyExpenses expenses={expenses} />
         </div>
 
         <div>
@@ -117,5 +82,3 @@ const Saidas = async () => {
     </>
   );
 };
-
-export default Saidas;
