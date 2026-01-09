@@ -21,34 +21,6 @@ export const calculateIncomes = (operations: Operation[]) => {
   return total;
 };
 
-// ******* WEEKLY AND DAILY EXPENSES ******** //
-
-// It doesnt convert the date to brazil timezone, just filter the operations
-export const filterWeeklyExpenses = (operations: Operation[]) => {
-  return operations.filter(
-    (operation) =>
-      !operation.is_income &&
-      isSameWeek(new Date(operation.date ?? ""), new Date(), {
-        weekStartsOn: 0,
-      })
-  );
-}
-
-export const calculateWeeklyExpenses = (operations: Operation[]) => {
-  let total = 0;
-
-  operations.forEach((operation) => {
-    if (
-      !operation.is_income &&
-      isSameWeek(new Date(operation.date ?? ""), new Date(), {
-        weekStartsOn: 0,
-      })
-    ) {
-      total += operation.value ?? 0;
-    }
-  });
-  return total;
-};
 
 export const calculateBalanceEvolution = (operations: Operation[]) => {
   //console.log(operations)

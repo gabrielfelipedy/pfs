@@ -7,35 +7,43 @@ import { Separator } from '@/components/ui/separator';
 import { Operation } from '@/lib/definitions';
 import { formatter } from '@/lib/utils';
 import { DialogTitle } from '@radix-ui/react-dialog';
-import { isToday } from 'date-fns';
+import { isSameWeek } from 'date-fns';
 import { TrendingDownIcon } from 'lucide-react';
 
-export const filterDailyExpenses = (operations: Operation[]) => {
-    return operations.filter(
-        (operation) =>
-            !operation.is_income && isToday(operation.date ?? ""))
-
+export const filterWeeklyExpenses = (operations: Operation[]) => {
+  return operations.filter(
+    (operation) =>
+      !operation.is_income &&
+      isSameWeek(new Date(operation.date ?? ""), new Date(), {
+        weekStartsOn: 0,
+      })
+  );
 }
 
-export const calculateDailyExpenses = (operations: Operation[]) => {
-    let total = 0;
+export const calculateWeeklyExpenses = (operations: Operation[]) => {
+  let total = 0;
 
-    operations.forEach((operation) => {
-        if (!operation.is_income && isToday(operation.date ?? "")) {
-            total += operation.value ?? 0;
-        }
-    });
-    return total;
+  operations.forEach((operation) => {
+    if (
+      !operation.is_income &&
+      isSameWeek(new Date(operation.date ?? ""), new Date(), {
+        weekStartsOn: 0,
+      })
+    ) {
+      total += operation.value ?? 0;
+    }
+  });
+  return total;
 };
 
 interface Props {
     expenses: Operation[];
 }
 
-export default function DailyExpenses({ expenses }: Props) {
+export default function WeeklyExpenses({ expenses }: Props) {
 
-    const total_daily_expenses = calculateDailyExpenses(expenses)
-    const daily_expenses = filterDailyExpenses(expenses)
+    const total_weekly_expenses = calculateWeeklyExpenses(expenses)
+    const weekly_expenses = filterWeeklyExpenses(expenses)
 
     return (
         <Dialog>
@@ -43,9 +51,9 @@ export default function DailyExpenses({ expenses }: Props) {
 
 
                 <CardResume
-                    title="Gastos diários"
+                    title="Gastos semanais"
                     icon={<TrendingDownIcon className="h-4 w-4 text-muted-foreground" />}
-                    data={total_daily_expenses}
+                    data={total_weekly_expenses}
                     subtext="Total de saídas registradas"
                     is_income={false}
                 />
@@ -53,11 +61,11 @@ export default function DailyExpenses({ expenses }: Props) {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Gastos diários</DialogTitle>
+                    <DialogTitle>Gastos semanais</DialogTitle>
                 </DialogHeader>
                 
                 <ScrollArea>
-                    {daily_expenses.map((expense) => (
+                    {weekly_expenses.map((expense) => (
                         <div key={expense.id}>
                             <div className="grid grid-cols-3 w-full "><p className="text-sm">{expense.name}</p>
 
