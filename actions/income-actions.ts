@@ -6,27 +6,14 @@ import { revalidatePath } from "next/cache";
 import { OperationActionState, OperationSchema } from "./definitions";
 
 export async function createEntrada(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
+
   const date = formData.get("date");
-  const time = formData.get("time");
-
-  let timestamp: string;
-  try {
-    timestamp = replaceUTCTime(date as string, utcMinus3ToUtc(time as string));
-  } catch (error) {
-    return {
-      success: false,
-      errors: {
-        date: ["Invalid date or time format"],
-      },
-    };
-  }
-
-  console.log(timestamp);
+  console.log(date)
 
   const validationResult = OperationSchema.safeParse({
     name: formData.get("name"),
     description: formData.get("description"),
-    date: timestamp,
+    date: date,
     value: Number(formData.get("value")),
     is_paid: formData.get("is_paid") === "true",
     is_income: true,
@@ -81,22 +68,16 @@ export async function createEntrada(prevState: OperationActionState | undefined,
 export async function updateIncome(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
 
   const id = formData.get("id");
-  const date = formData.get("date");
-  const time = formData.get("time");
-
-  const timestamp = replaceUTCTime(
-      date as string,
-      utcMinus3ToUtc(time as string)
-  );
-
-  console.log(timestamp);
+  const dateFromForm = formData.get("date");
+  
+  console.log(dateFromForm)
 
 
   const validationResult = OperationSchema.safeParse({
     id: Number(id),
     name: formData.get("name"),
     description: formData.get("description"),
-    date: timestamp,
+    date: dateFromForm,
     value: Number(formData.get("value")),
     is_paid: formData.get("is_paid") === "true",
     is_income: true,
@@ -104,7 +85,10 @@ export async function updateIncome(prevState: OperationActionState | undefined, 
     payment_method_id: Number(formData.get("payment_method_id")),
   });
 
+  //console.log(dateFromForm)
+
   if (!validationResult.success) {
+    //console.log(dateFromForm)
     return {
       success: false,
       errors: validationResult.error.flatten().fieldErrors,

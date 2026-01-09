@@ -37,15 +37,19 @@ const Saidas = async () => {
   const weekly_expenses = calculateWeeklyExpenses(expenses);
   const daily_expenses = calculateDailyExpenses(expenses);
 
+  //console.log(filterWeeklyExpenses(expenses).reverse());
+
   return (
     <>
       <h1 className="text-[3rem] font-bold mt-10">Saídas</h1>
 
-      <div className="mt-10 grid gap-4 grid-cols-1 lg:grid-cols-2 w-full ">
+      <div className="mt-10 grid gap-3 grid-cols-1 md:grid-cols-2 items-start">
+
+        <div>
 
         <Dialog>
           <DialogTitle></DialogTitle>
-          <DialogTrigger asChild className="hover:scale-101 hover:cursor-pointer transition-all">
+          <DialogTrigger asChild className="hover:cursor-pointer transition-all">
             <CardResume
               title="Gastos semanais"
               icon={<TrendingDownIcon className="h-4 w-4 text-muted-foreground" />}
@@ -59,8 +63,11 @@ const Saidas = async () => {
             <ScrollArea>
               {filterWeeklyExpenses(expenses).map((weekExpense) => (
                 <div key={weekExpense.id}>
-                  <div className="flex justify-between"><p className="text-sm">{weekExpense.name}</p>
-                    <p className="text-sm">{formatter.format((weekExpense.value ?? 0) / 100)}</p></div>
+                  <div className="grid grid-cols-3 w-full "><p className="text-sm">{weekExpense.name}</p>
+
+                    <p className="text-sm text-center">{weekExpense.date?.toLocaleDateString('pt-BR')}</p>
+
+                    <p className="text-sm text-end">{formatter.format((weekExpense.value ?? 0) / 100)}</p></div>
 
                   <Separator className="my-1" />
                 </div>
@@ -68,6 +75,9 @@ const Saidas = async () => {
             </ScrollArea>
           </DialogContent>
         </Dialog>
+        </div>
+
+        <div>
 
         <Dialog>
           <DialogTrigger asChild className="hover:scale-101 hover:cursor-pointer transition-all">
@@ -84,8 +94,11 @@ const Saidas = async () => {
             <ScrollArea>
               {filterDailyExpenses(expenses).map((weekExpense) => (
                 <div key={weekExpense.id}>
-                  <div className="flex justify-between"><p className="text-sm">{weekExpense.name}</p>
-                    <p className="text-sm">{formatter.format((weekExpense.value ?? 0) / 100)}</p></div>
+                  <div className="grid grid-cols-3 w-full "><p className="text-sm">{weekExpense.name}</p>
+
+                    <p className="text-sm text-center">{weekExpense.date?.toLocaleDateString('pt-BR')}</p>
+
+                    <p className="text-sm text-end">{formatter.format((weekExpense.value ?? 0) / 100)}</p></div>
 
                   <Separator className="my-1" />
                 </div>
@@ -93,6 +106,7 @@ const Saidas = async () => {
             </ScrollArea>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <p className="mt-10 text-sm text-[#cecece]">FILTRAR POR MÊS</p>
@@ -121,7 +135,7 @@ const Saidas = async () => {
             </div>
 
             <div className="mt-2">
-              <ReducedOperationDataTable operations={filterOperationsByMonth(expenses, month)} />
+              <ReducedOperationDataTable operations={filterOperationsByMonth(expenses, month).reverse()} />
             </div>
           </TabsContent>
         ))}

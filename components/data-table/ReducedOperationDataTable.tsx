@@ -13,6 +13,8 @@ import { Operation } from "@/lib/definitions";
 import { updateSaida } from "@/actions/expense-actions";
 import { updateIncome } from "@/actions/income-actions";
 import { Badge } from "../ui/badge";
+import { format } from "date-fns";
+import { ClientDateTime } from "../shared/ClientDateTime";
 
 export const columns: ColumnDef<Operation>[] = [
   {
@@ -46,10 +48,12 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      const dateValue = row.getValue("date") as string;
+      // Get's the date in UTC timezone
+      const dateValue = row.getValue("date") as Date;
 
       try {
-        return <div>{new Date(dateValue).toLocaleDateString("pt-BR")}</div>;
+        //convert to brazil timezone and format
+        return <ClientDateTime date={dateValue} />;
       } catch (error) {
         return <div>Invalid Date</div>;
       }

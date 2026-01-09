@@ -34,9 +34,9 @@ export async function deleteOperationAction(
     };
   }
 
-  revalidatePath("/");
+  revalidatePath("/dashboard");
   revalidatePath("/saidas");
   revalidatePath("/entradas");
 
-  return { success: true, message: "Record deleted successfully" };
+  return { success: true, message: "Saída deletada com sucesso" };
 }
