@@ -23,6 +23,7 @@ export const calculateIncomes = (operations: Operation[]) => {
 
 // ******* WEEKLY AND DAILY EXPENSES ******** //
 
+// It doesnt convert the date to brazil timezone, just filter the operations
 export const filterWeeklyExpenses = (operations: Operation[]) => {
   return operations.filter(
     (operation) =>

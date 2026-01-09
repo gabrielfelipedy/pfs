@@ -1,6 +1,14 @@
-import { isSameWeek, isToday } from "date-fns";
 import { Operation } from "./definitions";
 
+export function convertUtcToLocal(date: Date): Date {
+  const UTC_MINUS_3_OFFSET_MS = 3 * 60 * 60 * 1000; // UTC-3 offset in milliseconds
+  return new Date(date.getTime() - UTC_MINUS_3_OFFSET_MS);
+}
+
+export function convertLocalToUtc(date: Date): Date {
+  const UTC_MINUS_3_OFFSET_MS = 3 * 60 * 60 * 1000; // UTC-3 offset in milliseconds
+  return new Date(date.getTime() + UTC_MINUS_3_OFFSET_MS);
+}
 
 export const getAvaliableMonths = (operations: Operation[]) => {
   const monthsSet = new Set<string>();
@@ -19,18 +27,21 @@ export const filterOperationsByMonth = (
   operations: Operation[],
   month: string
 ): Operation[] => {
-  return operations.filter((operation) => {
-    if (operation.date) {
-      const date = new Date(operation.date);
-      const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
-      return monthYear === month;
-    }
-    return false;
-  }).sort((a, b) => {
-    return new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime();
-  })
+  return operations
+    .filter((operation) => {
+      if (operation.date) {
+        const date = new Date(operation.date);
+        const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
+        return monthYear === month;
+      }
+      return false;
+    })
+    .sort((a, b) => {
+      return (
+        new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime()
+      );
+    });
 };
-
 
 export function formatMonthYear(input: string): string {
   // Split "12-2025" into [12, 2025]
