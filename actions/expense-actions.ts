@@ -7,26 +7,11 @@ import { OperationActionState, OperationSchema } from "./definitions";
 
 export async function createSaida(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
   const date = formData.get("date");
-  const time = formData.get("time");
-
-  let timestamp: string;
-  try {
-    timestamp = replaceUTCTime(date as string, utcMinus3ToUtc(time as string));
-  } catch (error) {
-    return {
-      success: false,
-      errors: {
-        date: ["Invalid date or time format"],
-      },
-    };
-  }
-
-  console.log(timestamp);
 
   const validationResult = OperationSchema.safeParse({
     name: formData.get("name"),
     description: formData.get("description"),
-    date: timestamp,
+    date: date,
     value: Number(formData.get("value")),
     is_paid: formData.get("is_paid") === "true",
     is_income: false,

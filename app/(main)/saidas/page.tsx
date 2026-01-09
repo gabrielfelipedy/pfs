@@ -84,7 +84,7 @@ const Saidas = async () => {
             <CardResume
               title="Gastos diários"
               icon={<TrendingDownIcon className="h-4 w-4 text-muted-foreground" />}
-              data={calculateDailyExpenses(expenses)}
+              data={daily_expenses}
               subtext="Total de saídas registradas"
               is_income={false}
             />
