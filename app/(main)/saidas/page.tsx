@@ -37,7 +37,7 @@ const Saidas = async () => {
   const weekly_expenses = calculateWeeklyExpenses(expenses);
   const daily_expenses = calculateDailyExpenses(expenses);
 
-  console.log(filterWeeklyExpenses(expenses).reverse());
+  //console.log(filterWeeklyExpenses(expenses).reverse());
 
   return (
     <>

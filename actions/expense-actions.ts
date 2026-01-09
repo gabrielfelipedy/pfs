@@ -70,21 +70,14 @@ export async function updateSaida(prevState: OperationActionState | undefined, f
 
   const id = formData.get("id");
   const date = formData.get("date");
-  const time = formData.get("time");
 
-  const timestamp = replaceUTCTime(
-      date as string,
-      utcMinus3ToUtc(time as string)
-  );
-
-  console.log(timestamp);
-
+  console.log(date)
 
   const validationResult = OperationSchema.safeParse({
     id: Number(id),
     name: formData.get("name"),
     description: formData.get("description"),
-    date: timestamp,
+    date: date,
     value: Number(formData.get("value")),
     is_paid: formData.get("is_paid") === "true",
     is_income: false,

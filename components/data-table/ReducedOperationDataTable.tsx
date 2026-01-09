@@ -14,6 +14,7 @@ import { updateSaida } from "@/actions/expense-actions";
 import { updateIncome } from "@/actions/income-actions";
 import { Badge } from "../ui/badge";
 import { format } from "date-fns";
+import { ClientDateTime } from "../shared/ClientDateTime";
 
 export const columns: ColumnDef<Operation>[] = [
   {
@@ -47,13 +48,12 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-
       // Get's the date in UTC timezone
       const dateValue = row.getValue("date") as Date;
 
       try {
         //convert to brazil timezone and format
-        return <div>{dateValue.toLocaleDateString("pt-BR")}</div>;
+        return <ClientDateTime date={dateValue} />;
       } catch (error) {
         return <div>Invalid Date</div>;
       }

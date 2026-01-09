@@ -33,20 +33,21 @@ import CategorySelector from "../selectors/categorySelector";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "../ui/switch";
 import PaymentMethodSelector from "../selectors/paymentMethodSelector";
+import { ClientDateTime } from "../shared/ClientDateTime";
 
 // Defines the props for the FormDialog component
 
 interface Props {
   openDialogText: string | ReactNode;
   buttonVariation?:
-    | "link"
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | null
-    | undefined;
+  | "link"
+  | "default"
+  | "destructive"
+  | "outline"
+  | "secondary"
+  | "ghost"
+  | null
+  | undefined;
   dialogTitle: string;
   dialogDescription: string;
   buttonText: string;
@@ -70,8 +71,8 @@ export default function FormDialog({
 
   // States used by calendar selector propover
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(
-    operation?.date ? new Date(operation?.date) : new Date()
+  const [date, setDate] = useState<Date>(
+    operation?.date ?? new Date()
   );
 
   const [selected, setSelected] = useState(operation?.is_paid ?? true);
@@ -162,18 +163,17 @@ export default function FormDialog({
                   <input
                     type="hidden"
                     name="date"
-                    value={date ? date.toISOString().split("T")[0] : ""}
+                    value={date.toISOString()}
                   />
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         id="date"
-                        className="md:w-48 justify-between font-normal"
+                        className="w-full justify-between font-normal"
                       >
-                        {date
-                          ? date.toLocaleDateString("pt-BR")
-                          : "Selecione a data"}
+                        <ClientDateTime date={date} />
+                          
                         <ChevronDownIcon />
                       </Button>
                     </PopoverTrigger>
@@ -187,7 +187,7 @@ export default function FormDialog({
                         captionLayout="dropdown"
                         toYear={2030}
                         onSelect={(date) => {
-                          setDate(date);
+                          setDate(date ?? new Date());
                           setOpen(false);
                         }}
                       />
@@ -199,28 +199,6 @@ export default function FormDialog({
                     {state?.errors?.date || ""}
                   </p>
                 )}
-                <div className="flex flex-col gap-3">
-                  <Label htmlFor="time" className="px-1">
-                    Hora
-                  </Label>
-                  <Input
-                    type="time"
-                    name="time"
-                    defaultValue={
-                      operation?.date
-                        ? new Date(operation?.date || "").toLocaleTimeString(
-                            "pt-BR",
-                            { hour12: false }
-                          )
-                        : new Date().toLocaleTimeString("pt-BR", {
-                            hour12: false,
-                          })
-                    }
-                    id="time"
-                    step="1"
-                    className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                  />
-                </div>
               </div>
             </div>
           </div>
