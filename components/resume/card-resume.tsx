@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { forwardRef, ReactNode } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { formatter } from "@/lib/utils";
 
@@ -11,9 +11,9 @@ interface Props {
   className?: string;
 }
 
-const CardResume = ({ title, icon, data, subtext, is_income, className }: Props) => {
+const CardResume = forwardRef<HTMLDivElement, Props>(({ title, icon, data, subtext, is_income, className, ...props}, ref) => {
   return (
-    <Card className={className}>
+    <Card ref={ref} className={className} {...props}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         {icon}
@@ -24,6 +24,7 @@ const CardResume = ({ title, icon, data, subtext, is_income, className }: Props)
       </CardContent>
     </Card>
   );
-};
+})
 
+CardResume.displayName = 'CardResume'
 export default CardResume;

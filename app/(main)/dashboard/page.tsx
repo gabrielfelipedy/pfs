@@ -11,9 +11,7 @@ import Resume from "@/components/resume/resume";
 import Line from "@/components/charts/line";
 import Bar from "@/components/charts/bar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CardResume from "@/components/resume/card-resume";
-import { TrendingDownIcon } from "lucide-react";
-import { calculateDailyExpenses, calculateWeeklyExpenses, calculateBalanceEvolution, calculateIncomesAndExpensesEvolution  } from "@/lib/operation";
+import { calculateBalanceEvolution, calculateIncomesAndExpensesEvolution  } from "@/lib/operation";
 import OperationDataTable from "@/components/data-table/OperationDataTable";
 import { filterOperationsByMonth, getAvaliableMonths, formatMonthYear } from "@/lib/date";
 
@@ -38,8 +36,6 @@ export default async function Home() {
 
   //console.log(transformedData)
   const avaliableMonths = getAvaliableMonths(operations);
-  const weekly_expenses = calculateWeeklyExpenses(operations);
-  const daily_expenses = calculateDailyExpenses(operations);
 
   return (
     <section className="mt-4 md:mt-20">

@@ -50,24 +50,6 @@ export const calculateWeeklyExpenses = (operations: Operation[]) => {
   return total;
 };
 
-export const filterDailyExpenses = (operations: Operation[]) => {
-  return operations.filter(
-    (operation) =>
-      !operation.is_income && isToday(new Date(operation.date ?? ""))
-  );
-}
-
-export const calculateDailyExpenses = (operations: Operation[]) => {
-  let total = 0;
-
-  operations.forEach((operation) => {
-    if (!operation.is_income && isToday(new Date(operation.date ?? ""))) {
-      total += operation.value ?? 0;
-    }
-  });
-  return total;
-};
-
 export const calculateBalanceEvolution = (operations: Operation[]) => {
   //console.log(operations)
 
