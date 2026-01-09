@@ -144,55 +144,6 @@ export const calculateCumulativeIncomeEvolution = (operations: Operation[]) => {
   return Array.from(incomeMap.values());
 };
 
-export const calculateExpenseEvolution = (operations: Operation[]) => {
-  //console.log(operations)
-
-  const expenseMap = new Map<string, ChartData>();
-
-  operations.forEach((operation) => {
-    const date = startOfDay(new Date(operation.date ?? ""));
-    const key = date.toISOString().split("T")[0];
-
-    const current_value = expenseMap.get(key) ?? { date: key, value: 0 };
-    const value = operation.value ?? 0;
-
-    if (!operation.is_income) {
-      expenseMap.set(key, {
-        date: key,
-        value: current_value.value + value / 100,
-      });
-    }
-  });
-
-  //console.log(Array.from(expenseMap.values()));
-  return Array.from(expenseMap.values());
-};
-
-export const calculateCumulativeExpenseEvolution = (operations: Operation[]): ChartData[] => {
-  //console.log(operations)
-
-  const expenseMap = new Map<string, ChartData>();
-  let total = 0;
-
-  operations.forEach((operation) => {
-    if (operation.is_income) return;
-
-    const date = startOfDay(new Date(operation.date ?? ""));
-    const key = date.toISOString().split("T")[0];
-    // const current_value = expenseMap.get(key) ?? { date: key, value: 0 };
-    const value = operation.value ?? 0;
-
-    total += value / 100;
-
-    expenseMap.set(key, {
-      date: key,
-      value: total,
-    });
-  });
-
-  return Array.from(expenseMap.values());
-}
-
 export const filterInvestimentos = (operations: Operation[]) => {
   return operations.filter(
     (operation) => operation.category_id === INVESTIMENTO_CATEGORY_ID

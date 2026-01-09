@@ -10,14 +10,14 @@ import { DialogTitle } from '@radix-ui/react-dialog';
 import { isToday } from 'date-fns';
 import { TrendingDownIcon } from 'lucide-react';
 
-export const filterDailyExpenses = (operations: Operation[]) => {
+const filterDailyExpenses = (operations: Operation[]) => {
     return operations.filter(
         (operation) =>
             !operation.is_income && isToday(operation.date ?? ""))
 
 }
 
-export const calculateDailyExpenses = (operations: Operation[]) => {
+const calculateDailyExpenses = (operations: Operation[]) => {
     let total = 0;
 
     operations.forEach((operation) => {

@@ -10,7 +10,7 @@ import { DialogTitle } from '@radix-ui/react-dialog';
 import { isSameWeek } from 'date-fns';
 import { TrendingDownIcon } from 'lucide-react';
 
-export const filterWeeklyExpenses = (operations: Operation[]) => {
+const filterWeeklyExpenses = (operations: Operation[]) => {
   return operations.filter(
     (operation) =>
       !operation.is_income &&
@@ -20,7 +20,7 @@ export const filterWeeklyExpenses = (operations: Operation[]) => {
   );
 }
 
-export const calculateWeeklyExpenses = (operations: Operation[]) => {
+const calculateWeeklyExpenses = (operations: Operation[]) => {
   let total = 0;
 
   operations.forEach((operation) => {
