@@ -12,28 +12,20 @@ interface Props {
 
 const navLinks = [
   {
-    href: "/dashboard",
-    name: "Dashboard",
+    href: "/",
+    name: "Início",
   },
   {
-    href: "/entradas",
-    name: "Entradas",
+    href: "/",
+    name: "Como funciona",
   },
   {
-    href: "/saidas",
-    name: "Saídas",
-  },
-  {
-    href: "/saidas/limites",
-    name: "Limites de gastos",
-  },
-  {
-    href: "/invest",
-    name: "Investimentos",
+    href: "/",
+    name: "Sobre",
   },
 ];
 
-const Navbar = ({ linksClassName }: Props) => {
+export default function PublicNavbar ({ linksClassName }: Props) {
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -46,9 +38,9 @@ const Navbar = ({ linksClassName }: Props) => {
   }, [isOpen]);
 
   return (
-    <nav className="fixed top-0 left-0 z-50 w-full flex justify-between items-center h-22.5 px-6 md:px-20 bg-background">
+    <nav className="fixed z-50 w-full top-0 left-0 flex justify-between items-center h-22.5 px-6 md:px-20 bg-background">
 
-      <Link href="/dashboard">
+      <Link href="/" onClick={() => setIsOpen(false)}>
         <h1 className="font-bold text-[2rem]">pfs</h1>
       </Link>
 
@@ -116,5 +108,3 @@ const Navbar = ({ linksClassName }: Props) => {
     </nav>
   );
 };
-
-export default Navbar;

@@ -10,10 +10,12 @@ export default function MainLayout({
 }) {
   return (
     <>
-      <header className="flex justify-center">
-        <Navbar />
-      </header>
-      <main className="mt-16 md:mt-40">{children}
+
+
+      <Navbar />
+
+
+      <main >{children}
         <Toaster />
       </main>
     </>
