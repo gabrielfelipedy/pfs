@@ -46,21 +46,21 @@ const Navbar = ({ linksClassName }: Props) => {
   }, [isOpen]);
 
   return (
-    <nav className="fixed z-50 w-full flex justify-between items-center h-22.5 px-6 md:px-20 bg-background">
+    <nav className="fixed top-0 left-0 z-50 w-full flex justify-between items-center h-22.5 px-6 md:px-20 bg-background">
 
       <Link href="/dashboard">
         <h1 className="font-bold text-[2rem]">pfs</h1>
       </Link>
 
 
-      <div className="md:hidden flex items-center">
+      <div className="lg:hidden flex items-center">
         <div onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={35} /> : <Menu size={35} />}
         </div>
       </div>
 
       <div
-        className={`${linksClassName} text-sm md:text-md md:flex gap-6 text-gray-600 dark:text-gray-300 hidden`}
+        className={`${linksClassName} text-md md:text-md lg:flex gap-6 text-black/70 dark:text-white/70 hidden`}
       >
         {navLinks.map((item, index) => (
           <Link
@@ -73,18 +73,18 @@ const Navbar = ({ linksClassName }: Props) => {
         ))}
       </div>
 
-      <div className="md:flex gap-3 hidden">
+      <div className="lg:flex gap-6 hidden">
         <ModeToggle />
 
-        <Link href="/settings">
-          <Button variant="outline" size="icon">
-            <Settings />
-          </Button>
+        <Link href="/settings" className="flex items-center">
+
+          <Settings size={23} />
+
         </Link>
       </div>
 
       {isOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full h-[calc(100vh-90px)] bg-background border-b flex flex-col justify-between p-4 animate-in slide-in-from-top-2">
+        <div className="lg:hidden absolute top-full left-0 w-full h-[calc(100vh-90px)] bg-background border-b flex flex-col justify-between p-4 animate-in slide-in-from-top-2">
 
           <div className="flex flex-col gap-4">
             {navLinks.map((item, index) => (
@@ -100,10 +100,10 @@ const Navbar = ({ linksClassName }: Props) => {
           </div>
 
           <div className="flex justify-between">
-            <ModeToggle/>
+            <ModeToggle />
 
             <Link href="/settings"
-            onClick={() => setIsOpen(false)}>
+              onClick={() => setIsOpen(false)}>
               <Button variant="outline" size="icon">
                 <Settings />
               </Button>

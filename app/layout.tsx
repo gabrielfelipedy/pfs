@@ -22,8 +22,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-
-          <main className="px-6 md:px-20">
+          <main className="px-6 md:px-20 mt-40">
+          
             {children}
           </main>
         </ThemeProvider>

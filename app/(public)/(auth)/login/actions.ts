@@ -1,7 +1,7 @@
 "use server";
 
 import { createSession } from "@/lib/session";
-import { LoginFormSchema } from "../../../lib/definitions";
+import { LoginFormSchema } from "../../../../lib/definitions";
 import { redirect } from "next/navigation";
 import * as bcrypt from "bcrypt";
 import { getAuth } from "@/db/auth";
@@ -62,7 +62,6 @@ export async function login(
   await createSession(username);
   redirect("/dashboard");
   return { success: true, message: "Login Sucessfully" };
-  
 }
 
 export async function logout() {}

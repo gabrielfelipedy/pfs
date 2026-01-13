@@ -41,7 +41,6 @@ export default async function Home() {
     <>
       <h1 className="text-[2.2rem] md:text-[3rem] font-bold">Dashboard</h1>
      
-     <p className="mt-6 text-sm text-[#cecece]">FILTRAR POR MÊS</p>
 
       <Tabs className="mt-6" defaultValue={avaliableMonths.at(-1)}>
         <TabsList>
