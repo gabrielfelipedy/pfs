@@ -2,7 +2,9 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div>Home Page</div>
+    <div>
+      <h1 className='title'>Insights inteligentes sobre o seu dinheiro!</h1>
+    </div>
   )
 }
 

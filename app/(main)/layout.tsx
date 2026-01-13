@@ -13,7 +13,7 @@ export default function MainLayout({
       <header className="flex justify-center">
         <Navbar />
       </header>
-      <main className="mt-16 md:mt-40">{children}
+      <main className="mt-30 md:mt-40">{children}
         <Toaster />
       </main>
     </>

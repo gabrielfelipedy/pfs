@@ -27,7 +27,6 @@ const Entradas = async () => {
   return (
     <>
       <h1 className="text-[3rem] font-bold mt-10">Entradas</h1>
-      <p className="text-xl text-slate-600">Todos os registros de entradas</p>
 
       <Tabs className="mt-10" defaultValue={avaliableMonths.at(-1)}>
         <TabsList>
