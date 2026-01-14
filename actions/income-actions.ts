@@ -1,7 +1,6 @@
 "use server";
 
 import { insertOperation, updateOperation } from "@/db/queries/operation";
-import { replaceUTCTime, utcMinus3ToUtc } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { OperationActionState, OperationSchema } from "./definitions";
 
@@ -19,6 +18,7 @@ export async function createEntrada(prevState: OperationActionState | undefined,
     is_income: true,
     category_id: Number(formData.get("category_id")),
     payment_method_id: Number(formData.get("payment_method_id")),
+    period_id: formData.get("is_fixo") === "true" ? 3 : null
   });
 
   if (!validationResult.success) {
@@ -83,6 +83,7 @@ export async function updateIncome(prevState: OperationActionState | undefined, 
     is_income: true,
     category_id: Number(formData.get("category_id")),
     payment_method_id: Number(formData.get("payment_method_id")),
+    period_id: formData.get("is_fixo") === "true" ? 3 : null
   });
 
   //console.log(dateFromForm)

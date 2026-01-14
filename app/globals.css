@@ -142,4 +142,20 @@
   .title {
     @apply text-[2.2rem] md:text-[3.2rem] font-bold;
   }
+
+  .subtitle {
+    @apply text-[2rem] md:text-[3rem] font-bold;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
 }

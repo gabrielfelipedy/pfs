@@ -1,0 +1,1 @@
+ALTER TABLE `operation` ALTER COLUMN "date" TO "date" integer NOT NULL DEFAULT (CURRENT_TIMESTAMP);

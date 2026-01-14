@@ -90,7 +90,7 @@ export const operationTable = sqliteTable("operation", {
   name: text().notNull(),
   description: text(),
   value: integer(),
-  date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
+  date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`).notNull(),
   
   is_paid: integer({ mode: "boolean" }).default(false).notNull(),
   is_income: integer({ mode: "boolean" }).default(false).notNull(),

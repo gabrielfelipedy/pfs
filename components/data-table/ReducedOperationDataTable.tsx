@@ -13,8 +13,8 @@ import { Operation } from "@/lib/definitions";
 import { updateSaida } from "@/actions/expense-actions";
 import { updateIncome } from "@/actions/income-actions";
 import { Badge } from "../ui/badge";
-import { format } from "date-fns";
 import { ClientDateTime } from "../shared/ClientDateTime";
+import { EmptyDemo } from "../empty/EmptyDemo";
 
 export const columns: ColumnDef<Operation>[] = [
   {
@@ -178,5 +178,6 @@ interface Props {
 }
 
 export default function ReducedOperationDataTable({ operations }: Props) {
+
   return <DataTable columns={columns} data={operations} />;
 }
