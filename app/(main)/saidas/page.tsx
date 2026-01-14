@@ -10,11 +10,14 @@ import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
 import DailyExpenses from "./components/DailyExpenses";
 import WeeklyExpenses from "./components/WeeklyExpenses";
+import { filterFixedOperations, filterVariableOperations } from "@/lib/operation";
+import { EmptyDemo } from "@/components/empty/EmptyDemo";
 
 export const dynamic = "force-dynamic";
 
 const emptyOperation: Operation = {
-  is_income: false,
+  date: new Date(),
+  is_income: false
 };
 
 export default async function Saidas() {
@@ -23,11 +26,14 @@ export default async function Saidas() {
   try {
     expenses = await getExpenses();
   } catch (error) {
+    console.error(error)
     return <ErrorLoading />;
   }
   //console.log(expenses)
 
   const avaliableMonths = getAvaliableMonths(expenses);
+  const currentDate = new Date()
+  const actualMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`
 
   //console.log(filterWeeklyExpenses(expenses).reverse());
 
@@ -38,7 +44,6 @@ export default async function Saidas() {
       <div className="mt-10 grid gap-3 grid-cols-1 md:grid-cols-2 items-start">
 
         <div>
-
           <WeeklyExpenses expenses={expenses} />
         </div>
 
@@ -48,18 +53,41 @@ export default async function Saidas() {
         </div>
       </div>
 
-      <p className="mt-10 text-sm text-[#cecece]">FILTRAR POR MÊS</p>
-      <Tabs className="mt-4" defaultValue={avaliableMonths.at(-1)}>
-        <TabsList>
+
+      <Tabs className="mt-4" defaultValue={actualMonth}>
+        <TabsList className="w-full justify-start overflow-x-auto overflow-y-hidden whitespace-nowrap h-auto p-1 scrollbar-hide">
           {avaliableMonths.map((month) => (
-            <TabsTrigger key={month} value={month}>
+            <TabsTrigger key={month} value={month} className="shrink-0">
               {formatMonthYear(month)}
             </TabsTrigger>
           ))}
         </TabsList>
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
+
             <MonthlySaidas expenses={filterOperationsByMonth(expenses, month)} className="mt-10" />
+
+            <h2 className="subtitle mt-10">Gastos fixos</h2>
+
+            <div className="mt-2">
+              {(() => {
+
+                //console.log(expenses.filter((e) => e.period_id === 3))
+
+                const filtered = filterFixedOperations(filterOperationsByMonth(expenses, month))
+
+                if (filtered.length === 0) {
+                  return <EmptyDemo
+                    title="Sem Gastos Fixos"
+                    description="Você ainda não criou nenhum gasto fixo. Comece criando seu primeiro gasto fixo"
+                    createButtonText="Criar Gasto Fixo"
+                    importButtonText="Importar de CSV"
+                  />
+                }
+
+                return <ReducedOperationDataTable operations={filtered} />
+              })()}
+            </div>
 
             <div className="mt-10">
               {/* <CreateSaidaDialog /> */}
@@ -74,7 +102,7 @@ export default async function Saidas() {
             </div>
 
             <div className="mt-2">
-              <ReducedOperationDataTable operations={filterOperationsByMonth(expenses, month).reverse()} />
+              <ReducedOperationDataTable operations={filterVariableOperations(filterOperationsByMonth(expenses, month)).reverse()} />
             </div>
           </TabsContent>
         ))}

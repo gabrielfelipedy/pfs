@@ -10,23 +10,28 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> { className?: strin
 
 export function ModeToggle({ className, onClick, ...rest }: Props) {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleToggle = (e: React.MouseEvent<HTMLDivElement>) => {
-    // 1. Execute the theme change logic
     theme === "light" ? setTheme("dark") : setTheme("light");
 
-    // 2. Execute the onClick prop passed from the Navbar (to close the menu)
+
     if (onClick) {
       onClick(e);
     }
   };
 
+  if (!mounted) {
+    return <div className={className} {...rest}><div style={{ width: 23, height: 23 }} /></div>;
+  }
+
   return (
     <div className={className} onClick={handleToggle} {...rest}>
-
-
       {(theme === 'light') ? <Sun size={23} /> : <Moon size={23} />}
-
     </div>
   );
 }

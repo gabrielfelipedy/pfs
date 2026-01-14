@@ -75,7 +75,8 @@ export default function FormDialog({
     operation?.date ?? new Date()
   );
 
-  const [selected, setSelected] = useState(operation?.is_paid ?? true);
+  const [pagoSelected, setPagoSelected] = useState(operation?.is_paid ?? true);
+  const [fixoSelected, setFixoSelected] = useState((operation?.period_id ?? true) === 3);
 
   // State to control dialog open/close
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -226,15 +227,32 @@ export default function FormDialog({
 
                 <Switch
                   name="is_paid_switch"
-                  checked={selected}
-                  onCheckedChange={(checked) => setSelected(checked)}
+                  checked={pagoSelected}
+                  onCheckedChange={(checked) => setPagoSelected(checked)}
                   id="is_paid"
                 />
 
                 <input
                   type="hidden"
                   name="is_paid"
-                  value={selected ? "true" : "false"}
+                  value={pagoSelected ? "true" : "false"}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="is_fixo_switch">Fixo</Label>
+
+                <Switch
+                  name="is_fixo_switch"
+                  checked={fixoSelected}
+                  onCheckedChange={(checked) => setFixoSelected(checked)}
+                  id="is_paid"
+                />
+
+                <input
+                  type="hidden"
+                  name="is_fixo"
+                  value={fixoSelected ? "true" : "false"}
                 />
               </div>
             </div>
@@ -247,6 +265,10 @@ export default function FormDialog({
 
                 <p className="text-sm text-red-500">
                   {state?.errors?.is_paid || ""}
+                </p>
+
+                <p className="text-sm text-red-500">
+                  {state?.errors?.period_id|| ""}
                 </p>
               </>
             )}

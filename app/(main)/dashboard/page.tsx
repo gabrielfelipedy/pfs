@@ -14,13 +14,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBalanceEvolution, calculateIncomesAndExpensesEvolution  } from "@/lib/operation";
 import OperationDataTable from "@/components/data-table/OperationDataTable";
 import { filterOperationsByMonth, getAvaliableMonths, formatMonthYear } from "@/lib/date";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const emptyExpenseOperation: Operation = {
+  date: new Date(),
   is_income: false,
 };
 
 const emptyIncomeOperation: Operation = {
-  is_income: true,
+  date: new Date(),
+  is_income: true
 };
 
 
@@ -36,19 +39,27 @@ export default async function Home() {
 
   //console.log(transformedData)
   const avaliableMonths = getAvaliableMonths(operations);
+  console.log(avaliableMonths)
+  const currentDate = new Date()
+  const actualMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`
 
   return (
     <>
       <h1 className="text-[2.2rem] md:text-[3rem] font-bold">Dashboard</h1>
      
 
-      <Tabs className="mt-6" defaultValue={avaliableMonths.at(-1)}>
-        <TabsList>
+      <Tabs className="mt-6" defaultValue={actualMonth}>
+        <TabsList className="w-full justify-start overflow-x-auto overflow-y-hidden whitespace-nowrap h-auto p-1 scrollbar-hide">
+          
           {avaliableMonths.map((month) => (
-            <TabsTrigger key={month} value={month}>
+
+            
+            <TabsTrigger key={month} value={month} className="shrink-0">
               {formatMonthYear(month)}
             </TabsTrigger>
+            
           ))}
+          
         </TabsList>
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>

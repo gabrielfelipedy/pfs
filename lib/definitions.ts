@@ -5,7 +5,7 @@ export type Operation = {
   name?: string;
   description?: string | null;
   value?: number | null;
-  date?: Date | null;
+  date: Date;
   is_paid?: boolean | null;
   is_income?: boolean | null;
   category_id?: number | null;
@@ -14,6 +14,7 @@ export type Operation = {
   payment_method_name?: string | null;
   created_at?: Date;
   updated_at?: Date | null;
+  period_id?: number | null;
 };
 
 export type ExpenseLimit = {
