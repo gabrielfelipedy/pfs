@@ -3,7 +3,7 @@ import * as z from "zod";
 export const OperationSchema = z.object({
   id: z.number().optional(),
   name: z.string().min(1, { message: "Nome não pode ser vazio" }).trim(),
-  description: z.string().optional(),
+  description: z.string().nullable().optional(),
   date: z.coerce.date({ message: "Valor precisa ser uma data" }),
 
   value: z.number().min(0, { message: "Valor precisa ser positivo" }),
