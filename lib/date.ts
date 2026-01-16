@@ -44,7 +44,7 @@ export const getAvaliableMonths = (operations: Operation[]) => {
   return array.reverse();
 };
 
-const replaceMonth = (operations: Operation[], monthStr: string) => {
+export const replaceMonth = (operations: Operation[], monthStr: string) => {
   const targetDate = new Date(monthStr);
   const targetMonth = targetDate.getMonth();
   const targetYear = targetDate.getFullYear();

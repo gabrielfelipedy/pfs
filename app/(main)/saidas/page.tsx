@@ -86,7 +86,7 @@ export default async function Saidas() {
                   />
                 }
 
-                return <FixedExpensesDataTable operations={filtered} />
+                return <FixedExpensesDataTable month={month} operations={filtered} />
               })()}
             </div>
 
