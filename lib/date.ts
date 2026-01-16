@@ -44,7 +44,7 @@ export const getAvaliableMonths = (operations: Operation[]) => {
   return array.reverse();
 };
 
-const replaceMonth = (operations: Operation[], monthStr: string) => {
+export const replaceMonth = (operations: Operation[], monthStr: string) => {
   const targetDate = new Date(monthStr);
   const targetMonth = targetDate.getMonth();
   const targetYear = targetDate.getFullYear();
@@ -98,9 +98,9 @@ export const filterOperationsByMonth = (
 
   const fixedOperations = filterFixedOperations(operations).filter((o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month);
 
-  const replacedMonth = replaceMonth(fixedOperations, month)
+  //const replacedMonth = replaceMonth(fixedOperations, month)
 
-  return [...filteredByMonth, ...replacedMonth].sort((a, b) => {
+  return [...filteredByMonth, ...fixedOperations].sort((a, b) => {
     return new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime();
   });
 };

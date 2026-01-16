@@ -12,6 +12,7 @@ import DailyExpenses from "./components/DailyExpenses";
 import WeeklyExpenses from "./components/WeeklyExpenses";
 import { filterFixedOperations, filterVariableOperations } from "@/lib/operation";
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
+import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
 
 export const dynamic = "force-dynamic";
 
@@ -85,7 +86,7 @@ export default async function Saidas() {
                   />
                 }
 
-                return <ReducedOperationDataTable operations={filtered} />
+                return <FixedExpensesDataTable month={month} operations={filtered} />
               })()}
             </div>
 

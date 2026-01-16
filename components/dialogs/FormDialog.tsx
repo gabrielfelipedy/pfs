@@ -113,6 +113,10 @@ export default function FormDialog({
       router.refresh();
 
       setTimeout(() => {
+        setRawValor(0)
+        setDate(new Date())
+        setPagoSelected(true)
+        setFixoSelected(false)
         setDialogOpen(false);
       }, 0);
     } else {
