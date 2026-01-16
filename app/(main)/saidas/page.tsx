@@ -17,6 +17,9 @@ import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTab
 export const dynamic = "force-dynamic";
 
 const emptyOperation: Operation = {
+  name: '',
+  value: 0,
+  parcelas: 1,
   date: new Date(),
   is_income: false
 };
@@ -68,6 +71,18 @@ export default async function Saidas() {
 
             <MonthlySaidas expenses={filterOperationsByMonth(expenses, month)} className="mt-10" />
 
+            <div className="mt-10">
+              {/* <CreateSaidaDialog /> */}
+              <FormDialog
+                openDialogText="Adicionar Gasto"
+                dialogTitle="Adicionar Gasto"
+                dialogDescription="Preencha as informações do gasto"
+                buttonText="Adicionar"
+                operation={emptyOperation}
+                actionFunction={createSaida}
+              />
+            </div>
+
             <h2 className="subtitle mt-10">Gastos fixos</h2>
 
             <div className="mt-2">
@@ -90,17 +105,8 @@ export default async function Saidas() {
               })()}
             </div>
 
-            <div className="mt-10">
-              {/* <CreateSaidaDialog /> */}
-              <FormDialog
-                openDialogText="Adicionar Gasto"
-                dialogTitle="Adicionar Gasto"
-                dialogDescription="Preencha as informações do gasto"
-                buttonText="Adicionar"
-                operation={emptyOperation}
-                actionFunction={createSaida}
-              />
-            </div>
+
+            <h2 className="subtitle mt-10">Gastos variáveis</h2>
 
             <div className="mt-2">
               <ReducedOperationDataTable operations={filterVariableOperations(filterOperationsByMonth(expenses, month)).reverse()} />

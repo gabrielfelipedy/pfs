@@ -34,7 +34,17 @@ import { Spinner } from "../ui/spinner";
 import { Switch } from "../ui/switch";
 import PaymentMethodSelector from "../selectors/paymentMethodSelector";
 import { ClientDateTime } from "../shared/ClientDateTime";
-
+import { Textarea } from "@/components/ui/textarea"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Currency } from "../shared/Currency";
 // Defines the props for the FormDialog component
 
 interface Props {
@@ -51,7 +61,7 @@ interface Props {
   dialogTitle: string;
   dialogDescription: string;
   buttonText: string;
-  operation: Operation | undefined;
+  operation: Operation;
   actionFunction: (
     prevState: OperationActionState | undefined,
     formData: FormData
@@ -142,12 +152,62 @@ export default function FormDialog({
             <DialogDescription>{dialogDescription}</DialogDescription>
           </DialogHeader>
           <div className="flex flex-col md:grid gap-4 mt-10">
+
+            <div className="grid grid-cols-2 gap-5">
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="valor_display">Valor</Label>
+
+                <Input
+                  id="valor_display"
+                  type="text"
+                  value={formatter.format(rawValor / 100)}
+                  onChange={handleValorChange}
+                  onSelect={handleSelect}
+                  className="w-full text-right"
+                />
+                {/* 2. DATA INPUT: Hidden, has the "name", sends the raw integer */}
+                <input type="hidden" name="value" value={rawValor} />
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <Label htmlFor="parcelas">Nº de parcelas</Label>
+
+                <Select name="parcelas" defaultValue={operation?.parcelas.toString()}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Ver" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Parcelas</SelectLabel>
+
+
+                      {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => (
+                        <SelectItem key={n} value={n.toString()}>
+                          <span>{n}x de </span>
+                          <Currency value={rawValor / n} />
+                        </SelectItem>
+                      ))}
+
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {!state?.success && (
+                <>
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.value || ""}
+                  </p>
+                </>
+              )}
+
+            </div>
+
             <div className="md:grid gap-3">
               <input type="hidden" name="id" value={operation?.id || ""} />
 
               <Label htmlFor="name">Nome</Label>
               <Input
-                className="mt-4"
                 id="name"
                 name="name"
                 defaultValue={operation?.name || ""}
@@ -160,7 +220,8 @@ export default function FormDialog({
             </div>
 
             <div className="md:grid gap-3">
-              <div className="flex flex-col md:flex-row justify-between gap-4">
+              <div className="grid grid-cols-3 gap-5 place-items-center">
+
                 <div className="flex flex-col gap-3">
                   <Label htmlFor="date" className="px-1">
                     Data
@@ -178,7 +239,7 @@ export default function FormDialog({
                         className="w-full justify-between font-normal"
                       >
                         <ClientDateTime date={date} />
-                          
+
                         <ChevronDownIcon />
                       </Button>
                     </PopoverTrigger>
@@ -199,86 +260,65 @@ export default function FormDialog({
                     </PopoverContent>
                   </Popover>
                 </div>
+
+                <div className="flex flex-col gap-3">
+                  <Label htmlFor="is_paid_switch">Pago</Label>
+
+                  <Switch
+                    name="is_paid_switch"
+                    checked={pagoSelected}
+                    onCheckedChange={(checked) => setPagoSelected(checked)}
+                    id="is_paid"
+                  />
+
+                  <input
+                    type="hidden"
+                    name="is_paid"
+                    value={pagoSelected ? "true" : "false"}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <Label htmlFor="is_fixo_switch">Fixo</Label>
+
+                  <Switch
+                    name="is_fixo_switch"
+                    checked={fixoSelected}
+                    onCheckedChange={(checked) => setFixoSelected(checked)}
+                    id="is_paid"
+                  />
+
+                  <input
+                    type="hidden"
+                    name="is_fixo"
+                    value={fixoSelected ? "true" : "false"}
+                  />
+                </div>
+
+
                 {!state?.success && (
-                  <p className="text-sm text-red-500">
-                    {state?.errors?.date || ""}
-                  </p>
-                )}
+                  <>
+                    <p className="text-sm text-red-500">
+                      {state?.errors?.date || ""}
+                    </p>
+
+                    <p className="text-sm text-red-500">
+                      {state?.errors?.is_paid || ""}
+                    </p>
+
+                    <p className="text-sm text-red-500">
+                      {state?.errors?.period_id || ""}
+                    </p>
+
+                  </>)}
               </div>
             </div>
           </div>
 
           <div className="grid gap-3 mt-4">
+
             <div className="flex items-center justify-between gap-3">
               <div className="flex flex-col gap-3">
-                <Label htmlFor="value">Valor</Label>
-                {/* <Input className="max-w-[150px]" id="valor" name="valor" /> */}
-
-                <Input
-                  id="valor_display"
-                  type="text"
-                  value={formatter.format(rawValor / 100)}
-                  onChange={handleValorChange}
-                  onSelect={handleSelect}
-                  className="max-w-28 md:max-w-30 text-right"
-                />
-                {/* 2. DATA INPUT: Hidden, has the "name", sends the raw integer */}
-                <input type="hidden" name="value" value={rawValor} />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="is_paid_switch">Pago</Label>
-
-                <Switch
-                  name="is_paid_switch"
-                  checked={pagoSelected}
-                  onCheckedChange={(checked) => setPagoSelected(checked)}
-                  id="is_paid"
-                />
-
-                <input
-                  type="hidden"
-                  name="is_paid"
-                  value={pagoSelected ? "true" : "false"}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="is_fixo_switch">Fixo</Label>
-
-                <Switch
-                  name="is_fixo_switch"
-                  checked={fixoSelected}
-                  onCheckedChange={(checked) => setFixoSelected(checked)}
-                  id="is_paid"
-                />
-
-                <input
-                  type="hidden"
-                  name="is_fixo"
-                  value={fixoSelected ? "true" : "false"}
-                />
-              </div>
-            </div>
-
-            {!state?.success && (
-              <>
-                <p className="text-sm text-red-500">
-                  {state?.errors?.value || ""}
-                </p>
-
-                <p className="text-sm text-red-500">
-                  {state?.errors?.is_paid || ""}
-                </p>
-
-                <p className="text-sm text-red-500">
-                  {state?.errors?.period_id|| ""}
-                </p>
-              </>
-            )}
-
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex flex-col gap-2">
                 <Label htmlFor="category_id">Categoria</Label>
 
                 <CategorySelector
@@ -287,7 +327,7 @@ export default function FormDialog({
                 />
               </div>
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 <Label htmlFor="payment_method_id">Método de pagamento</Label>
 
                 <PaymentMethodSelector
@@ -309,10 +349,9 @@ export default function FormDialog({
             )}
           </div>
 
-          <div className="md:grid gap-3">
+          <div className="flex flex-col gap-3">
             <Label htmlFor="description">Descrição (opcional)</Label>
-            <Input
-              className="mt-4"
+            <Textarea
               id="description"
               name="description"
               defaultValue={operation?.description || ""}

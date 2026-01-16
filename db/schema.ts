@@ -1,5 +1,5 @@
 import { INVESTIMENTO_CATEGORY_ID } from "@/lib/operation";
-import { and, asc, eq, sql } from "drizzle-orm";
+import { and, asc, eq, getTableColumns, sql } from "drizzle-orm";
 import {
   integer,
   sqliteTable,
@@ -28,7 +28,9 @@ export const periodTable = sqliteTable("period", {
   id: integer().primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   description: text(),
-  created_at: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`).notNull(),
+  created_at: integer({ mode: "timestamp" })
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
   updated_at: integer("updated_at", { mode: "timestamp" }).$onUpdate(
     () => new Date()
   ),
@@ -89,9 +91,12 @@ export const operationTable = sqliteTable("operation", {
 
   name: text().notNull(),
   description: text(),
-  value: integer(),
-  date: integer({ mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`).notNull(),
-  
+  value: integer().default(0).notNull(),
+  parcelas: integer().default(1).notNull(),
+  date: integer({ mode: "timestamp" })
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+
   is_paid: integer({ mode: "boolean" }).default(false).notNull(),
   is_income: integer({ mode: "boolean" }).default(false).notNull(),
 
@@ -166,7 +171,10 @@ export const expenseView = sqliteView("vw_expense").as((qb) =>
 );
 
 export const investmentView = sqliteView("vw_investment").as((qb) =>
-  qb.select().from(operationTable).where(eq(operationTable.category_id, INVESTIMENTO_CATEGORY_ID))
+  qb
+    .select()
+    .from(operationTable)
+    .where(eq(operationTable.category_id, INVESTIMENTO_CATEGORY_ID))
 );
 
 export const operationWithCategoryView = sqliteView(
@@ -174,18 +182,11 @@ export const operationWithCategoryView = sqliteView(
 ).as((qb) =>
   qb
     .select({
-      id: operationTable.id,
-      name: operationTable.name,
-      description: operationTable.description,
-      value: operationTable.value,
-      date: operationTable.date,
-      is_paid: operationTable.is_paid,
-      is_income: operationTable.is_income,
-      period_id: operationTable.period_id,
-      category_id: operationTable.category_id,
+      ...getTableColumns(operationTable),
+
       category_name: sql<string>`category.name`.as("category_name"),
       period_name: sql<string>`period.name`.as("period_name"),
-      payment_method_id: operationTable.payment_method_id,
+
       payment_method_name: sql<string>`payment_method.name`.as(
         "payment_method_name"
       ),

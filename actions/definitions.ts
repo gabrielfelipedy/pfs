@@ -7,6 +7,9 @@ export const OperationSchema = z.object({
   date: z.coerce.date({ message: "Valor precisa ser uma data" }),
 
   value: z.number().min(0, { message: "Valor precisa ser positivo" }),
+
+  parcelas: z.number().min(1, { message: "Valor precisa ser maior que 0" }).max(12, { message: "Valor precisa ser menor ou igual a 12" }).optional(),
+
   is_paid: z.boolean(),
   is_income: z.boolean(),
   category_id: z.preprocess((val) => {

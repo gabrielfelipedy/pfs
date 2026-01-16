@@ -603,6 +603,27 @@
       "when": 1768400369019,
       "tag": "0085_remarkable_hannibal_king",
       "breakpoints": true
+    },
+    {
+      "idx": 86,
+      "version": "6",
+      "when": 1768602431831,
+      "tag": "0086_classy_bishop",
+      "breakpoints": true
+    },
+    {
+      "idx": 87,
+      "version": "6",
+      "when": 1768602869223,
+      "tag": "0087_conscious_juggernaut",
+      "breakpoints": true
+    },
+    {
+      "idx": 88,
+      "version": "6",
+      "when": 1768603071851,
+      "tag": "0088_fixed_brood",
+      "breakpoints": true
     }
   ]
 }

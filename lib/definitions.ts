@@ -2,10 +2,12 @@ import * as z from "zod";
 
 export type Operation = {
   id?: number;
-  name?: string;
+  name: string;
   description?: string | null;
-  value?: number | null;
+  value: number | null;
+  parcelas: number,
   date: Date;
+  
   is_paid?: boolean | null;
   is_income?: boolean | null;
   category_id?: number | null;
