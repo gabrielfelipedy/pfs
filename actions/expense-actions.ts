@@ -1,24 +1,28 @@
-"use server"
+"use server";
 
 import { insertOperation, updateOperation } from "@/db/queries/operation";
 import { replaceUTCTime, utcMinus3ToUtc } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { OperationActionState, OperationSchema } from "./definitions";
 
-export async function createSaida(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
-  const date = formData.get("date");
-
-  const validationResult = OperationSchema.safeParse({
+const validateZodSchema = (formData: FormData) =>
+  OperationSchema.safeParse({
     name: formData.get("name"),
     description: formData.get("description"),
-    date: date,
+    date: formData.get("date"),
     value: Number(formData.get("value")),
     is_paid: formData.get("is_paid") === "true",
     is_income: false,
     category_id: Number(formData.get("category_id")),
     payment_method_id: Number(formData.get("payment_method_id")),
-    period_id: formData.get("is_fixo") === "true" ? 3 : null
+    period_id: formData.get("is_fixo") === "true" ? 3 : null,
   });
+
+export async function createSaida(
+  prevState: OperationActionState | undefined,
+  formData: FormData
+): Promise<OperationActionState> {
+  const validationResult = validateZodSchema(formData);
 
   if (!validationResult.success) {
     return {
@@ -28,9 +32,7 @@ export async function createSaida(prevState: OperationActionState | undefined, f
   }
 
   //console.log(validationResult.data);
-  const result = await insertOperation(
-    validationResult.data
-  );
+  const result = await insertOperation(validationResult.data);
 
   if (!result) {
     return {
@@ -43,34 +45,22 @@ export async function createSaida(prevState: OperationActionState | undefined, f
     };
   }
 
-  revalidatePath('/dashboard')
-  revalidatePath('/saidas')
-  revalidatePath('/saidas/limites')
+  revalidatePath("/dashboard");
+  revalidatePath("/saidas");
+  revalidatePath("/saidas/limites");
 
   return { success: true, message: "Saída criada com sucesso" };
 }
 
 // **************** UPDATE ***************
 
-export async function updateSaida(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
-
+export async function updateSaida(
+  prevState: OperationActionState | undefined,
+  formData: FormData
+): Promise<OperationActionState> {
   const id = formData.get("id");
-  const date = formData.get("date");
 
-  console.log(date)
-
-  const validationResult = OperationSchema.safeParse({
-    id: Number(id),
-    name: formData.get("name"),
-    description: formData.get("description"),
-    date: date,
-    value: Number(formData.get("value")),
-    is_paid: formData.get("is_paid") === "true",
-    is_income: false,
-    category_id: Number(formData.get("category_id")),
-    payment_method_id: Number(formData.get("payment_method_id")),
-    period_id: formData.get("is_fixo") === "true" ? 3 : null
-  });
+  const validationResult = validateZodSchema(formData);
 
   if (!validationResult.success) {
     return {
@@ -80,23 +70,22 @@ export async function updateSaida(prevState: OperationActionState | undefined, f
   }
 
   console.log(validationResult.data);
-  const result = await updateOperation(Number(id), validationResult.data)
+  const result = await updateOperation(Number(id), validationResult.data);
 
-  if(!result){
-
+  if (!result) {
     return {
       success: false,
       errors: {
         name: ["Erro ao atualizar saída"],
       },
 
-      message: 'Erro ao atualizar saída'
+      message: "Erro ao atualizar saída",
     };
   }
 
-  revalidatePath('/dashboard')
-  revalidatePath('/saidas')
-  revalidatePath('/saidas/limites')
+  revalidatePath("/dashboard");
+  revalidatePath("/saidas");
+  revalidatePath("/saidas/limites");
 
-  return { success: true, message: 'Saída atualizada com sucesso' };
+  return { success: true, message: "Saída atualizada com sucesso" };
 }

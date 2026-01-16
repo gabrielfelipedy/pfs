@@ -4,15 +4,11 @@ import { insertOperation, updateOperation } from "@/db/queries/operation";
 import { revalidatePath } from "next/cache";
 import { OperationActionState, OperationSchema } from "./definitions";
 
-export async function createEntrada(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
-
-  const date = formData.get("date");
-  console.log(date)
-
-  const validationResult = OperationSchema.safeParse({
+const validateZodSchema = (formData: FormData) =>
+  OperationSchema.safeParse({
     name: formData.get("name"),
     description: formData.get("description"),
-    date: date,
+    date: formData.get("date"),
     value: Number(formData.get("value")),
     is_paid: formData.get("is_paid") === "true",
     is_income: true,
@@ -20,6 +16,10 @@ export async function createEntrada(prevState: OperationActionState | undefined,
     payment_method_id: Number(formData.get("payment_method_id")),
     period_id: formData.get("is_fixo") === "true" ? 3 : null
   });
+
+export async function createEntrada(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
+
+  const validationResult = validateZodSchema(formData)
 
   if (!validationResult.success) {
     return {
@@ -68,24 +68,8 @@ export async function createEntrada(prevState: OperationActionState | undefined,
 export async function updateIncome(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
 
   const id = formData.get("id");
-  const dateFromForm = formData.get("date");
-  
-  console.log(dateFromForm)
-
-
-  const validationResult = OperationSchema.safeParse({
-    id: Number(id),
-    name: formData.get("name"),
-    description: formData.get("description"),
-    date: dateFromForm,
-    value: Number(formData.get("value")),
-    is_paid: formData.get("is_paid") === "true",
-    is_income: true,
-    category_id: Number(formData.get("category_id")),
-    payment_method_id: Number(formData.get("payment_method_id")),
-    period_id: formData.get("is_fixo") === "true" ? 3 : null
-  });
-
+ 
+  const validationResult = validateZodSchema(formData)
   //console.log(dateFromForm)
 
   if (!validationResult.success) {
