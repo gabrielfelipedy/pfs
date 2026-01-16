@@ -98,9 +98,9 @@ export const filterOperationsByMonth = (
 
   const fixedOperations = filterFixedOperations(operations).filter((o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month);
 
-  const replacedMonth = replaceMonth(fixedOperations, month)
+  //const replacedMonth = replaceMonth(fixedOperations, month)
 
-  return [...filteredByMonth, ...replacedMonth].sort((a, b) => {
+  return [...filteredByMonth, ...fixedOperations].sort((a, b) => {
     return new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime();
   });
 };

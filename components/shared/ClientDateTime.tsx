@@ -7,7 +7,12 @@ export function ClientDateTime({ date }: { date: Date | null }) {
 
   // This runs after the first render
   useEffect(() => {
-    setIsClient(true);
+
+    setTimeout(() => {
+      setIsClient(true);
+    }, 0);
+
+
   }, []);
 
   // Server-side (and first client pass): render a placeholder with the same structure
