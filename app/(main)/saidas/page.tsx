@@ -13,6 +13,7 @@ import WeeklyExpenses from "./components/WeeklyExpenses";
 import { filterFixedOperations, filterVariableOperations } from "@/lib/operation";
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
+import ComprasParceladas from "@/components/resume/ComprasParceladas";
 
 export const dynamic = "force-dynamic";
 
@@ -111,6 +112,10 @@ export default async function Saidas() {
             <div className="mt-2">
               <ReducedOperationDataTable operations={filterVariableOperations(filterOperationsByMonth(expenses, month)).reverse()} />
             </div>
+
+            <h2 className="subtitle mt-10">Meus parcelamentos</h2>
+
+            <ComprasParceladas />
           </TabsContent>
         ))}
       </Tabs>
