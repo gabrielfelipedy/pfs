@@ -105,6 +105,31 @@ export const filterOperationsByMonth = (
   });
 };
 
+export const filterOperationsByMonthCharts = (
+  operations: Operation[],
+  month: string
+): Operation[] => {
+  
+  const filteredByMonth = filterVariableOperations(operations).filter(
+    (operation) => {
+      if (operation.date) {
+        const date = operation.date;
+        const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
+        return monthYear === month;
+      }
+      return false;
+    }
+  );
+
+  const fixedOperations = filterFixedOperations(operations).filter((o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month);
+
+  const replacedMonth = replaceMonth(fixedOperations, month)
+
+  return [...filteredByMonth, ...replacedMonth].sort((a, b) => {
+    return new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime();
+  });
+};
+
 export function formatMonthYear(input: string): string {
   // Split "12-2025" into [12, 2025]
   const [year, month] = input.split("-").map(Number);

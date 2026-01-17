@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export type Operation = {
+export interface Operation {
   id?: number;
   name: string;
   description?: string | null;
@@ -19,7 +19,7 @@ export type Operation = {
   period_id?: number | null;
 };
 
-export type ExpenseLimit = {
+export interface ExpenseLimit {
   id?: number;
   name?: string;
   description?: string | null;

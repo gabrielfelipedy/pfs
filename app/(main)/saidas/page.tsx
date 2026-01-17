@@ -10,7 +10,7 @@ import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
 import DailyExpenses from "./components/DailyExpenses";
 import WeeklyExpenses from "./components/WeeklyExpenses";
-import { filterFixedOperations, filterVariableOperations } from "@/lib/operation";
+import { filterComprasParceladas, filterFixedOperations, filterVariableOperations } from "@/lib/operation";
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
 import ComprasParceladas from "@/components/resume/ComprasParceladas";
@@ -115,7 +115,9 @@ export default async function Saidas() {
 
             <h2 className="subtitle mt-10">Meus parcelamentos</h2>
 
-            <ComprasParceladas />
+            <div className="mt-2">
+              <ReducedOperationDataTable operations={expenses.filterComprasParceladas()} />
+            </div>
           </TabsContent>
         ))}
       </Tabs>

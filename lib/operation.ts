@@ -161,6 +161,12 @@ export const filterInvestimentos = (operations: Operation[]) => {
   );
 };
 
+export const filterComprasParceladas = (operations: Operation[]) => {
+  return operations.filter(
+    (operation) => operation.parcelas > 1
+  );
+};
+
 export const calculateIncomesAndExpensesEvolution = (
   operations: Operation[]
 ) => {
