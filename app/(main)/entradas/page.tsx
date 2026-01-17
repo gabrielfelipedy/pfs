@@ -4,14 +4,16 @@ import { Operation } from "@/lib/definitions";
 import MonthlyEntradas from "./monthlyEntradas";
 import { getIncomes } from "@/db/queries/incomes";
 import ErrorLoading from "@/components/error/ErrorLoading";
-import { filterOperationsByMonth, getAvaliableMonths } from "@/lib/date";
+import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
-import { filterFixedOperations, filterVariableOperations } from "@/lib/operation";
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
 
 const emptyOperation: Operation = {
+  name: "",
+  value: 0,
+  parcelas: 1,
   date: new Date(),
   is_income: false
 };
@@ -47,7 +49,7 @@ const Entradas = async () => {
           <TabsContent key={month} value={month}>
 
             <MonthlyEntradas
-              incomes={filterOperationsByMonth(incomes, month)}
+              incomes={filterOperationsByMonthCharts(incomes, month)}
               className="mt-4"
             />
 
@@ -55,7 +57,7 @@ const Entradas = async () => {
 
             <div className="mt-2">
               {(() => {
-                const filtered = filterFixedOperations(filterOperationsByMonth(incomes, month))
+                const filtered = filterOperationsByMonth(incomes, month).filterFixedOperations()
 
 
                 if (filtered.length === 0) {
@@ -85,7 +87,7 @@ const Entradas = async () => {
 
             <div className="mt-2">
               <ReducedOperationDataTable
-                operations={filterVariableOperations(filterOperationsByMonth(incomes, month)).reverse()}
+                operations={filterOperationsByMonth(incomes, month).filterVariableOperations().reverse()}
               />
             </div>
           </TabsContent>

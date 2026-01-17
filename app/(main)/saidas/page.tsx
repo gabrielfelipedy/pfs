@@ -10,7 +10,6 @@ import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
 import DailyExpenses from "./components/DailyExpenses";
 import WeeklyExpenses from "./components/WeeklyExpenses";
-import { filterComprasParceladas, filterFixedOperations, filterVariableOperations } from "@/lib/operation";
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
 import ComprasParceladas from "@/components/resume/ComprasParceladas";
@@ -91,7 +90,7 @@ export default async function Saidas() {
 
                 //console.log(expenses.filter((e) => e.period_id === 3))
 
-                const filtered = filterFixedOperations(filterOperationsByMonth(expenses, month))
+                const filtered = filterOperationsByMonth(expenses, month).filterFixedOperations()
 
                 if (filtered.length === 0) {
                   return <EmptyDemo
@@ -110,7 +109,7 @@ export default async function Saidas() {
             <h2 className="subtitle mt-10">Gastos variáveis</h2>
 
             <div className="mt-2">
-              <ReducedOperationDataTable operations={filterVariableOperations(filterOperationsByMonth(expenses, month)).reverse()} />
+              <ReducedOperationDataTable operations={filterOperationsByMonth(expenses, month).filterVariableOperations().reverse()} />
             </div>
 
             <h2 className="subtitle mt-10">Meus parcelamentos</h2>

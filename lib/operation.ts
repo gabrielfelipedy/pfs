@@ -23,15 +23,7 @@ export const calculateIncomes = (operations: Operation[]) => {
 };
 
 
-export function filterFixedOperations(operations: Operation[])
-{
-  return operations.filter((o) => o.period_id === MONTHLY_PERIOD_ID)
-}
 
-export function filterVariableOperations(operations: Operation[])
-{
-  return operations.filter((o) => o.period_id === null)
-}
 
 export const calculateBalanceEvolution = (operations: Operation[]) => {
   //console.log(operations)
@@ -158,12 +150,6 @@ export const calculateCumulativeIncomeEvolution = (operations: Operation[]) => {
 export const filterInvestimentos = (operations: Operation[]) => {
   return operations.filter(
     (operation) => operation.category_id === INVESTIMENTO_CATEGORY_ID
-  );
-};
-
-export const filterComprasParceladas = (operations: Operation[]) => {
-  return operations.filter(
-    (operation) => operation.parcelas > 1
   );
 };
 

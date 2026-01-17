@@ -1,5 +1,4 @@
 import { Operation } from "./definitions";
-import { filterFixedOperations, filterVariableOperations } from "./operation";
 
 export function convertUtcToLocal(date: Date): Date {
   const UTC_MINUS_3_OFFSET_MS = 3 * 60 * 60 * 1000; // UTC-3 offset in milliseconds
@@ -50,7 +49,11 @@ export const replaceMonth = (operations: Operation[], monthStr: string) => {
   const targetYear = targetDate.getFullYear();
 
   // Calculate the last day of the target month once to use for all operations
-  const lastDayOfTargetMonth = new Date(targetYear, targetMonth + 1, 0).getDate();
+  const lastDayOfTargetMonth = new Date(
+    targetYear,
+    targetMonth + 1,
+    0,
+  ).getDate();
 
   return operations.map((op) => {
     const oldDate = new Date(op.date);
@@ -59,14 +62,13 @@ export const replaceMonth = (operations: Operation[], monthStr: string) => {
     // 1. Create the new date instance
     const newDate = new Date(oldDate);
 
-    // 2. Decide the day: 
+    // 2. Decide the day:
     // Keep originalDay UNLESS it's greater than the target month's capacity
-    const safeDay = originalDay <= lastDayOfTargetMonth 
-      ? originalDay 
-      : lastDayOfTargetMonth;
+    const safeDay =
+      originalDay <= lastDayOfTargetMonth ? originalDay : lastDayOfTargetMonth;
 
     /** * To prevent accidental rollover during the setMonth() call,
-     * we set the day to the safe value FIRST if the target month is "shorter" 
+     * we set the day to the safe value FIRST if the target month is "shorter"
      * than the current month.
      */
     newDate.setDate(1); // Temporary safety reset
@@ -83,20 +85,22 @@ export const replaceMonth = (operations: Operation[], monthStr: string) => {
 
 export const filterOperationsByMonth = (
   operations: Operation[],
-  month: string
+  month: string,
 ): Operation[] => {
-  const filteredByMonth = filterVariableOperations(operations).filter(
-    (operation) => {
+  const filteredByMonth = operations
+    .filterVariableOperations()
+    .filter((operation) => {
       if (operation.date) {
         const date = operation.date;
         const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
         return monthYear === month;
       }
       return false;
-    }
-  );
+    });
 
-  const fixedOperations = filterFixedOperations(operations).filter((o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month);
+  const fixedOperations = operations.filterFixedOperations().filter(
+    (o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month,
+  );
 
   //const replacedMonth = replaceMonth(fixedOperations, month)
 
@@ -107,21 +111,22 @@ export const filterOperationsByMonth = (
 
 export const filterOperationsByMonthCharts = (
   operations: Operation[],
-  month: string
+  month: string,
 ): Operation[] => {
-  
-  const filteredByMonth = filterVariableOperations(operations).filter(
-    (operation) => {
+  const filteredByMonth = operations
+    .filterVariableOperations()
+    .filter((operation) => {
       if (operation.date) {
         const date = operation.date;
         const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
         return monthYear === month;
       }
       return false;
-    }
-  );
+    });
 
-  const fixedOperations = filterFixedOperations(operations).filter((o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month);
+  const fixedOperations = operations.filterFixedOperations().filter(
+    (o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month,
+  );
 
   const replacedMonth = replaceMonth(fixedOperations, month)
 
