@@ -4,7 +4,7 @@ import { createSaida } from "@/actions/expense-actions";
 import { Operation } from "@/lib/definitions";
 import { getExpenses } from "@/db/queries/expense";
 import ErrorLoading from "@/components/error/ErrorLoading";
-import { filterOperationsByMonth, getAvaliableMonths } from "@/lib/date";
+import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
@@ -69,7 +69,7 @@ export default async function Saidas() {
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
 
-            <MonthlySaidas expenses={filterOperationsByMonth(expenses, month)} className="mt-10" />
+            <MonthlySaidas expenses={filterOperationsByMonthCharts(expenses, month)} className="mt-10" />
 
             <div className="mt-10">
               {/* <CreateSaidaDialog /> */}
