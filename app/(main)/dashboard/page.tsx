@@ -13,15 +13,21 @@ import Bar from "@/components/charts/bar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBalanceEvolution, calculateIncomesAndExpensesEvolution  } from "@/lib/operation";
 import OperationDataTable from "@/components/data-table/OperationDataTable";
-import { filterOperationsByMonth, getAvaliableMonths, formatMonthYear } from "@/lib/date";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { filterOperationsByMonth, getAvaliableMonths, formatMonthYear, filterOperationsByMonthCharts } from "@/lib/date";
+
 
 const emptyExpenseOperation: Operation = {
+  name: "",
   date: new Date(),
+  value: 0,
+  parcelas: 1,
   is_income: false,
 };
 
 const emptyIncomeOperation: Operation = {
+  name: "",
+  value: 0,
+  parcelas: 1,
   date: new Date(),
   is_income: true
 };
@@ -95,7 +101,7 @@ export default async function Home() {
                 title="Evolução do saldo"
                 description="Ao longo do mês atual"
                 data={calculateBalanceEvolution(
-                  filterOperationsByMonth(operations, month)
+                  filterOperationsByMonthCharts(operations, month)
                 )}
               />
 
@@ -109,7 +115,7 @@ export default async function Home() {
                     title="Comparação de entradas e saídas"
                     description="Ao longo do mês atual"
                     data={calculateIncomesAndExpensesEvolution(
-                      filterOperationsByMonth(operations, month)
+                      filterOperationsByMonthCharts(operations, month)
                     )}
                   />
                 </TabsContent>
@@ -119,14 +125,14 @@ export default async function Home() {
                     title="Comparação de entradas e saídas"
                     description="Ao longo do mês atual"
                     data={calculateIncomesAndExpensesEvolution(
-                      filterOperationsByMonth(operations, month)
+                      filterOperationsByMonthCharts(operations, month)
                     )}
                   />
                 </TabsContent>
               </Tabs>
 
-              <div className="mt-10 flex gap-5">
-                {/* <CreateSaidaDialog /> */}
+              {/* <div className="mt-10 flex gap-5">
+                
                 <FormDialog
                   openDialogText="Adicionar entrada"
                   dialogTitle="Adicionar entrada"
@@ -149,7 +155,7 @@ export default async function Home() {
 
               <div className="mt-2">
                 <OperationDataTable operations={filterOperationsByMonth(operations, month).reverse()} />
-              </div>
+              </div> */}
             </div>
           </TabsContent>
         ))}

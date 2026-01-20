@@ -1,11 +1,13 @@
 import * as z from "zod";
 
-export type Operation = {
+export interface Operation {
   id?: number;
-  name?: string;
+  name: string;
   description?: string | null;
-  value?: number | null;
+  value: number;
+  parcelas: number,
   date: Date;
+  
   is_paid?: boolean | null;
   is_income?: boolean | null;
   category_id?: number | null;
@@ -17,7 +19,42 @@ export type Operation = {
   period_id?: number | null;
 };
 
-export type ExpenseLimit = {
+export class OperationArray {
+
+  private MONTHLY_PERIOD_ID = 3
+  private INVESTIMENTO_CATEGORY_ID = 6
+
+  constructor(private operations: Operation[]) {}
+
+  calcSum(): number {
+    return this.operations.reduce((sum, op) => sum + op.value, 0);
+  }
+
+  filterFixedOperations(): Operation[] {
+    return this.operations.filter((o) => o.period_id === this.MONTHLY_PERIOD_ID)
+  }
+
+  filterVariableOperations(): Operation[] {
+    return this.operations.filter((o) => o.period_id === null)
+  }
+
+  filterComprasParceladas(): Operation[] {
+    return this.operations.filter((o) => o.parcelas > 1);
+  }
+
+  filterInvestimentos(): Operation[] {
+    return this.operations.filter((o) => o.category_id === this.INVESTIMENTO_CATEGORY_ID);
+  }
+
+  // Add other useful methods
+  getOperations(): Operation[] {
+    return this.operations;
+  }
+}
+
+
+
+export interface ExpenseLimit {
   id?: number;
   name?: string;
   description?: string | null;

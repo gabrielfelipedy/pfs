@@ -1,22 +1,25 @@
 import MonthlySaidas from "./components/monthlySaidas";
 import FormDialog from "../../../components/dialogs/FormDialog";
 import { createSaida } from "@/actions/expense-actions";
-import { Operation } from "@/lib/definitions";
+import { Operation, OperationArray } from "@/lib/definitions";
 import { getExpenses } from "@/db/queries/expense";
 import ErrorLoading from "@/components/error/ErrorLoading";
-import { filterOperationsByMonth, getAvaliableMonths } from "@/lib/date";
+import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
 import DailyExpenses from "./components/DailyExpenses";
 import WeeklyExpenses from "./components/WeeklyExpenses";
-import { filterFixedOperations, filterVariableOperations } from "@/lib/operation";
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
+import ComprasParceladas from "@/components/resume/ComprasParceladas";
 
 export const dynamic = "force-dynamic";
 
 const emptyOperation: Operation = {
+  name: '',
+  value: 0,
+  parcelas: 1,
   date: new Date(),
   is_income: false
 };
@@ -31,6 +34,8 @@ export default async function Saidas() {
     return <ErrorLoading />;
   }
   //console.log(expenses)
+
+  const expensesArray = new OperationArray(expenses)
 
   const avaliableMonths = getAvaliableMonths(expenses);
   const currentDate = new Date()
@@ -66,7 +71,19 @@ export default async function Saidas() {
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
 
-            <MonthlySaidas expenses={filterOperationsByMonth(expenses, month)} className="mt-10" />
+            <MonthlySaidas expenses={filterOperationsByMonthCharts(expenses, month)} className="mt-10" />
+
+            <div className="mt-10">
+              {/* <CreateSaidaDialog /> */}
+              <FormDialog
+                openDialogText="Adicionar Gasto"
+                dialogTitle="Adicionar Gasto"
+                dialogDescription="Preencha as informações do gasto"
+                buttonText="Adicionar"
+                operation={emptyOperation}
+                actionFunction={createSaida}
+              />
+            </div>
 
             <h2 className="subtitle mt-10">Gastos fixos</h2>
 
@@ -75,7 +92,7 @@ export default async function Saidas() {
 
                 //console.log(expenses.filter((e) => e.period_id === 3))
 
-                const filtered = filterFixedOperations(filterOperationsByMonth(expenses, month))
+                const filtered = filterOperationsByMonth(expensesArray.filterFixedOperations(), month)
 
                 if (filtered.length === 0) {
                   return <EmptyDemo
@@ -90,20 +107,17 @@ export default async function Saidas() {
               })()}
             </div>
 
-            <div className="mt-10">
-              {/* <CreateSaidaDialog /> */}
-              <FormDialog
-                openDialogText="Adicionar Gasto"
-                dialogTitle="Adicionar Gasto"
-                dialogDescription="Preencha as informações do gasto"
-                buttonText="Adicionar"
-                operation={emptyOperation}
-                actionFunction={createSaida}
-              />
-            </div>
+
+            <h2 className="subtitle mt-10">Gastos variáveis</h2>
 
             <div className="mt-2">
-              <ReducedOperationDataTable operations={filterVariableOperations(filterOperationsByMonth(expenses, month)).reverse()} />
+              <ReducedOperationDataTable operations={filterOperationsByMonth(expensesArray.filterVariableOperations(), month).reverse()} />
+            </div>
+
+            <h2 className="subtitle mt-10">Meus parcelamentos</h2>
+
+            <div className="mt-2">
+              <ReducedOperationDataTable operations={expensesArray.filterComprasParceladas()} />
             </div>
           </TabsContent>
         ))}

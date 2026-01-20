@@ -2,15 +2,6 @@ import { startOfDay } from "date-fns";
 import { ChartData, Operation, OperationBalance } from "./definitions";
 
 export const INVESTIMENTO_CATEGORY_ID = 6;
-const MONTHLY_PERIOD_ID = 3
-
-export const sumValuesOfOperations = (operations: Operation[]) => {
-  let total = 0;
-  operations.forEach((operation) => {
-    total += operation.value ?? 0;
-  });
-  return total;
-};
 
 export const calculateIncomes = (operations: Operation[]) => {
   let total = 0;
@@ -21,17 +12,6 @@ export const calculateIncomes = (operations: Operation[]) => {
   });
   return total;
 };
-
-
-export function filterFixedOperations(operations: Operation[])
-{
-  return operations.filter((o) => o.period_id === MONTHLY_PERIOD_ID)
-}
-
-export function filterVariableOperations(operations: Operation[])
-{
-  return operations.filter((o) => o.period_id === null)
-}
 
 export const calculateBalanceEvolution = (operations: Operation[]) => {
   //console.log(operations)
@@ -153,12 +133,6 @@ export const calculateCumulativeIncomeEvolution = (operations: Operation[]) => {
 
   //console.log(Array.from(incomeMap.values()));
   return Array.from(incomeMap.values());
-};
-
-export const filterInvestimentos = (operations: Operation[]) => {
-  return operations.filter(
-    (operation) => operation.category_id === INVESTIMENTO_CATEGORY_ID
-  );
 };
 
 export const calculateIncomesAndExpensesEvolution = (

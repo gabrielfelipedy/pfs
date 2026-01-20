@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import PublicNavbar from "@/components/shared/PublicNavbar";
 
 export const metadata: Metadata = {
   title: "PFS",
@@ -23,7 +22,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <main className="px-6 md:px-20 mt-40">
-          
+
             {children}
           </main>
         </ThemeProvider>

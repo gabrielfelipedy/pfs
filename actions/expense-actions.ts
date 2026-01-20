@@ -1,7 +1,6 @@
 "use server";
 
 import { insertOperation, updateOperation } from "@/db/queries/operation";
-import { replaceUTCTime, utcMinus3ToUtc } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { OperationActionState, OperationSchema } from "./definitions";
 
@@ -11,6 +10,7 @@ const validateZodSchema = (formData: FormData) =>
     description: formData.get("description"),
     date: formData.get("date"),
     value: Number(formData.get("value")),
+    parcelas: Number(formData.get("parcelas")),
     is_paid: formData.get("is_paid") === "true",
     is_income: false,
     category_id: Number(formData.get("category_id")),
