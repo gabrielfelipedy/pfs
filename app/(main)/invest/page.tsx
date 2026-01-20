@@ -2,11 +2,10 @@ import Line from "@/components/charts/line";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getInvestments } from "@/db/queries/invest";
-import { Operation } from "@/lib/definitions";
+import { Operation, OperationArray } from "@/lib/definitions";
 import {
   calculateCumulativeOperationEvolution,
   calculateOperationEvolution,
-  sumValuesOfOperations,
 } from "@/lib/operation";
 import { formatter } from "@/lib/utils";
 import React from "react";
@@ -20,7 +19,9 @@ const page = async () => {
     return <ErrorLoading />;
   }
 
-  const total = sumValuesOfOperations(investments);
+  const investmentsArray = new OperationArray(investments)
+
+  const total = investmentsArray.calcSum()
 
   const cumulativeOperations = calculateCumulativeOperationEvolution(investments)
 
