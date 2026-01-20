@@ -1,7 +1,7 @@
 import MonthlySaidas from "./components/monthlySaidas";
 import FormDialog from "../../../components/dialogs/FormDialog";
 import { createSaida } from "@/actions/expense-actions";
-import { Operation } from "@/lib/definitions";
+import { Operation, OperationArray } from "@/lib/definitions";
 import { getExpenses } from "@/db/queries/expense";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
@@ -34,6 +34,8 @@ export default async function Saidas() {
     return <ErrorLoading />;
   }
   //console.log(expenses)
+
+  const expensesArray = new OperationArray(expenses)
 
   const avaliableMonths = getAvaliableMonths(expenses);
   const currentDate = new Date()
@@ -90,7 +92,7 @@ export default async function Saidas() {
 
                 //console.log(expenses.filter((e) => e.period_id === 3))
 
-                const filtered = filterOperationsByMonth(expenses, month).filterFixedOperations()
+                const filtered = filterOperationsByMonth(expensesArray.filterFixedOperations(), month)
 
                 if (filtered.length === 0) {
                   return <EmptyDemo
@@ -109,13 +111,13 @@ export default async function Saidas() {
             <h2 className="subtitle mt-10">Gastos variáveis</h2>
 
             <div className="mt-2">
-              <ReducedOperationDataTable operations={filterOperationsByMonth(expenses, month).filterVariableOperations().reverse()} />
+              <ReducedOperationDataTable operations={filterOperationsByMonth(expensesArray.filterVariableOperations(), month).reverse()} />
             </div>
 
             <h2 className="subtitle mt-10">Meus parcelamentos</h2>
 
             <div className="mt-2">
-              <ReducedOperationDataTable operations={expenses.filterComprasParceladas()} />
+              <ReducedOperationDataTable operations={expensesArray.filterComprasParceladas()} />
             </div>
           </TabsContent>
         ))}

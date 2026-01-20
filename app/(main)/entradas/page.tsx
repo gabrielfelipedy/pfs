@@ -1,6 +1,6 @@
 import FormDialog from "../../../components/dialogs/FormDialog";
 import { createEntrada } from "@/actions/income-actions";
-import { Operation } from "@/lib/definitions";
+import { Operation, OperationArray } from "@/lib/definitions";
 import MonthlyEntradas from "./monthlyEntradas";
 import { getIncomes } from "@/db/queries/incomes";
 import ErrorLoading from "@/components/error/ErrorLoading";
@@ -28,6 +28,8 @@ const Entradas = async () => {
     console.error(error)
     return <ErrorLoading />;
   }
+
+  const incomesArray = new OperationArray(incomes)
 
   const avaliableMonths = getAvaliableMonths(incomes);
   const currentDate = new Date()
@@ -57,7 +59,7 @@ const Entradas = async () => {
 
             <div className="mt-2">
               {(() => {
-                const filtered = filterOperationsByMonth(incomes, month).filterFixedOperations()
+                const filtered = filterOperationsByMonth(incomesArray.filterFixedOperations(), month)
 
 
                 if (filtered.length === 0) {
@@ -87,7 +89,7 @@ const Entradas = async () => {
 
             <div className="mt-2">
               <ReducedOperationDataTable
-                operations={filterOperationsByMonth(incomes, month).filterVariableOperations().reverse()}
+                operations={filterOperationsByMonth(incomesArray.filterVariableOperations(), month).reverse()}
               />
             </div>
           </TabsContent>

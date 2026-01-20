@@ -4,7 +4,7 @@ export interface Operation {
   id?: number;
   name: string;
   description?: string | null;
-  value: number | null;
+  value: number;
   parcelas: number,
   date: Date;
   
@@ -18,6 +18,41 @@ export interface Operation {
   updated_at?: Date | null;
   period_id?: number | null;
 };
+
+export class OperationArray {
+
+  private MONTHLY_PERIOD_ID = 3
+  private INVESTIMENTO_CATEGORY_ID = 6
+
+  constructor(private operations: Operation[]) {}
+
+  calcSum(): number {
+    return this.operations.reduce((sum, op) => sum + op.value, 0);
+  }
+
+  filterFixedOperations(): Operation[] {
+    return this.operations.filter((o) => o.period_id === this.MONTHLY_PERIOD_ID)
+  }
+
+  filterVariableOperations(): Operation[] {
+    return this.operations.filter((o) => o.period_id === null)
+  }
+
+  filterComprasParceladas(): Operation[] {
+    return this.operations.filter((o) => o.parcelas > 1);
+  }
+
+  filterInvestimentos(): Operation[] {
+    return this.operations.filter((o) => o.category_id === this.INVESTIMENTO_CATEGORY_ID);
+  }
+
+  // Add other useful methods
+  getOperations(): Operation[] {
+    return this.operations;
+  }
+}
+
+
 
 export interface ExpenseLimit {
   id?: number;

@@ -1,5 +1,3 @@
-// app/(main)/layout.tsx
-
 import Navbar from "@/components/shared/Navbar";
 import { Toaster } from "@/components/ui/sonner";
 

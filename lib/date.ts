@@ -1,4 +1,4 @@
-import { Operation } from "./definitions";
+import { Operation, OperationArray } from "./definitions";
 
 export function convertUtcToLocal(date: Date): Date {
   const UTC_MINUS_3_OFFSET_MS = 3 * 60 * 60 * 1000; // UTC-3 offset in milliseconds
@@ -87,8 +87,10 @@ export const filterOperationsByMonth = (
   operations: Operation[],
   month: string,
 ): Operation[] => {
-  const filteredByMonth = operations
-    .filterVariableOperations()
+
+  const operationsArray = new OperationArray(operations)
+
+  const filteredByMonth = operationsArray.filterVariableOperations()
     .filter((operation) => {
       if (operation.date) {
         const date = operation.date;
@@ -98,7 +100,7 @@ export const filterOperationsByMonth = (
       return false;
     });
 
-  const fixedOperations = operations.filterFixedOperations().filter(
+  const fixedOperations = operationsArray.filterFixedOperations().filter(
     (o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month,
   );
 
@@ -113,7 +115,10 @@ export const filterOperationsByMonthCharts = (
   operations: Operation[],
   month: string,
 ): Operation[] => {
-  const filteredByMonth = operations
+
+  const operationsArray = new OperationArray(operations)
+
+  const filteredByMonth = operationsArray
     .filterVariableOperations()
     .filter((operation) => {
       if (operation.date) {
@@ -124,7 +129,7 @@ export const filterOperationsByMonthCharts = (
       return false;
     });
 
-  const fixedOperations = operations.filterFixedOperations().filter(
+  const fixedOperations = operationsArray.filterFixedOperations().filter(
     (o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month,
   );
 

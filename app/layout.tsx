@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
-import "@/lib/array.extensions";
-
 export const metadata: Metadata = {
   title: "PFS",
   description: "Financial system to manage your personal finances",
