@@ -90,7 +90,7 @@ export const filterOperationsByMonth = (
 
   const operationsArray = new OperationArray(operations)
 
-  const filteredByMonth = operationsArray.filterVariableOperations()
+  const filteredByMonth = operationsArray.filterVariableOperations().getOperations()
     .filter((operation) => {
       if (operation.date) {
         const date = operation.date;
@@ -100,7 +100,7 @@ export const filterOperationsByMonth = (
       return false;
     });
 
-  const fixedOperations = operationsArray.filterFixedOperations().filter(
+  const fixedOperations = operationsArray.filterFixedOperations().getOperations().filter(
     (o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month,
   );
 
@@ -119,7 +119,7 @@ export const filterOperationsByMonthCharts = (
   const operationsArray = new OperationArray(operations)
 
   const filteredByMonth = operationsArray
-    .filterVariableOperations()
+    .filterVariableOperations().getOperations()
     .filter((operation) => {
       if (operation.date) {
         const date = operation.date;
@@ -129,7 +129,7 @@ export const filterOperationsByMonthCharts = (
       return false;
     });
 
-  const fixedOperations = operationsArray.filterFixedOperations().filter(
+  const fixedOperations = operationsArray.filterFixedOperations().getOperations().filter(
     (o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month,
   );
 

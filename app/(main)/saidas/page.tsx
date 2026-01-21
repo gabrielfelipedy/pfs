@@ -12,7 +12,6 @@ import DailyExpenses from "./components/DailyExpenses";
 import WeeklyExpenses from "./components/WeeklyExpenses";
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
-import ComprasParceladas from "@/components/resume/ComprasParceladas";
 
 export const dynamic = "force-dynamic";
 
@@ -92,7 +91,7 @@ export default async function Saidas() {
 
                 //console.log(expenses.filter((e) => e.period_id === 3))
 
-                const filtered = filterOperationsByMonth(expensesArray.filterFixedOperations(), month)
+                const filtered = filterOperationsByMonth(expensesArray.filterFixedOperations().getOperations(), month)
 
                 if (filtered.length === 0) {
                   return <EmptyDemo
@@ -111,13 +110,13 @@ export default async function Saidas() {
             <h2 className="subtitle mt-10">Gastos variáveis</h2>
 
             <div className="mt-2">
-              <ReducedOperationDataTable operations={filterOperationsByMonth(expensesArray.filterVariableOperations(), month).reverse()} />
+              <ReducedOperationDataTable operations={filterOperationsByMonth(expensesArray.filterVariableOperations().getOperations(), month).reverse()} />
             </div>
 
             <h2 className="subtitle mt-10">Meus parcelamentos</h2>
 
             <div className="mt-2">
-              <ReducedOperationDataTable operations={expensesArray.filterComprasParceladas()} />
+              <ReducedOperationDataTable operations={expensesArray.filterComprasParceladas().getOperations()} />
             </div>
           </TabsContent>
         ))}

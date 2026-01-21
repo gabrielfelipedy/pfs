@@ -8,7 +8,6 @@ import {
   calculateOperationEvolution,
 } from "@/lib/operation";
 import { formatter } from "@/lib/utils";
-import React from "react";
 
 const page = async () => {
   let investments: Operation[];
@@ -16,11 +15,11 @@ const page = async () => {
   try {
     investments = await getInvestments();
   } catch (error) {
+    console.error(error)
     return <ErrorLoading />;
   }
 
   const investmentsArray = new OperationArray(investments)
-
   const total = investmentsArray.calcSum()
 
   const cumulativeOperations = calculateCumulativeOperationEvolution(investments)
