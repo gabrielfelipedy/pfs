@@ -13,6 +13,7 @@ export default async function page() {
     categories = await getCategories();
   }
   catch (error) {
+    console.error(error)
     return <ErrorLoading />;
   }
 

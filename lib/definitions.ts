@@ -5,9 +5,9 @@ export interface Operation {
   name: string;
   description?: string | null;
   value: number;
-  parcelas: number,
+  parcelas: number;
   date: Date;
-  
+
   is_paid?: boolean | null;
   is_income?: boolean | null;
   category_id?: number | null;
@@ -17,12 +17,11 @@ export interface Operation {
   created_at?: Date;
   updated_at?: Date | null;
   period_id?: number | null;
-};
+}
 
 export class OperationArray {
-
-  private MONTHLY_PERIOD_ID = 3
-  private INVESTIMENTO_CATEGORY_ID = 6
+  private MONTHLY_PERIOD_ID = 3;
+  private INVESTIMENTO_CATEGORY_ID = 6;
 
   constructor(private operations: Operation[]) {}
 
@@ -30,20 +29,40 @@ export class OperationArray {
     return this.operations.reduce((sum, op) => sum + op.value, 0);
   }
 
-  filterFixedOperations(): Operation[] {
-    return this.operations.filter((o) => o.period_id === this.MONTHLY_PERIOD_ID)
+  calcBalance(): number {
+    return this.operations.reduce((sum, op) => sum + (op.is_income ? op.value : (op.value * -1)), 0);
   }
 
-  filterVariableOperations(): Operation[] {
-    return this.operations.filter((o) => o.period_id === null)
+  filterIncomes(): OperationArray {
+    return new OperationArray(
+      this.operations.filter((o) => o.is_income === true),
+    );
   }
 
-  filterComprasParceladas(): Operation[] {
-    return this.operations.filter((o) => o.parcelas > 1);
+  filterExpenses(): OperationArray {
+    return new OperationArray(
+      this.operations.filter((o) => o.is_income === false),
+    );
   }
 
-  filterInvestimentos(): Operation[] {
-    return this.operations.filter((o) => o.category_id === this.INVESTIMENTO_CATEGORY_ID);
+  filterFixedOperations(): OperationArray {
+    return new OperationArray(this.operations.filter(
+      (o) => o.period_id === this.MONTHLY_PERIOD_ID,
+    ))
+  }
+
+  filterVariableOperations(): OperationArray {
+    return new OperationArray(this.operations.filter((o) => o.period_id === null))
+  }
+
+  filterComprasParceladas(): OperationArray {
+    return new OperationArray(this.operations.filter((o) => o.parcelas > 1))
+  }
+
+  filterInvestimentos(): OperationArray {
+    return new OperationArray(this.operations.filter(
+      (o) => o.category_id === this.INVESTIMENTO_CATEGORY_ID,
+    ))
   }
 
   // Add other useful methods
@@ -51,8 +70,6 @@ export class OperationArray {
     return this.operations;
   }
 }
-
-
 
 export interface ExpenseLimit {
   id?: number;
@@ -68,7 +85,7 @@ export interface ExpenseLimit {
   created_at?: Date;
   updated_at?: Date | null;
   spend?: number | null;
-};
+}
 
 export type Category = {
   id?: number;
@@ -85,7 +102,7 @@ export type PaymentMethod = {
   description: string;
   created_at?: Date;
   updated_at?: Date | null;
-}
+};
 
 export type Period = {
   id?: number;
@@ -93,7 +110,7 @@ export type Period = {
   description?: string | null;
   created_at?: Date;
   updated_at?: Date | null;
-}
+};
 
 export type ChartData = { value: number; date: string };
 

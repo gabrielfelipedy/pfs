@@ -2,8 +2,7 @@ import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 
 import CardResume from "./card-resume";
 
-import { Operation } from "@/lib/definitions";
-import { calculateIncomes } from "@/lib/operation";
+import { Operation, OperationArray } from "@/lib/definitions";
 
 interface Props {
   operations: Operation[];
@@ -11,33 +10,13 @@ interface Props {
   children?: React.ReactNode;
 }
 
-const calculateBalance = (operations: Operation[]) => {
-  let balance = 0;
-  operations.forEach((operation) => {
-    if (operation.is_income) {
-      balance += operation.value ?? 0;
-    } else {
-      balance -= operation.value ?? 0;
-    }
-  });
-  return balance;
-};
-
-const calculateExpenses = (operations: Operation[]) => {
-  let total = 0;
-  operations.forEach((operation) => {
-    if (!operation.is_income) {
-      total += operation.value ?? 0;
-    }
-  });
-  return total;
-};
 
 const Resume = async ({ operations, className, children }: Props) => {
-  //console.log(balance);
-  const balance = calculateBalance(operations);
-  const incomes = calculateIncomes(operations);
-  const expenses = calculateExpenses(operations);
+  
+  const operationsArray = new OperationArray(operations)
+  const balance = operationsArray.calcBalance()
+  const incomes = operationsArray.filterIncomes().calcSum()
+  const expenses = operationsArray.filterExpenses().calcSum()
 
   return (
     <div className={`${className} w-full py-6 flex flex-col gap-5`}>

@@ -15,7 +15,7 @@ const emptyOperation: Operation = {
   value: 0,
   parcelas: 1,
   date: new Date(),
-  is_income: false
+  is_income: true
 };
 
 
@@ -59,7 +59,7 @@ const Entradas = async () => {
 
             <div className="mt-2">
               {(() => {
-                const filtered = filterOperationsByMonth(incomesArray.filterFixedOperations(), month)
+                const filtered = filterOperationsByMonth(incomesArray.filterFixedOperations().getOperations(), month)
 
 
                 if (filtered.length === 0) {
@@ -89,7 +89,7 @@ const Entradas = async () => {
 
             <div className="mt-2">
               <ReducedOperationDataTable
-                operations={filterOperationsByMonth(incomesArray.filterVariableOperations(), month).reverse()}
+                operations={filterOperationsByMonth(incomesArray.filterVariableOperations().getOperations(), month).reverse()}
               />
             </div>
           </TabsContent>

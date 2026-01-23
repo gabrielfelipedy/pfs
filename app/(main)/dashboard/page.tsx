@@ -2,21 +2,17 @@
 
 import Area from "@/components/charts/area";
 import ErrorLoading from "@/components/error/ErrorLoading";
-import FormDialog from "@/components/dialogs/FormDialog";
-import { createEntrada } from "@/actions/income-actions";
-import { createSaida } from "@/actions/expense-actions";
-import { Operation } from "@/lib/definitions";
+// import { Operation } from "@/lib/definitions";
 import { getOperations } from "@/db/queries/operation";
 import Resume from "@/components/resume/resume";
 import Line from "@/components/charts/line";
 import Bar from "@/components/charts/bar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBalanceEvolution, calculateIncomesAndExpensesEvolution  } from "@/lib/operation";
-import OperationDataTable from "@/components/data-table/OperationDataTable";
 import { filterOperationsByMonth, getAvaliableMonths, formatMonthYear, filterOperationsByMonthCharts } from "@/lib/date";
 
 
-const emptyExpenseOperation: Operation = {
+/* const emptyExpenseOperation: Operation = {
   name: "",
   date: new Date(),
   value: 0,
@@ -30,7 +26,7 @@ const emptyIncomeOperation: Operation = {
   parcelas: 1,
   date: new Date(),
   is_income: true
-};
+}; */
 
 
 export default async function Home() {
@@ -45,7 +41,7 @@ export default async function Home() {
 
   //console.log(transformedData)
   const avaliableMonths = getAvaliableMonths(operations);
-  console.log(avaliableMonths)
+  //console.log(avaliableMonths)
   const currentDate = new Date()
   const actualMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`
 
