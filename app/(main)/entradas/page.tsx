@@ -15,7 +15,7 @@ const emptyOperation: Operation = {
   value: 0,
   parcelas: 1,
   date: new Date(),
-  is_income: false
+  is_income: true
 };
 
 
