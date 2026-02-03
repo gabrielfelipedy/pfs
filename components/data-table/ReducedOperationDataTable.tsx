@@ -14,26 +14,8 @@ import { updateSaida } from "@/actions/expense-actions";
 import { updateIncome } from "@/actions/income-actions";
 import { Badge } from "../ui/badge";
 import { ClientDateTime } from "../shared/ClientDateTime";
-import { EmptyDemo } from "../empty/EmptyDemo";
 
 export const columns: ColumnDef<Operation>[] = [
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Nome
-          <ChevronsUpDown className="h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return <div>{row.getValue("name")}</div>;
-    },
-  },
   {
     accessorKey: "date",
     header: ({ column }) => {
@@ -55,8 +37,26 @@ export const columns: ColumnDef<Operation>[] = [
         //convert to brazil timezone and format
         return <ClientDateTime date={dateValue} />;
       } catch (error) {
+        console.error(error)
         return <div>Invalid Date</div>;
       }
+    },
+  },
+  {
+    accessorKey: "name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nome
+          <ChevronsUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <div>{row.getValue("name")}</div>;
     },
   },
   {

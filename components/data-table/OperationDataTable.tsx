@@ -17,23 +17,6 @@ import { ClientDateTime } from "../shared/ClientDateTime";
 
 export const columns: ColumnDef<Operation>[] = [
   {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Nome
-          <ChevronsUpDown className="h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return <div>{row.getValue("name")}</div>;
-    },
-  },
-  {
     accessorKey: "date",
     header: ({ column }) => {
       return (
@@ -52,8 +35,26 @@ export const columns: ColumnDef<Operation>[] = [
       try {
         return <ClientDateTime date={dateValue} />;
       } catch (error) {
+        console.error(error);
         return <div>Invalid Date</div>;
       }
+    },
+  },
+  {
+    accessorKey: "name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nome
+          <ChevronsUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <div>{row.getValue("name")}</div>;
     },
   },
   {
