@@ -39,6 +39,7 @@ export async function createEntrada(prevState: OperationActionState | undefined,
   }
   catch(error)
   {
+    console.error(error)
     return {
       success: false,
       message: "Erro ao registrar entrada no banco de dados",

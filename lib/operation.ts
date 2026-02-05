@@ -3,16 +3,6 @@ import { ChartData, Operation, OperationBalance } from "./definitions";
 
 export const INVESTIMENTO_CATEGORY_ID = 6;
 
-export const calculateIncomes = (operations: Operation[]) => {
-  let total = 0;
-  operations.forEach((operation) => {
-    if (operation.is_income) {
-      total += operation.value ?? 0;
-    }
-  });
-  return total;
-};
-
 export const calculateBalanceEvolution = (operations: Operation[]) => {
   //console.log(operations)
 

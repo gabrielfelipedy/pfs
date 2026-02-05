@@ -1,7 +1,9 @@
 import { expect, test } from "vitest";
-import { Operation, OperationArray } from "../definitions";
+import { Operation, OperationArray } from "../../definitions";
 
 const GLOBAL_DATE = new Date("2026-01-01");
+
+// TESTING FILTER OPERATIONS METHODS
 
 test("expected filterInvestments filter investments properly", () => {
   const rawOperations: Operation[] = [
@@ -31,7 +33,7 @@ test("expected filterInvestments filter investments properly", () => {
     },
   ];
 
-  expect(new OperationArray(rawOperations).filterInvestimentos()).toEqual(filteredOperations);
+  expect(new OperationArray(rawOperations).filterInvestimentos().getOperations()).toEqual(filteredOperations);
 });
 
 test("correct handle whe there's no investment operations", () => {
@@ -54,7 +56,7 @@ test("correct handle whe there's no investment operations", () => {
 
   const filteredOperations: Operation[] = []
 
-  expect(new OperationArray(rawOperations).filterInvestimentos()).toEqual(filteredOperations);
+  expect(new OperationArray(rawOperations).filterInvestimentos().getOperations()).toEqual(filteredOperations);
 });
 
 test("correct handle empty array of operations", () => {
@@ -62,7 +64,7 @@ test("correct handle empty array of operations", () => {
 
   const filteredOperations: Operation[] = []
 
-  expect(new OperationArray(rawOperations).filterInvestimentos()).toEqual(filteredOperations);
+  expect(new OperationArray(rawOperations).filterInvestimentos().getOperations()).toEqual(filteredOperations);
 });
 
 test("expected filterFixedOperations filter fixed operations properly", () => {
@@ -96,7 +98,7 @@ test("expected filterFixedOperations filter fixed operations properly", () => {
     },
   ];
 
-  expect(new OperationArray(rawOperations).filterFixedOperations()).toEqual(filteredOperations);
+  expect(new OperationArray(rawOperations).filterFixedOperations().getOperations()).toEqual(filteredOperations);
 });
 
 
@@ -131,7 +133,7 @@ test("expected filterVariableOperations filter variable operations properly", ()
     },
   ];
 
-  expect(new OperationArray(rawOperations).filterVariableOperations()).toEqual(filteredOperations);
+  expect(new OperationArray(rawOperations).filterVariableOperations().getOperations()).toEqual(filteredOperations);
 });
 
 test("expected filterCompraasParceladas filter compras parceladas properly", () => {
@@ -165,5 +167,5 @@ test("expected filterCompraasParceladas filter compras parceladas properly", () 
     },
   ];
 
-  expect(new OperationArray(rawOperations).filterComprasParceladas()).toEqual(filteredOperations);
+  expect(new OperationArray(rawOperations).filterComprasParceladas().getOperations()).toEqual(filteredOperations);
 });

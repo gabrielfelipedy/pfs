@@ -15,8 +15,8 @@ const Resume = async ({ operations, className, children }: Props) => {
   
   const operationsArray = new OperationArray(operations)
   const balance = operationsArray.calcBalance()
-  const incomes = operationsArray.filterIncomes().calcSum()
-  const expenses = operationsArray.filterExpenses().calcSum()
+  const incomes = operationsArray.calculateIncomes()
+  const expenses = operationsArray.calculateExpenses()
 
   return (
     <div className={`${className} w-full py-6 flex flex-col gap-5`}>

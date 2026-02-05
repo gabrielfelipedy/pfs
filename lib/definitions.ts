@@ -33,6 +33,14 @@ export class OperationArray {
     return this.operations.reduce((sum, op) => sum + (op.is_income ? op.value : (op.value * -1)), 0);
   }
 
+  calculateIncomes(): number {
+    return this.filterIncomes().calcSum()
+  }
+
+  calculateExpenses(): number {
+    return this.filterExpenses().calcSum()
+  };
+
   filterIncomes(): OperationArray {
     return new OperationArray(
       this.operations.filter((o) => o.is_income === true),
