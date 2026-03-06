@@ -1,1 +1,0 @@
-ALTER TABLE `expense_limit` ADD `payment_method_id` integer REFERENCES payment_method(id);

@@ -1,1 +1,0 @@
-CREATE VIEW `vw_investment` AS select "id", "name", "description", "value", "date", "is_paid", "is_income", "category_id", "period_id", "payment_method_id", "created_at", "updated_at" from "operation" where "operation"."category_id" = 6;

@@ -1,1 +1,0 @@
-DROP VIEW IF EXISTS `vw_balance_evolution`;

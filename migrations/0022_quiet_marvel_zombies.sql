@@ -1,1 +1,0 @@
-ALTER TABLE `user` ALTER COLUMN "created_at" TO "created_at" integer NOT NULL DEFAULT (CURRENT_TIMESTAMP);
