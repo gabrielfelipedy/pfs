@@ -65,6 +65,54 @@ export class OperationArray {
     ))
   }
 
+  filterOperationsByMonth(
+    month: string,
+  ): Operation[] {
+  
+    const operationsArray = new OperationArray(this.operations)
+
+    // FILTRA AS OPERAÇÕES VARIÁVEIS DO MÊS
+  
+    const filteredByMonth = operationsArray.filterVariableOperations().getOperations()
+      .filter((operation) => {
+        if (operation.date) {
+          const date = operation.date;
+          const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
+          return monthYear === month && operation.parcelas === 1;
+        }
+        return false;
+      });
+
+
+    // FILTRA AS OPERAÇÕES FIXAS GERAL
+  
+    const fixedOperations = operationsArray.filterFixedOperations().getOperations().filter(
+      (o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month,
+    );
+  
+    // EXPANDE OS PARCELAMENTOS
+
+    const parcelamentos = operationsArray
+    .filterComprasParceladas()
+    .getOperations()
+    .filter((o) => {
+      const numParcelas = o.parcelas ?? 1;
+      const date = new Date(o.date);
+
+      const [targetYear, targetMonth] = month.split("-").map(Number);
+
+      const startMonthIndex = date.getFullYear() * 12 + date.getMonth();
+      const endMonthIndex = startMonthIndex + (numParcelas - 1);
+      const targetMonthIndex = targetYear * 12 + (targetMonth - 1);
+
+      return targetMonthIndex >= startMonthIndex && targetMonthIndex <= endMonthIndex;
+    });
+  
+    return [...filteredByMonth, ...fixedOperations, ...parcelamentos].sort((a, b) => {
+      return new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime();
+    });
+  };
+
   // Add other useful methods
   getOperations(): Operation[] {
     return this.operations;

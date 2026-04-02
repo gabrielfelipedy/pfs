@@ -73,7 +73,7 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      const valor = row.getValue("value") as number;
+      const valor = (row.getValue("value") as number) / row.original.parcelas;
 
       return <div>{formatter.format(valor / 100)}</div>;
     },

@@ -110,14 +110,17 @@ export default async function Saidas() {
             <h2 className="subtitle mt-10">Gastos variáveis</h2>
 
             <div className="mt-2">
-              <ReducedOperationDataTable operations={filterOperationsByMonth(expensesArray.filterVariableOperations().getOperations(), month).reverse()} />
+              <ReducedOperationDataTable operations={expensesArray.filterVariableOperations().filterOperationsByMonth(month).reverse()} />
             </div>
+
+
+            {/* COMPRAS PARCELADAS
 
             <h2 className="subtitle mt-10">Meus parcelamentos</h2>
 
             <div className="mt-2">
               <ReducedOperationDataTable operations={expensesArray.filterComprasParceladas().getOperations()} />
-            </div>
+            </div> */}
           </TabsContent>
         ))}
       </Tabs>
