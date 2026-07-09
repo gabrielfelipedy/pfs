@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect, ReactNode } from "react";
+import { useActionState, useState, useEffect, useRef, ReactNode } from "react";
 import { ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -108,6 +108,33 @@ export default function FormDialog({
 
   // controls the currency formatin of valor field
   const [rawValor, setRawValor] = useState<number>(operation?.value || 0);
+
+  // Sync internal state with the operation prop when the dialog opens for editing.
+  // Prevents stale hidden inputs from corrupting data after router.refresh() reuses
+  // the same FormDialog component instance with a different operation.
+  const prevDialogOpen = useRef(dialogOpen);
+
+  useEffect(() => {
+    if (dialogOpen && !prevDialogOpen.current && operation?.id) {
+      setRawValor(operation.value ?? 0);
+      setDate(operation.date ?? new Date());
+      setPagoSelected(operation.is_paid ?? true);
+      setFixoSelected((operation.period_id ?? undefined) === 3);
+      setFixoStartInput(
+        operation.start_date
+          ? `${String(operation.start_date.getMonth() + 1).padStart(2, '0')}/${String(operation.start_date.getFullYear()).slice(-2)}`
+          : operation.date
+            ? `${String(operation.date.getMonth() + 1).padStart(2, '0')}/${String(operation.date.getFullYear()).slice(-2)}`
+            : ""
+      );
+      setFixoEndInput(
+        operation.end_date
+          ? `${String(operation.end_date.getMonth() + 1).padStart(2, '0')}/${String(operation.end_date.getFullYear()).slice(-2)}`
+          : ""
+      );
+    }
+    prevDialogOpen.current = dialogOpen;
+  }, [dialogOpen, operation?.id]);
 
   const handleValorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");

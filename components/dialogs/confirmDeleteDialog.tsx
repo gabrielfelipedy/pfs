@@ -79,8 +79,8 @@ export default function ConfirmDeleteDialog({ operation }: Props) {
               </Button>
             </AlertDialogCancel>
 
-          <AlertDialogAction className="w-1/2 p-0">
-            <Button variant="destructive" className="w-full" disabled={pending}>
+          <AlertDialogAction asChild className="w-1/2 p-0">
+            <Button type="submit" variant="destructive" className="w-full" disabled={pending}>
               {pending && <Spinner />}
               {pending ? "Deletando" : "Deletar"}
             </Button>

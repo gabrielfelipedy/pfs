@@ -46,3 +46,6 @@ TODO.txt
 # git backup
 
 .git_backup/*
+
+# ai
+.opencode/
