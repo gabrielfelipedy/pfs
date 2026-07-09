@@ -31,7 +31,7 @@ import { OperationActionState } from "@/actions/definitions";
 import { useRouter } from "next/navigation";
 import CategorySelector from "../selectors/categorySelector";
 import { Spinner } from "../ui/spinner";
-import { Switch } from "../ui/switch";
+
 import PaymentMethodSelector from "../selectors/paymentMethodSelector";
 import { ClientDateTime } from "../shared/ClientDateTime";
 import { Textarea } from "@/components/ui/textarea"
@@ -88,6 +88,21 @@ export default function FormDialog({
   const [pagoSelected, setPagoSelected] = useState(operation?.is_paid ?? true);
   const [fixoSelected, setFixoSelected] = useState((operation?.period_id ?? true) === 3);
 
+  const [fixoStartInput, setFixoStartInput] = useState<string>(
+    operation.start_date
+      ? `${String(operation.start_date.getMonth() + 1).padStart(2, '0')}/${String(operation.start_date.getFullYear()).slice(-2)}`
+      : operation.date
+        ? `${String(operation.date.getMonth() + 1).padStart(2, '0')}/${String(operation.date.getFullYear()).slice(-2)}`
+        : ""
+  );
+  const [fixoEndInput, setFixoEndInput] = useState<string>(
+    operation.end_date
+      ? `${String(operation.end_date.getMonth() + 1).padStart(2, '0')}/${String(operation.end_date.getFullYear()).slice(-2)}`
+      : ""
+  );
+  const [fixoStartError, setFixoStartError] = useState<string | null>(null);
+  const [fixoEndError, setFixoEndError] = useState<string | null>(null);
+
   // State to control dialog open/close
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -102,6 +117,43 @@ export default function FormDialog({
     const input = e.currentTarget;
     const len = input.value.length;
     input.setSelectionRange(len, len);
+  };
+
+  const formatMonthInput = (value: string): string => {
+    const digits = value.replace(/\D/g, "").slice(0, 4);
+    if (digits.length <= 2) return digits;
+    return digits.slice(0, 2) + "/" + digits.slice(2);
+  };
+
+  const parseMonthInput = (value: string): { month: number; year: number } | null => {
+    const cleaned = value.replace(/\D/g, "");
+    if (cleaned.length !== 4) return null;
+    const month = parseInt(cleaned.slice(0, 2), 10);
+    const year = 2000 + parseInt(cleaned.slice(2, 4), 10);
+    if (month < 1 || month > 12) return null;
+    return { month, year };
+  };
+
+  const handleStartInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatMonthInput(e.target.value);
+    setFixoStartInput(formatted);
+    const parsed = parseMonthInput(formatted);
+    if (formatted.length === 5 && !parsed) {
+      setFixoStartError("Data inválida. Use MM/AA");
+    } else {
+      setFixoStartError(null);
+    }
+  };
+
+  const handleEndInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatMonthInput(e.target.value);
+    setFixoEndInput(formatted);
+    const parsed = parseMonthInput(formatted);
+    if (formatted.length === 5 && !parsed) {
+      setFixoEndError("Data inválida. Use MM/AA");
+    } else {
+      setFixoEndError(null);
+    }
   };
 
   //defines the action to be used based on whether operation is defined
@@ -127,14 +179,21 @@ export default function FormDialog({
         setDate(new Date())
         setPagoSelected(true)
         setFixoSelected(false)
+        setFixoStartInput("")
+        setFixoEndInput("")
+        setFixoStartError(null)
+        setFixoEndError(null)
         setDialogOpen(false);
       }, 0);
     } else {
-      if (state && state.message) {
-        toast.error(state.message);
+      if (state) {
+        toast.error(state.message || "Erro desconhecido. Verifique os campos.");
       }
     }
   }, [state, router]);
+
+  const parsedStart = parseMonthInput(fixoStartInput);
+  const parsedEnd = fixoEndInput ? parseMonthInput(fixoEndInput) : null;
 
   return (
     <Dialog
@@ -153,7 +212,7 @@ export default function FormDialog({
           </DialogHeader>
           <div className="flex flex-col md:grid gap-4 mt-10">
 
-            <div className="grid grid-cols-2 gap-5">
+            <div className={`grid ${fixoSelected ? 'grid-cols-1' : 'grid-cols-2'} gap-5`}>
               <div className="flex flex-col gap-3">
                 <Label htmlFor="valor_display">Valor</Label>
 
@@ -169,6 +228,7 @@ export default function FormDialog({
                 <input type="hidden" name="value" value={rawValor} />
               </div>
 
+              {!fixoSelected && (
               <div className="flex flex-col gap-3">
                 <Label htmlFor="parcelas">Nº de parcelas</Label>
 
@@ -192,11 +252,15 @@ export default function FormDialog({
                   </SelectContent>
                 </Select>
               </div>
+              )}
 
               {!state?.success && (
                 <>
                   <p className="text-sm text-red-500">
                     {state?.errors?.value || ""}
+                  </p>
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.parcelas || ""}
                   </p>
                 </>
               )}
@@ -220,17 +284,36 @@ export default function FormDialog({
             </div>
 
             <div className="md:grid gap-3">
-              <div className="grid grid-cols-3 gap-5 place-items-center">
-
+              {fixoSelected ? (
+                <div className="grid grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-3">
+                    <Label>Mês de início</Label>
+                    <Input
+                      value={fixoStartInput}
+                      onChange={handleStartInputChange}
+                      placeholder="MM/AA"
+                      className={fixoStartError ? "border-red-500" : ""}
+                    />
+                    {fixoStartError && (
+                      <p className="text-sm text-red-500">{fixoStartError}</p>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <Label>Mês de fim (opcional)</Label>
+                    <Input
+                      value={fixoEndInput}
+                      onChange={handleEndInputChange}
+                      placeholder="MM/AA"
+                      className={fixoEndError ? "border-red-500" : ""}
+                    />
+                    {fixoEndError && (
+                      <p className="text-sm text-red-500">{fixoEndError}</p>
+                    )}
+                  </div>
+                </div>
+              ) : (
                 <div className="flex flex-col gap-3">
-                  <Label htmlFor="date" className="px-1">
-                    Data
-                  </Label>
-                  <input
-                    type="hidden"
-                    name="date"
-                    value={date.toISOString()}
-                  />
+                  <Label htmlFor="date">Data</Label>
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                       <Button
@@ -259,59 +342,88 @@ export default function FormDialog({
                       />
                     </PopoverContent>
                   </Popover>
-                </div>
-
-                <div className="flex flex-col gap-3">
-                  <Label htmlFor="is_paid_switch">Pago</Label>
-
-                  <Switch
-                    name="is_paid_switch"
-                    checked={pagoSelected}
-                    onCheckedChange={(checked) => setPagoSelected(checked)}
-                    id="is_paid"
-                  />
-
-                  <input
-                    type="hidden"
-                    name="is_paid"
-                    value={pagoSelected ? "true" : "false"}
-                  />
-                </div>
-
-                <div className="flex flex-col gap-3">
-                  <Label htmlFor="is_fixo_switch">Fixo</Label>
-
-                  <Switch
-                    name="is_fixo_switch"
-                    checked={fixoSelected}
-                    onCheckedChange={(checked) => setFixoSelected(checked)}
-                    id="is_paid"
-                  />
-
-                  <input
-                    type="hidden"
-                    name="is_fixo"
-                    value={fixoSelected ? "true" : "false"}
-                  />
-                </div>
-
-
-                {!state?.success && (
-                  <>
+                  {!state?.success && (
                     <p className="text-sm text-red-500">
                       {state?.errors?.date || ""}
                     </p>
+                  )}
+                </div>
+              )}
 
-                    <p className="text-sm text-red-500">
-                      {state?.errors?.is_paid || ""}
-                    </p>
+              <input
+                type="hidden"
+                name="date"
+                value={
+                  fixoSelected && parsedStart
+                    ? new Date(parsedStart.year, parsedStart.month - 1, 1).toISOString()
+                    : date.toISOString()
+                }
+              />
+              {fixoSelected && (
+                <>
+                  <input
+                    type="hidden"
+                    name="start_date"
+                    value={
+                      parsedStart
+                        ? new Date(parsedStart.year, parsedStart.month - 1, 1).toISOString()
+                        : ""
+                    }
+                  />
+                  <input
+                    type="hidden"
+                    name="end_date"
+                    value={
+                      parsedEnd
+                        ? new Date(parsedEnd.year, parsedEnd.month - 1, 1).toISOString()
+                        : ""
+                    }
+                  />
+                </>
+              )}
 
-                    <p className="text-sm text-red-500">
-                      {state?.errors?.period_id || ""}
-                    </p>
-
-                  </>)}
+              <div className="flex flex-col gap-3 mt-4">
+                <Label>Tipo</Label>
+                <div className={`grid ${fixoSelected ? 'grid-cols-1' : 'grid-cols-2'} rounded-lg border overflow-hidden`}>
+                  {!fixoSelected && (
+                  <button
+                    type="button"
+                    onClick={() => setPagoSelected(!pagoSelected)}
+                    className={`py-3 text-sm font-medium transition-all ${
+                      pagoSelected
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-background text-muted-foreground hover:bg-accent"
+                    }`}
+                  >
+                    Pago
+                  </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setFixoSelected(!fixoSelected)}
+                    className={`py-3 text-sm font-medium transition-all ${
+                      fixoSelected
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-background text-muted-foreground hover:bg-accent"
+                    }`}
+                  >
+                    Fixo
+                  </button>
+                </div>
+                <input type="hidden" name="is_paid" value={pagoSelected ? "true" : "false"} />
+                <input type="hidden" name="is_fixo" value={fixoSelected ? "true" : "false"} />
               </div>
+
+              {!state?.success && (
+                <>
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.is_paid || ""}
+                  </p>
+                  <p className="text-sm text-red-500">
+                    {state?.errors?.period_id || ""}
+                  </p>
+                </>
+              )}
             </div>
           </div>
 

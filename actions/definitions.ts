@@ -35,6 +35,9 @@ export const OperationSchema = z.object({
       return val;
     }, z.number().int().positive({ message: "Payment Method ID tem que ser um número positivo" }).nullable())
     .optional(),
+
+  start_date: z.coerce.date().nullable().optional(),
+  end_date: z.coerce.date().nullable().optional(),
 });
 
 export type OperationActionState =
@@ -50,9 +53,12 @@ export type OperationActionState =
         description?: string[];
         date?: string[];
         value?: string[];
+        parcelas?: string[];
         is_paid?: string[];
         category_id?: string[];
         payment_method_id?: string[];
         period_id?: string[];
+        start_date?: string[];
+        end_date?: string[];
       };
     };

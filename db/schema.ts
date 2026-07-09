@@ -97,6 +97,9 @@ export const operationTable = sqliteTable("operation", {
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
 
+  start_date: integer("start_date", { mode: "timestamp" }),
+  end_date: integer("end_date", { mode: "timestamp" }),
+
   is_paid: integer({ mode: "boolean" }).default(false).notNull(),
   is_income: integer({ mode: "boolean" }).default(false).notNull(),
 

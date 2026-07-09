@@ -1,5 +1,14 @@
 import { Operation, OperationArray } from "./definitions";
 
+function monthToNumber(date: Date): number {
+  return date.getFullYear() * 12 + date.getMonth();
+}
+
+function monthStrToNumber(month: string): number {
+  const [y, m] = month.split("-").map(Number);
+  return y * 12 + (m - 1);
+}
+
 export function convertUtcToLocal(date: Date): Date {
   const UTC_MINUS_3_OFFSET_MS = 3 * 60 * 60 * 1000; // UTC-3 offset in milliseconds
   return new Date(date.getTime() - UTC_MINUS_3_OFFSET_MS);
@@ -14,15 +23,26 @@ export const getAvaliableMonths = (operations: Operation[]) => {
   const monthsSet = new Set<string>();
 
   operations.forEach((operation) => {
-    if (operation.date) {
+    if (operation.period_id === 3 && (operation.start_date || operation.date)) {
+      const startDate = operation.start_date || operation.date;
+      const endDate = operation.end_date || new Date();
+      const startMonth = monthToNumber(startDate);
+      const endMonth = monthToNumber(endDate);
+      for (let m = startMonth; m <= endMonth; m++) {
+        const y = Math.floor(m / 12);
+        const mo = (m % 12) + 1;
+        monthsSet.add(`${y}-${mo}`);
+      }
+    } else if (operation.date) {
       const date = operation.date;
       const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
-
       monthsSet.add(monthYear);
     }
   });
 
-  const array = Array.from(monthsSet);
+  const array = Array.from(monthsSet).sort((a, b) => {
+    return monthStrToNumber(a) - monthStrToNumber(b);
+  });
   //console.log(array)
 
   if (array.length > 12) {
@@ -30,57 +50,16 @@ export const getAvaliableMonths = (operations: Operation[]) => {
   }
 
   while (array.length < 12) {
-    const latest =
-      array[0] || `${new Date().getFullYear()}-${new Date().getMonth() + 1}`;
-    const [year, month] = latest.split("-").map(Number);
+    const earliest = array[0];
+    const [year, month] = earliest.split("-").map(Number);
 
-    const nextDate = new Date(year, month, 1);
-    const nextMonthStr = `${nextDate.getFullYear()}-${nextDate.getMonth() + 1}`;
+    const prevDate = new Date(year, month - 2, 1);
+    const prevMonthStr = `${prevDate.getFullYear()}-${prevDate.getMonth() + 1}`;
 
-    array.unshift(nextMonthStr);
+    array.unshift(prevMonthStr);
   }
 
-  return array.reverse();
-};
-
-export const replaceMonth = (operations: Operation[], monthStr: string) => {
-  const targetDate = new Date(monthStr);
-  const targetMonth = targetDate.getMonth();
-  const targetYear = targetDate.getFullYear();
-
-  // Calculate the last day of the target month once to use for all operations
-  const lastDayOfTargetMonth = new Date(
-    targetYear,
-    targetMonth + 1,
-    0,
-  ).getDate();
-
-  return operations.map((op) => {
-    const oldDate = new Date(op.date);
-    const originalDay = oldDate.getDate();
-
-    // 1. Create the new date instance
-    const newDate = new Date(oldDate);
-
-    // 2. Decide the day:
-    // Keep originalDay UNLESS it's greater than the target month's capacity
-    const safeDay =
-      originalDay <= lastDayOfTargetMonth ? originalDay : lastDayOfTargetMonth;
-
-    /** * To prevent accidental rollover during the setMonth() call,
-     * we set the day to the safe value FIRST if the target month is "shorter"
-     * than the current month.
-     */
-    newDate.setDate(1); // Temporary safety reset
-    newDate.setFullYear(targetYear);
-    newDate.setMonth(targetMonth);
-    newDate.setDate(safeDay); // Apply the preserved or "clamped" day
-
-    return {
-      ...op,
-      date: newDate,
-    };
-  });
+  return array;
 };
 
 export const filterOperationsByMonth = (
@@ -100,11 +79,13 @@ export const filterOperationsByMonth = (
       return false;
     });
 
-  const fixedOperations = operationsArray.filterFixedOperations().getOperations().filter(
-    (o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month,
-  );
-
-  //const replacedMonth = replaceMonth(fixedOperations, month)
+  const targetNum = monthStrToNumber(month);
+  const fixedOperations = operationsArray.filterFixedOperations().getOperations().filter((o) => {
+    const startDate = o.start_date || o.date;
+    const startNum = monthToNumber(startDate);
+    const endNum = o.end_date ? monthToNumber(o.end_date) : null;
+    return startNum <= targetNum && (endNum === null || targetNum <= endNum);
+  });
 
   return [...filteredByMonth, ...fixedOperations].sort((a, b) => {
     return new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime();
@@ -129,13 +110,7 @@ export const filterOperationsByMonthCharts = (
       return false;
     });
 
-  const fixedOperations = operationsArray.filterFixedOperations().getOperations().filter(
-    (o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month,
-  );
-
-  const replacedMonth = replaceMonth(fixedOperations, month)
-
-  return [...filteredByMonth, ...replacedMonth].sort((a, b) => {
+  return filteredByMonth.sort((a, b) => {
     return new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime();
   });
 };

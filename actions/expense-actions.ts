@@ -10,12 +10,14 @@ const validateZodSchema = (formData: FormData) =>
     description: formData.get("description"),
     date: formData.get("date"),
     value: Number(formData.get("value")),
-    parcelas: Number(formData.get("parcelas")),
+    parcelas: formData.get("parcelas") ? Number(formData.get("parcelas")) : 1,
     is_paid: formData.get("is_paid") === "true",
     is_income: false,
     category_id: Number(formData.get("category_id")),
     payment_method_id: Number(formData.get("payment_method_id")),
     period_id: formData.get("is_fixo") === "true" ? 3 : null,
+    start_date: formData.get("start_date") ? new Date(formData.get("start_date") as string) : null,
+    end_date: formData.get("end_date") ? new Date(formData.get("end_date") as string) : null,
   });
 
 export async function createSaida(
@@ -27,6 +29,7 @@ export async function createSaida(
   if (!validationResult.success) {
     return {
       success: false,
+      message: "Erro de validação. Verifique os campos.",
       errors: validationResult.error.flatten().fieldErrors,
     };
   }
@@ -65,6 +68,7 @@ export async function updateSaida(
   if (!validationResult.success) {
     return {
       success: false,
+      message: "Erro de validação. Verifique os campos.",
       errors: validationResult.error.flatten().fieldErrors,
     };
   }

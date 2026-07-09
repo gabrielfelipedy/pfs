@@ -10,6 +10,7 @@ import Bar from "@/components/charts/bar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBalanceEvolution, calculateIncomesAndExpensesEvolution  } from "@/lib/operation";
 import { filterOperationsByMonth, getAvaliableMonths, formatMonthYear, filterOperationsByMonthCharts } from "@/lib/date";
+import ScrollableTabsList from "@/components/shared/ScrollableTabsList";
 
 
 /* const emptyExpenseOperation: Operation = {
@@ -51,7 +52,7 @@ export default async function Home() {
      
 
       <Tabs className="mt-6" defaultValue={actualMonth}>
-        <TabsList className="w-full justify-start overflow-x-auto overflow-y-hidden whitespace-nowrap h-auto p-1 scrollbar-hide">
+        <ScrollableTabsList className="w-full justify-start overflow-x-auto overflow-y-hidden whitespace-nowrap h-auto p-1 scrollbar-hide">
           
           {avaliableMonths.map((month) => (
 
@@ -62,7 +63,7 @@ export default async function Home() {
             
           ))}
           
-        </TabsList>
+        </ScrollableTabsList>
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
             

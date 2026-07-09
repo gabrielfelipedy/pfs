@@ -16,11 +16,13 @@ interface Props {
     description: string;
     createButtonText: string;
     importButtonText: string;
+    createButton?: React.ReactNode;
+    importButton?: React.ReactNode;
 }
 
 export function EmptyDemo({...rest }: Props) {
   return (
-    <Empty>
+    <Empty className="border">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <IconFolderCode />
@@ -32,8 +34,8 @@ export function EmptyDemo({...rest }: Props) {
       </EmptyHeader>
       <EmptyContent>
         <div className="flex gap-2">
-          <Button variant="secondary">{rest.createButtonText}</Button>
-          <Button variant="outline">{rest.importButtonText}</Button>
+          {rest.createButton || <Button variant="secondary">{rest.createButtonText}</Button>}
+          {rest.importButton || <Button variant="outline">{rest.importButtonText}</Button>}
         </div>
       </EmptyContent>
       <Button

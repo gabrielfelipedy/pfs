@@ -17,11 +17,22 @@ export interface Operation {
   created_at?: Date;
   updated_at?: Date | null;
   period_id?: number | null;
+  start_date?: Date | null;
+  end_date?: Date | null;
 }
 
 export class OperationArray {
   private MONTHLY_PERIOD_ID = 3;
   private INVESTIMENTO_CATEGORY_ID = 6;
+
+  private monthToNumber(date: Date): number {
+    return date.getFullYear() * 12 + date.getMonth();
+  }
+
+  private monthStrToNumber(monthStr: string): number {
+    const [y, m] = monthStr.split("-").map(Number);
+    return y * 12 + (m - 1);
+  }
 
   constructor(private operations: Operation[]) {}
 
@@ -86,9 +97,13 @@ export class OperationArray {
 
     // FILTRA AS OPERAÇÕES FIXAS GERAL
   
-    const fixedOperations = operationsArray.filterFixedOperations().getOperations().filter(
-      (o) => `${o.date.getFullYear()}-${o.date.getMonth() + 1}` <= month,
-    );
+    const targetNum = this.monthStrToNumber(month);
+    const fixedOperations = operationsArray.filterFixedOperations().getOperations().filter((o) => {
+      const startDate = o.start_date || o.date;
+      const startNum = this.monthToNumber(startDate);
+      const endNum = o.end_date ? this.monthToNumber(o.end_date) : null;
+      return startNum <= targetNum && (endNum === null || targetNum <= endNum);
+    });
   
     // EXPANDE OS PARCELAMENTOS
 

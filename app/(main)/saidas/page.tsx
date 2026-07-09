@@ -5,13 +5,15 @@ import { Operation, OperationArray } from "@/lib/definitions";
 import { getExpenses } from "@/db/queries/expense";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
+import ScrollableTabsList from "@/components/shared/ScrollableTabsList";
 import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
 import DailyExpenses from "./components/DailyExpenses";
 import WeeklyExpenses from "./components/WeeklyExpenses";
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
+import ImportCsvDialog from "@/components/dialogs/ImportCsvDialog";
 
 export const dynamic = "force-dynamic";
 
@@ -60,13 +62,13 @@ export default async function Saidas() {
 
 
       <Tabs className="mt-4" defaultValue={actualMonth}>
-        <TabsList className="w-full justify-start overflow-x-auto overflow-y-hidden whitespace-nowrap h-auto p-1 scrollbar-hide">
+        <ScrollableTabsList className="w-full justify-start overflow-x-auto overflow-y-hidden whitespace-nowrap h-auto p-1 scrollbar-hide">
           {avaliableMonths.map((month) => (
             <TabsTrigger key={month} value={month} className="shrink-0">
               {formatMonthYear(month)}
             </TabsTrigger>
           ))}
-        </TabsList>
+        </ScrollableTabsList>
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
 
@@ -93,16 +95,27 @@ export default async function Saidas() {
 
                 const filtered = filterOperationsByMonth(expensesArray.filterFixedOperations().getOperations(), month)
 
-                if (filtered.length === 0) {
-                  return <EmptyDemo
-                    title="Sem Gastos Fixos"
-                    description="Você ainda não criou nenhum gasto fixo. Comece criando seu primeiro gasto fixo"
-                    createButtonText="Criar Gasto Fixo"
-                    importButtonText="Importar de CSV"
-                  />
-                }
+                  if (filtered.length === 0) {
+                    return <EmptyDemo
+                      title="Sem Gastos Fixos"
+                      description="Você ainda não criou nenhum gasto fixo. Comece criando seu primeiro gasto fixo"
+                      createButtonText="Criar Gasto Fixo"
+                      importButtonText="Importar de CSV"
+                      createButton={
+                        <FormDialog
+                          openDialogText="Criar Gasto Fixo"
+                          dialogTitle="Adicionar Gasto"
+                          dialogDescription="Preencha as informações do gasto"
+                          buttonText="Adicionar"
+                          operation={emptyOperation}
+                          actionFunction={createSaida}
+                        />
+                      }
+                      importButton={<ImportCsvDialog isIncome={false} />}
+                    />
+                  }
 
-                return <FixedExpensesDataTable month={month} operations={filtered} />
+                return <FixedExpensesDataTable operations={filtered} />
               })()}
             </div>
 
@@ -110,7 +123,31 @@ export default async function Saidas() {
             <h2 className="subtitle mt-10">Gastos variáveis</h2>
 
             <div className="mt-2">
-              <ReducedOperationDataTable operations={expensesArray.filterVariableOperations().filterOperationsByMonth(month).reverse()} />
+              {(() => {
+                const variableOps = expensesArray.filterVariableOperations().filterOperationsByMonth(month).reverse();
+                if (variableOps.length === 0) {
+                  return (
+                    <EmptyDemo
+                      title="Sem Gastos Variáveis"
+                      description="Você ainda não criou nenhum gasto variável neste mês."
+                      createButtonText="Criar Gasto"
+                      importButtonText="Importar de CSV"
+                      createButton={
+                        <FormDialog
+                          openDialogText="Criar Gasto"
+                          dialogTitle="Adicionar Gasto"
+                          dialogDescription="Preencha as informações do gasto"
+                          buttonText="Adicionar"
+                          operation={emptyOperation}
+                          actionFunction={createSaida}
+                        />
+                      }
+                      importButton={<ImportCsvDialog isIncome={false} />}
+                    />
+                  );
+                }
+                return <ReducedOperationDataTable operations={variableOps} />;
+              })()}
             </div>
 
 

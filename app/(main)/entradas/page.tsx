@@ -5,10 +5,13 @@ import MonthlyEntradas from "./monthlyEntradas";
 import { getIncomes } from "@/db/queries/incomes";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
+import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
+import ImportCsvDialog from "@/components/dialogs/ImportCsvDialog";
+import ScrollableTabsList from "@/components/shared/ScrollableTabsList";
 
 const emptyOperation: Operation = {
   name: "",
@@ -40,13 +43,13 @@ const Entradas = async () => {
       <h1 className="text-[3rem] font-bold mt-10">Entradas</h1>
 
       <Tabs className="mt-10" defaultValue={actualMonth}>
-        <TabsList className="w-full justify-start overflow-x-auto overflow-y-hidden whitespace-nowrap h-auto p-1 scrollbar-hide">
+        <ScrollableTabsList className="w-full justify-start overflow-x-auto overflow-y-hidden whitespace-nowrap h-auto p-1 scrollbar-hide">
           {avaliableMonths.map((month) => (
             <TabsTrigger key={month} value={month} className="shrink-0">
               {formatMonthYear(month)}
             </TabsTrigger>
           ))}
-        </TabsList>
+        </ScrollableTabsList>
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
 
@@ -62,16 +65,27 @@ const Entradas = async () => {
                 const filtered = filterOperationsByMonth(incomesArray.filterFixedOperations().getOperations(), month)
 
 
-                if (filtered.length === 0) {
-                  return <EmptyDemo
-                    title="Sem Entradas Fixas"
-                    description="Você ainda não criou nenhuma entrada fixa. Comece criando sua primeira entrada"
-                    createButtonText="Criar Entrada Fixo"
-                    importButtonText="Importar de CSV"
-                  />
-                }
+                  if (filtered.length === 0) {
+                    return <EmptyDemo
+                      title="Sem Entradas Fixas"
+                      description="Você ainda não criou nenhuma entrada fixa. Comece criando sua primeira entrada"
+                      createButtonText="Criar Entrada Fixo"
+                      importButtonText="Importar de CSV"
+                      createButton={
+                        <FormDialog
+                          openDialogText="Criar Entrada Fixo"
+                          dialogTitle="Adicionar entrada"
+                          dialogDescription="Preencha as informações da entrada"
+                          buttonText="Adicionar"
+                          operation={emptyOperation}
+                          actionFunction={createEntrada}
+                        />
+                      }
+                      importButton={<ImportCsvDialog isIncome={true} />}
+                    />
+                  }
 
-                return <ReducedOperationDataTable operations={filtered} />
+                return <FixedExpensesDataTable operations={filtered} />
               })()}
             </div>
 
@@ -88,9 +102,31 @@ const Entradas = async () => {
             </div>
 
             <div className="mt-2">
-              <ReducedOperationDataTable
-                operations={filterOperationsByMonth(incomesArray.filterVariableOperations().getOperations(), month).reverse()}
-              />
+              {(() => {
+                const variableOps = filterOperationsByMonth(incomesArray.filterVariableOperations().getOperations(), month).reverse();
+                if (variableOps.length === 0) {
+                  return (
+                    <EmptyDemo
+                      title="Sem Entradas Variáveis"
+                      description="Você ainda não criou nenhuma entrada variável neste mês."
+                      createButtonText="Criar Entrada"
+                      importButtonText="Importar de CSV"
+                      createButton={
+                        <FormDialog
+                          openDialogText="Criar Entrada"
+                          dialogTitle="Adicionar entrada"
+                          dialogDescription="Preencha as informações da entrada"
+                          buttonText="Adicionar"
+                          operation={emptyOperation}
+                          actionFunction={createEntrada}
+                        />
+                      }
+                      importButton={<ImportCsvDialog isIncome={true} />}
+                    />
+                  );
+                }
+                return <ReducedOperationDataTable operations={variableOps} />;
+              })()}
             </div>
           </TabsContent>
         ))}
