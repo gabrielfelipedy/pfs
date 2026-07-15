@@ -43,10 +43,10 @@ const Heatmap = ({ title, description, className, data }: Props) => {
     return data.filter((d) => d.value > 0).map((d) => [d.date, d.value]);
   }, [data]);
 
-  const backgroundColor = isDark ? "#25252b" : "#f0f0f0";
-  const borderColor = isDark ? "#17171b" : "#ffffff";
+  const backgroundColor = isDark ? "#25252b" : "#e5e5e5";
+  const borderColor = isDark ? "#0D1117" : "#ffffff";
   const textColor = isDark ? "#ffffee" : "#333333";
-  const splitLineColor = isDark ? "#17171b" : "#ffffff";
+  const splitLineColor = isDark ? "#0D1117" : "#ffffff";
 
   const option = {
     tooltip: {
