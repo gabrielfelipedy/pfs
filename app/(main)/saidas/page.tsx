@@ -1,7 +1,7 @@
 import MonthlySaidas from "./components/monthlySaidas";
 import FormDialog from "../../../components/dialogs/FormDialog";
 import { createSaida } from "@/actions/expense-actions";
-import { Operation, OperationArray } from "@/lib/definitions";
+import { ChartData, Operation, OperationArray } from "@/lib/definitions";
 import { getExpenses } from "@/db/queries/expense";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
@@ -14,6 +14,8 @@ import WeeklyExpenses from "./components/WeeklyExpenses";
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
 import ImportCsvDialog from "@/components/dialogs/ImportCsvDialog";
+import Heatmap from "@/components/charts/heatmap";
+import { startOfDay } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +27,34 @@ const emptyOperation: Operation = {
   is_income: false
 };
 
+function calculateYearlyExpenseMap(expenses: Operation[]): ChartData[] {
+  const now = new Date();
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const start = new Date(end);
+  start.setFullYear(start.getFullYear() - 1);
+  start.setDate(start.getDate() + 1);
+
+  const expenseMap = new Map<string, number>();
+
+  let cursor = new Date(start);
+  while (cursor <= end) {
+    const key = cursor.toISOString().split("T")[0];
+    expenseMap.set(key, 0);
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  expenses.forEach((op) => {
+    if (op.is_income) return;
+    const date = startOfDay(new Date(op.date ?? ""));
+    const key = date.toISOString().split("T")[0];
+    if (expenseMap.has(key)) {
+      expenseMap.set(key, (expenseMap.get(key) ?? 0) + (op.value ?? 0) / 100);
+    }
+  });
+
+  return Array.from(expenseMap.entries()).map(([date, value]) => ({ date, value }));
+}
+
 export default async function Saidas() {
   let expenses: Operation[];
 
@@ -34,13 +64,14 @@ export default async function Saidas() {
     console.error(error)
     return <ErrorLoading />;
   }
-  //console.log(expenses)
 
   const expensesArray = new OperationArray(expenses)
 
   const avaliableMonths = getAvaliableMonths(expenses);
   const currentDate = new Date()
   const actualMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`
+
+  const heatmapData = calculateYearlyExpenseMap(expenses);
 
   //console.log(filterWeeklyExpenses(expenses).reverse());
 
@@ -60,6 +91,12 @@ export default async function Saidas() {
         </div>
       </div>
 
+      <Heatmap
+        title="Expenses Activity"
+        description="Total de gastos ao longo do ano"
+        className="mt-10"
+        data={heatmapData}
+      />
 
       <Tabs className="mt-4" defaultValue={actualMonth}>
         <ScrollableTabsList className="w-full justify-start overflow-x-auto overflow-y-hidden whitespace-nowrap h-auto p-1 scrollbar-hide">

@@ -37,7 +37,17 @@ export async function login(
 
   const { username, password } = validationResult.data;
 
-  const dbData = await getAuth();
+  let dbData;
+  try {
+    dbData = await getAuth();
+  } catch {
+    return {
+      success: false,
+      errors: {
+        username: ["Erro de conexão com o banco de dados. Tente novamente mais tarde."],
+      },
+    };
+  }
 
   if (dbData.length === 0) {
     return {
