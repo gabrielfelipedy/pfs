@@ -2,6 +2,7 @@ import FormDialog from "../../../components/dialogs/FormDialog";
 import { createEntrada } from "@/actions/income-actions";
 import { Operation, OperationArray } from "@/lib/definitions";
 import MonthlyEntradas from "./monthlyEntradas";
+import MonthlyIncome from "./MonthlyIncome";
 import { getIncomes } from "@/db/queries/incomes";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
@@ -52,6 +53,10 @@ const Entradas = async () => {
         </ScrollableTabsList>
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
+
+            <div className="mt-10 grid gap-3 grid-cols-1 lg:grid-cols-3 items-start">
+              <MonthlyIncome incomes={incomes} month={month} />
+            </div>
 
             <MonthlyEntradas
               incomes={filterOperationsByMonthCharts(incomes, month)}

@@ -11,6 +11,7 @@ import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
 import DailyExpenses from "./components/DailyExpenses";
 import WeeklyExpenses from "./components/WeeklyExpenses";
+import MonthlyExpenses from "./components/MonthlyExpenses";
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
 import ImportCsvDialog from "@/components/dialogs/ImportCsvDialog";
@@ -79,18 +80,6 @@ export default async function Saidas() {
     <>
       <h1 className="text-[3rem] font-bold mt-10">Saídas</h1>
 
-      <div className="mt-10 grid gap-3 grid-cols-1 md:grid-cols-2 items-start">
-
-        <div>
-          <WeeklyExpenses expenses={expenses} />
-        </div>
-
-        <div>
-
-          <DailyExpenses expenses={expenses} />
-        </div>
-      </div>
-
       <Heatmap
         title="Expenses Activity"
         description="Total de gastos ao longo do ano"
@@ -108,6 +97,12 @@ export default async function Saidas() {
         </ScrollableTabsList>
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
+
+            <div className="mt-10 grid gap-3 grid-cols-1 lg:grid-cols-3 items-start">
+              <MonthlyExpenses expenses={expenses} month={month} />
+              <WeeklyExpenses expenses={expenses} />
+              <DailyExpenses expenses={expenses} />
+            </div>
 
             <MonthlySaidas expenses={filterOperationsByMonthCharts(expenses, month)} className="mt-10" />
 
