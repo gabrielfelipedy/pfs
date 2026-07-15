@@ -98,6 +98,7 @@ export const filterOperationsByMonthCharts = (
 ): Operation[] => {
 
   const operationsArray = new OperationArray(operations)
+  const [targetYear, targetMonth] = month.split("-").map(Number);
 
   const filteredByMonth = operationsArray
     .filterVariableOperations().getOperations()
@@ -110,7 +111,40 @@ export const filterOperationsByMonthCharts = (
       return false;
     });
 
-  return filteredByMonth.sort((a, b) => {
+  const targetNum = monthStrToNumber(month);
+  const fixedOperations = operationsArray.filterFixedOperations().getOperations().filter((o) => {
+    const startDate = o.start_date || o.date;
+    const startNum = monthToNumber(startDate);
+    const endNum = o.end_date ? monthToNumber(o.end_date) : null;
+    return startNum <= targetNum && (endNum === null || targetNum <= endNum);
+  }).map((o) => ({
+    ...o,
+    date: new Date(targetYear, targetMonth - 1, 1),
+  }));
+
+  const parcelamentos = operationsArray
+    .filterComprasParceladas()
+    .getOperations()
+    .filter((o) => {
+      const numParcelas = o.parcelas ?? 1;
+      const date = new Date(o.date);
+
+      const startMonthIndex = date.getFullYear() * 12 + date.getMonth();
+      const endMonthIndex = startMonthIndex + (numParcelas - 1);
+      const targetMonthIndex = targetYear * 12 + (targetMonth - 1);
+
+      return targetMonthIndex >= startMonthIndex && targetMonthIndex <= endMonthIndex;
+    })
+    .map((o) => {
+      const originalDate = new Date(o.date);
+      const day = Math.min(originalDate.getDate(), 28);
+      return {
+        ...o,
+        date: new Date(targetYear, targetMonth - 1, day),
+      };
+    });
+
+  return [...filteredByMonth, ...fixedOperations, ...parcelamentos].sort((a, b) => {
     return new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime();
   });
 };
