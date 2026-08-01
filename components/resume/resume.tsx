@@ -2,7 +2,8 @@ import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 
 import CardResume from "./card-resume";
 
-import { Operation, OperationArray } from "@/lib/definitions";
+import { Operation } from "@/lib/definitions";
+import { operationValue } from "@/lib/parcelamento";
 
 interface Props {
   operations: Operation[];
@@ -12,11 +13,17 @@ interface Props {
 
 
 const Resume = async ({ operations, className, children }: Props) => {
-  
-  const operationsArray = new OperationArray(operations)
-  const balance = operationsArray.calcBalance()
-  const incomes = operationsArray.filterIncomes().calcSum()
-  const expenses = operationsArray.filterExpenses().calcSum()
+
+  const balance = operations.reduce(
+    (sum, op) => sum + (op.is_income ? operationValue(op) : -operationValue(op)),
+    0
+  );
+  const incomes = operations
+    .filter((op) => op.is_income)
+    .reduce((sum, op) => sum + operationValue(op), 0);
+  const expenses = operations
+    .filter((op) => !op.is_income)
+    .reduce((sum, op) => sum + operationValue(op), 0);
 
   return (
     <div className={`${className} w-full py-6 flex flex-col gap-5`}>

@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Operation } from '@/lib/definitions';
+import { operationValue } from '@/lib/parcelamento';
 import { formatter } from '@/lib/utils';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { isSameWeek } from 'date-fns';
@@ -30,7 +31,7 @@ const calculateWeeklyExpenses = (operations: Operation[]) => {
         weekStartsOn: 0,
       })
     ) {
-      total += operation.value ?? 0;
+      total += operationValue(operation);
     }
   });
   return total;
@@ -71,7 +72,7 @@ export default function WeeklyExpenses({ expenses }: Props) {
 
                                 <p className="text-sm text-center">{expense.date?.toLocaleDateString('pt-BR')}</p>
 
-                                <p className="text-sm text-end">{formatter.format((expense.value ?? 0) / 100)}</p></div>
+                                <p className="text-sm text-end">{formatter.format(operationValue(expense) / 100)}</p></div>
 
                             <Separator className="my-1" />
                         </div>

@@ -1,4 +1,9 @@
 import * as z from "zod";
+import {
+  expandParcelamentosForMonth,
+  monthStrToNumber,
+  monthToNumber,
+} from "./parcelamento";
 
 export interface Operation {
   id?: number;
@@ -19,20 +24,18 @@ export interface Operation {
   period_id?: number | null;
   start_date?: Date | null;
   end_date?: Date | null;
+
+  // Campos de exibição preenchidos ao expandir parcelamentos por mês.
+  // O `value` armazenado continua sendo o total; estes campos são apenas de
+  // visualização (prefixo "1/2", "2/2") e de cálculo (valor da parcela).
+  parcela_value?: number;
+  parcela_atual?: number;
+  parcela_total?: number;
 }
 
 export class OperationArray {
   private MONTHLY_PERIOD_ID = 3;
   private INVESTIMENTO_CATEGORY_ID = 6;
-
-  private monthToNumber(date: Date): number {
-    return date.getFullYear() * 12 + date.getMonth();
-  }
-
-  private monthStrToNumber(monthStr: string): number {
-    const [y, m] = monthStr.split("-").map(Number);
-    return y * 12 + (m - 1);
-  }
 
   constructor(private operations: Operation[]) {}
 
@@ -79,11 +82,10 @@ export class OperationArray {
   filterOperationsByMonth(
     month: string,
   ): Operation[] {
-  
     const operationsArray = new OperationArray(this.operations)
 
     // FILTRA AS OPERAÇÕES VARIÁVEIS DO MÊS
-  
+
     const filteredByMonth = operationsArray.filterVariableOperations().getOperations()
       .filter((operation) => {
         if (operation.date) {
@@ -96,33 +98,19 @@ export class OperationArray {
 
 
     // FILTRA AS OPERAÇÕES FIXAS GERAL
-  
-    const targetNum = this.monthStrToNumber(month);
+
+    const targetNum = monthStrToNumber(month);
     const fixedOperations = operationsArray.filterFixedOperations().getOperations().filter((o) => {
       const startDate = o.start_date || o.date;
-      const startNum = this.monthToNumber(startDate);
-      const endNum = o.end_date ? this.monthToNumber(o.end_date) : null;
+      const startNum = monthToNumber(startDate);
+      const endNum = o.end_date ? monthToNumber(o.end_date) : null;
       return startNum <= targetNum && (endNum === null || targetNum <= endNum);
     });
-  
+
     // EXPANDE OS PARCELAMENTOS
 
-    const parcelamentos = operationsArray
-    .filterComprasParceladas()
-    .getOperations()
-    .filter((o) => {
-      const numParcelas = o.parcelas ?? 1;
-      const date = new Date(o.date);
+    const parcelamentos = expandParcelamentosForMonth(this.operations, month);
 
-      const [targetYear, targetMonth] = month.split("-").map(Number);
-
-      const startMonthIndex = date.getFullYear() * 12 + date.getMonth();
-      const endMonthIndex = startMonthIndex + (numParcelas - 1);
-      const targetMonthIndex = targetYear * 12 + (targetMonth - 1);
-
-      return targetMonthIndex >= startMonthIndex && targetMonthIndex <= endMonthIndex;
-    });
-  
     return [...filteredByMonth, ...fixedOperations, ...parcelamentos].sort((a, b) => {
       return new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime();
     });

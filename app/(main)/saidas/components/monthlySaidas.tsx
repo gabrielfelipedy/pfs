@@ -7,6 +7,7 @@ import TreeMap from "@/components/charts/treemap";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBalancesSum } from "@/lib/utils";
 import { ChartData, Operation } from "@/lib/definitions";
+import { operationValue } from "@/lib/parcelamento";
 import {
   calculateOperationProportion,
   calculatePaymentMethodProportion,
@@ -23,7 +24,7 @@ const calculateExpenseEvolution = (operations: Operation[]) => {
     const key = date.toISOString().split("T")[0];
 
     const current_value = expenseMap.get(key) ?? { date: key, value: 0 };
-    const value = operation.value ?? 0;
+    const value = operationValue(operation);
 
     if (!operation.is_income) {
       expenseMap.set(key, {
@@ -49,7 +50,7 @@ const calculateCumulativeExpenseEvolution = (operations: Operation[]): ChartData
     const date = startOfDay(new Date(operation.date ?? ""));
     const key = date.toISOString().split("T")[0];
     // const current_value = expenseMap.get(key) ?? { date: key, value: 0 };
-    const value = operation.value ?? 0;
+    const value = operationValue(operation);
 
     total += value / 100;
 

@@ -1,13 +1,9 @@
 import { Operation, OperationArray } from "./definitions";
-
-function monthToNumber(date: Date): number {
-  return date.getFullYear() * 12 + date.getMonth();
-}
-
-function monthStrToNumber(month: string): number {
-  const [y, m] = month.split("-").map(Number);
-  return y * 12 + (m - 1);
-}
+import {
+  expandParcelamentosForMonth,
+  monthStrToNumber,
+  monthToNumber,
+} from "./parcelamento";
 
 export function convertUtcToLocal(date: Date): Date {
   const UTC_MINUS_3_OFFSET_MS = 3 * 60 * 60 * 1000; // UTC-3 offset in milliseconds
@@ -28,6 +24,15 @@ export const getAvaliableMonths = (operations: Operation[]) => {
       const endDate = operation.end_date || new Date();
       const startMonth = monthToNumber(startDate);
       const endMonth = monthToNumber(endDate);
+      for (let m = startMonth; m <= endMonth; m++) {
+        const y = Math.floor(m / 12);
+        const mo = (m % 12) + 1;
+        monthsSet.add(`${y}-${mo}`);
+      }
+    } else if (operation.parcelas && operation.parcelas > 1 && operation.date) {
+      const startDate = operation.date;
+      const startMonth = monthToNumber(startDate);
+      const endMonth = startMonth + (operation.parcelas - 1);
       for (let m = startMonth; m <= endMonth; m++) {
         const y = Math.floor(m / 12);
         const mo = (m % 12) + 1;
@@ -74,7 +79,7 @@ export const filterOperationsByMonth = (
       if (operation.date) {
         const date = operation.date;
         const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
-        return monthYear === month;
+        return monthYear === month && operation.parcelas === 1;
       }
       return false;
     });
@@ -87,7 +92,9 @@ export const filterOperationsByMonth = (
     return startNum <= targetNum && (endNum === null || targetNum <= endNum);
   });
 
-  return [...filteredByMonth, ...fixedOperations].sort((a, b) => {
+  const parcelamentos = expandParcelamentosForMonth(operations, month);
+
+  return [...filteredByMonth, ...fixedOperations, ...parcelamentos].sort((a, b) => {
     return new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime();
   });
 };
@@ -106,7 +113,7 @@ export const filterOperationsByMonthCharts = (
       if (operation.date) {
         const date = operation.date;
         const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
-        return monthYear === month;
+        return monthYear === month && operation.parcelas === 1;
       }
       return false;
     });
@@ -122,27 +129,7 @@ export const filterOperationsByMonthCharts = (
     date: new Date(targetYear, targetMonth - 1, 1),
   }));
 
-  const parcelamentos = operationsArray
-    .filterComprasParceladas()
-    .getOperations()
-    .filter((o) => {
-      const numParcelas = o.parcelas ?? 1;
-      const date = new Date(o.date);
-
-      const startMonthIndex = date.getFullYear() * 12 + date.getMonth();
-      const endMonthIndex = startMonthIndex + (numParcelas - 1);
-      const targetMonthIndex = targetYear * 12 + (targetMonth - 1);
-
-      return targetMonthIndex >= startMonthIndex && targetMonthIndex <= endMonthIndex;
-    })
-    .map((o) => {
-      const originalDate = new Date(o.date);
-      const day = Math.min(originalDate.getDate(), 28);
-      return {
-        ...o,
-        date: new Date(targetYear, targetMonth - 1, day),
-      };
-    });
+  const parcelamentos = expandParcelamentosForMonth(operations, month);
 
   return [...filteredByMonth, ...fixedOperations, ...parcelamentos].sort((a, b) => {
     return new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime();

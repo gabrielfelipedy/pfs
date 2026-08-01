@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Operation } from '@/lib/definitions';
 import { filterOperationsByMonth } from '@/lib/date';
+import { operationValue } from '@/lib/parcelamento';
 import { formatter } from '@/lib/utils';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { TrendingUpIcon } from 'lucide-react';
@@ -18,7 +19,7 @@ interface Props {
 export default function MonthlyIncome({ incomes, month }: Props) {
 
     const filteredIncomes = filterOperationsByMonth(incomes, month);
-    const total = filteredIncomes.reduce((sum, op) => sum + (op.value ?? 0), 0);
+    const total = filteredIncomes.reduce((sum, op) => sum + operationValue(op), 0);
 
     return (
         <Dialog>
@@ -45,7 +46,7 @@ export default function MonthlyIncome({ incomes, month }: Props) {
 
                                 <p className="text-sm text-center">{income.date?.toLocaleDateString('pt-BR')}</p>
 
-                                <p className="text-sm text-end">{formatter.format((income.value ?? 0) / 100)}</p></div>
+                                <p className="text-sm text-end">{formatter.format(operationValue(income) / 100)}</p></div>
 
                             <Separator className="my-1" />
                         </div>

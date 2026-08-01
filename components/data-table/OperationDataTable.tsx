@@ -10,6 +10,7 @@ import { Pencil } from "lucide-react";
 import ConfirmDeleteDialog from "@/components/dialogs/confirmDeleteDialog";
 import FormDialog from "@/components/dialogs/FormDialog";
 import { Operation } from "@/lib/definitions";
+import { operationValue } from "@/lib/parcelamento";
 import { updateSaida } from "@/actions/expense-actions";
 import { updateIncome } from "@/actions/income-actions";
 import { Badge } from "../ui/badge";
@@ -30,7 +31,12 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>{row.getValue("name")}</div>;
+      const op = row.original;
+      const parcelaPrefix =
+        op.parcela_atual && op.parcela_total
+          ? `${op.parcela_atual}/${op.parcela_total} `
+          : "";
+      return <div>{parcelaPrefix}{row.getValue("name")}</div>;
     },
   },
   {
@@ -70,7 +76,7 @@ export const columns: ColumnDef<Operation>[] = [
       );
     },
     cell: ({ row }) => {
-      const valor = row.getValue("value") as number;
+      const valor = operationValue(row.original);
 
       return <div>{formatter.format(valor / 100)}</div>;
     },

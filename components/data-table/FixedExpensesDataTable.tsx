@@ -9,6 +9,7 @@ import { capitalizeFirstLetter, formatter } from "@/lib/utils";
 import ConfirmDeleteDialog from "@/components/dialogs/confirmDeleteDialog";
 import FormDialog from "@/components/dialogs/FormDialog";
 import { Operation } from "@/lib/definitions";
+import { operationValue } from "@/lib/parcelamento";
 import { updateSaida } from "@/actions/expense-actions";
 import { updateIncome } from "@/actions/income-actions";
 import { Badge } from "../ui/badge";
@@ -76,7 +77,7 @@ export const columns: ColumnDef<Operation>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const valor = row.getValue("value") as number;
+      const valor = operationValue(row.original);
       return <div>{formatter.format(valor / 100)}</div>;
     },
   },

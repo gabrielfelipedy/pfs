@@ -1,5 +1,6 @@
 import { startOfDay } from "date-fns";
 import { ChartData, Operation, OperationBalance } from "./definitions";
+import { operationValue } from "./parcelamento";
 
 export const INVESTIMENTO_CATEGORY_ID = 6;
 
@@ -7,7 +8,7 @@ export const calculateIncomes = (operations: Operation[]) => {
   let total = 0;
   operations.forEach((operation) => {
     if (operation.is_income) {
-      total += operation.value ?? 0;
+      total += operationValue(operation);
     }
   });
   return total;
@@ -23,7 +24,7 @@ export const calculateBalanceEvolution = (operations: Operation[]) => {
     const date = startOfDay(new Date(operation.date ?? ""));
     const key = date.toISOString().split("T")[0];
 
-    const value = operation.value ?? 0;
+    const value = operationValue(operation);
 
     if (operation.is_income) {
       total_incomes += value;
@@ -95,7 +96,7 @@ export const calculateIncomeEvolution = (operations: Operation[]) => {
     const key = date.toISOString().split("T")[0];
 
     const current_value = incomeMap.get(key) ?? { date: key, value: 0 };
-    const value = operation.value ?? 0;
+    const value = operationValue(operation);
 
     if (operation.is_income) {
       incomeMap.set(key, {
@@ -121,7 +122,7 @@ export const calculateCumulativeIncomeEvolution = (operations: Operation[]) => {
     const date = startOfDay(new Date(operation.date ?? ""));
     const key = date.toISOString().split("T")[0];
     // const current_value = incomeMap.get(key) ?? { date: key, value: 0 };
-    const value = operation.value ?? 0;
+    const value = operationValue(operation);
 
     total += value / 100;
 
@@ -155,7 +156,7 @@ export const calculateIncomesAndExpensesEvolution = (
       total_expenses: 0,
     };
 
-    const value = operation.value ?? 0;
+    const value = operationValue(operation);
 
     if (operation.is_income) {
       balanceMap.set(key, {
@@ -190,7 +191,7 @@ export const calculateOperationProportion = (operations: Operation[]) => {
 
     proportionMap.set(key, {
       name: operation.category_name ?? "Sem categoria",
-      value: current_value.value + (operation.value ?? 0),
+      value: current_value.value + operationValue(operation),
     });
   });
 
@@ -215,7 +216,7 @@ export const calculatePaymentMethodProportion = (operations: Operation[]) => {
 
     paymentMethodMap.set(key, {
       name: operation.payment_method_name ?? "Sem método de pagamento",
-      value: current_value.value + (operation.value ?? 0),
+      value: current_value.value + operationValue(operation),
     });
   });
 

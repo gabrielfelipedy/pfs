@@ -3,6 +3,7 @@ import FormDialog from "../../../components/dialogs/FormDialog";
 import { createSaida } from "@/actions/expense-actions";
 import { ChartData, Operation, OperationArray } from "@/lib/definitions";
 import { getExpenses } from "@/db/queries/expense";
+import { operationValue } from "@/lib/parcelamento";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
 import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
@@ -49,7 +50,7 @@ function calculateYearlyExpenseMap(expenses: Operation[]): ChartData[] {
     const date = startOfDay(new Date(op.date ?? ""));
     const key = date.toISOString().split("T")[0];
     if (expenseMap.has(key)) {
-      expenseMap.set(key, (expenseMap.get(key) ?? 0) + (op.value ?? 0) / 100);
+      expenseMap.set(key, (expenseMap.get(key) ?? 0) + operationValue(op) / 100);
     }
   });
 
