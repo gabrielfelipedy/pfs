@@ -14,6 +14,14 @@ export async function getOperations() {
     .orderBy(desc(operationWithCategoryView.date));
 }
 
+export async function getOperationById(id: SelectOperation["id"]) {
+  return db
+    .select()
+    .from(operationWithCategoryView)
+    .where(eq(operationWithCategoryView.id, id))
+    .get();
+}
+
 
 export async function deleteOperation(id: SelectOperation["id"]) {
   return db.delete(operationTable).where(eq(operationTable.id, id));

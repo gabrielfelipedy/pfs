@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { capitalizeFirstLetter, formatter } from "@/lib/utils";
 import { Pencil } from "lucide-react";
 import ConfirmDeleteDialog from "@/components/dialogs/confirmDeleteDialog";
+import DuplicateOperationButton from "@/components/dialogs/DuplicateOperationButton";
 import FormDialog from "@/components/dialogs/FormDialog";
 import { Operation } from "@/lib/definitions";
 import { operationValue } from "@/lib/parcelamento";
@@ -172,6 +173,7 @@ export const columns: ColumnDef<Operation>[] = [
             actionFunction={row.original.is_income ? updateIncome : updateSaida}
           />
           {/* <UpdateSaidaDialog operation={row.original} /> */}
+          <DuplicateOperationButton operation={row.original} />
           <ConfirmDeleteDialog operation={row.original} />
         </div>
       );
