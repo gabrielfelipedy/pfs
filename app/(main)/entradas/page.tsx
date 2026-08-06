@@ -4,6 +4,7 @@ import { Operation, OperationArray } from "@/lib/definitions";
 import MonthlyEntradas from "./monthlyEntradas";
 import MonthlyIncome from "./MonthlyIncome";
 import { getIncomes } from "@/db/queries/incomes";
+import { getExpenses } from "@/db/queries/expense";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths, todayInUtcMinus3 } from "@/lib/date";
 import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
@@ -13,6 +14,7 @@ import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTab
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import ImportCsvDialog from "@/components/dialogs/ImportCsvDialog";
 import ScrollableTabsList from "@/components/shared/ScrollableTabsList";
+import BalanceCard from "@/components/resume/balance-card";
 
 const emptyOperation: Operation = {
   name: "",
@@ -25,15 +27,18 @@ const emptyOperation: Operation = {
 
 const Entradas = async () => {
   let incomes: Operation[];
+  let expenses: Operation[];
 
   try {
     incomes = await getIncomes();
+    expenses = await getExpenses();
   } catch (error) {
     console.error(error)
     return <ErrorLoading />;
   }
 
   const incomesArray = new OperationArray(incomes)
+  const operations = [...incomes, ...expenses]
 
   const avaliableMonths = getAvaliableMonths(incomes);
   const currentDate = todayInUtcMinus3()
@@ -53,6 +58,8 @@ const Entradas = async () => {
         </ScrollableTabsList>
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
+
+            <BalanceCard operations={operations} month={month} className="mt-2" />
 
             <div className="mt-10 grid gap-3 grid-cols-1 lg:grid-cols-3 items-start">
               <MonthlyIncome incomes={incomes} month={month} />

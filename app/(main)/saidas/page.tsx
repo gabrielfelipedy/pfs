@@ -3,6 +3,7 @@ import FormDialog from "../../../components/dialogs/FormDialog";
 import { createSaida } from "@/actions/expense-actions";
 import { ChartData, Operation, OperationArray } from "@/lib/definitions";
 import { getExpenses } from "@/db/queries/expense";
+import { getIncomes } from "@/db/queries/incomes";
 import { operationValue } from "@/lib/parcelamento";
 import ErrorLoading from "@/components/error/ErrorLoading";
 import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
@@ -17,6 +18,7 @@ import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
 import ImportCsvDialog from "@/components/dialogs/ImportCsvDialog";
 import Heatmap from "@/components/charts/heatmap";
+import BalanceCard from "@/components/resume/balance-card";
 
 export const dynamic = "force-dynamic";
 
@@ -58,15 +60,18 @@ function calculateYearlyExpenseMap(expenses: Operation[]): ChartData[] {
 
 export default async function Saidas() {
   let expenses: Operation[];
+  let incomes: Operation[];
 
   try {
     expenses = await getExpenses();
+    incomes = await getIncomes();
   } catch (error) {
     console.error(error)
     return <ErrorLoading />;
   }
 
   const expensesArray = new OperationArray(expenses)
+  const operations = [...expenses, ...incomes]
 
   const avaliableMonths = getAvaliableMonths(expenses);
   const currentDate = todayInUtcMinus3()
@@ -97,6 +102,8 @@ export default async function Saidas() {
         </ScrollableTabsList>
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
+
+            <BalanceCard operations={operations} month={month} className="mt-2" />
 
             <div className="mt-10 grid gap-3 grid-cols-1 lg:grid-cols-3 items-start">
               <MonthlyExpenses expenses={expenses} month={month} />
