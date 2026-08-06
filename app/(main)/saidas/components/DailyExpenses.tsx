@@ -8,13 +8,13 @@ import { Operation } from '@/lib/definitions';
 import { operationValue } from '@/lib/parcelamento';
 import { formatter } from '@/lib/utils';
 import { DialogTitle } from '@radix-ui/react-dialog';
-import { isToday } from 'date-fns';
+import { isTodayUTC, formatDateBR } from '@/lib/date';
 import { TrendingDownIcon } from 'lucide-react';
 
 const filterDailyExpenses = (operations: Operation[]) => {
     return operations.filter(
         (operation) =>
-            !operation.is_income && isToday(operation.date ?? ""))
+            !operation.is_income && operation.date && isTodayUTC(operation.date))
 
 }
 
@@ -22,7 +22,7 @@ const calculateDailyExpenses = (operations: Operation[]) => {
     let total = 0;
 
     operations.forEach((operation) => {
-        if (!operation.is_income && isToday(operation.date ?? "")) {
+        if (!operation.is_income && operation.date && isTodayUTC(operation.date)) {
             total += operationValue(operation);
         }
     });
@@ -62,7 +62,7 @@ export default function DailyExpenses({ expenses }: Props) {
                         <div key={expense.id}>
                             <div className="grid grid-cols-3 w-full "><p className="text-sm">{expense.name}</p>
 
-                                <p className="text-sm text-center">{expense.date?.toLocaleDateString('pt-BR')}</p>
+                                <p className="text-sm text-center">{expense.date ? formatDateBR(expense.date) : ""}</p>
 
                                 <p className="text-sm text-end">{formatter.format(operationValue(expense) / 100)}</p></div>
 

@@ -90,7 +90,7 @@ export class OperationArray {
       .filter((operation) => {
         if (operation.date) {
           const date = operation.date;
-          const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
+          const monthYear = `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}`;
           return monthYear === month && operation.parcelas === 1;
         }
         return false;

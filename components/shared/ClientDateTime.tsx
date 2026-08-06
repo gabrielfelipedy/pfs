@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatDateBR, formatDateBRMonthYear } from "@/lib/date";
 
 interface Props {
   date: Date | null;
@@ -29,8 +30,8 @@ export function ClientDateTime({ date, format = "full" }: Props) {
   if (!date) return <span>-</span>;
 
   if (format === "monthYear") {
-    return <span>{date.toLocaleDateString('pt-BR', { month: '2-digit', year: '2-digit' })}</span>;
+    return <span>{formatDateBRMonthYear(date)}</span>;
   }
 
-  return <span>{date.toLocaleDateString('pt-BR')}</span>;
+  return <span>{formatDateBR(date)}</span>;
 }

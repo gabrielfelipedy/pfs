@@ -42,7 +42,12 @@ export function utcMinus3ToUtc(time: string): string {
 
 // Replaces the timem into the timestamp string from another time given in the function's paramter
 
-export function replaceUTCTime(utcTimestamp: string, time: string): string {
+export function replaceUTCTime(
+  utcTimestamp: string | null | undefined,
+  time: string
+): string | null {
+  if (!utcTimestamp) return null;
+
   const date = new Date(utcTimestamp);
 
   if (isNaN(date.getTime())) {

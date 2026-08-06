@@ -14,8 +14,8 @@ export async function createExpenseLimit(
     description: formData.get("description"),
     value: Number(formData.get("value")),
     recursive: formData.get("recursive") === "true",
-    start_date: replaceUTCTime(formData.get("start_date") as string, '00:00:00'),
-    end_date: replaceUTCTime(formData.get("end_date") as string, '23:59:59'),
+    start_date: replaceUTCTime(formData.get("start_date") as string, '03:00:00'),
+    end_date: replaceUTCTime(formData.get("end_date") as string, '03:00:00'),
     category_id: Number(formData.get("category_id")),
     period_id: Number(formData.get("period_id")),
   });

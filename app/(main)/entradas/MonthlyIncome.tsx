@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Operation } from '@/lib/definitions';
-import { filterOperationsByMonth } from '@/lib/date';
+import { filterOperationsByMonth, formatDateBR } from '@/lib/date';
 import { operationValue } from '@/lib/parcelamento';
 import { formatter } from '@/lib/utils';
 import { DialogTitle } from '@radix-ui/react-dialog';
@@ -44,7 +44,7 @@ export default function MonthlyIncome({ incomes, month }: Props) {
                         <div key={income.id}>
                             <div className="grid grid-cols-3 w-full "><p className="text-sm">{income.name}</p>
 
-                                <p className="text-sm text-center">{income.date?.toLocaleDateString('pt-BR')}</p>
+                                <p className="text-sm text-center">{income.date ? formatDateBR(income.date) : ""}</p>
 
                                 <p className="text-sm text-end">{formatter.format(operationValue(income) / 100)}</p></div>
 

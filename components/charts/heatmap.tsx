@@ -11,6 +11,7 @@ import {
 } from "../ui/card";
 import { useTheme } from "next-themes";
 import { useMemo } from "react";
+import { todayInUtcMinus3 } from "@/lib/date";
 
 interface Props {
   title: string;
@@ -24,11 +25,13 @@ const Heatmap = ({ title, description, className, data }: Props) => {
   const isDark = resolvedTheme === "dark" || theme === "dark";
 
   const { startStr, endStr, maxValue } = useMemo(() => {
-    const now = new Date();
-    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const today = todayInUtcMinus3();
+    const end = new Date(
+      Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())
+    );
     const start = new Date(end);
-    start.setFullYear(start.getFullYear() - 1);
-    start.setDate(start.getDate() + 1);
+    start.setUTCFullYear(start.getUTCFullYear() - 1);
+    start.setUTCDate(start.getUTCDate() + 1);
 
     const max = data.reduce((m, d) => Math.max(m, d.value), 0);
 
@@ -52,10 +55,11 @@ const Heatmap = ({ title, description, className, data }: Props) => {
     tooltip: {
       formatter: (params: { value: [string, number] }) => {
         const [date, value] = params.value;
-        const formattedDate = new Date(date + "T00:00:00").toLocaleDateString("pt-BR", {
+        const formattedDate = new Date(date + "T00:00:00Z").toLocaleDateString("pt-BR", {
           day: "numeric",
           month: "long",
           year: "numeric",
+          timeZone: "UTC",
         });
         return `<strong>${formattedDate}</strong><br/>Gastos: ${formatter.format(value)}`;
       },

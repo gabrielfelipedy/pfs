@@ -5,7 +5,7 @@ import MonthlyEntradas from "./monthlyEntradas";
 import MonthlyIncome from "./MonthlyIncome";
 import { getIncomes } from "@/db/queries/incomes";
 import ErrorLoading from "@/components/error/ErrorLoading";
-import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
+import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths, todayInUtcMinus3 } from "@/lib/date";
 import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { formatMonthYear } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
@@ -36,7 +36,7 @@ const Entradas = async () => {
   const incomesArray = new OperationArray(incomes)
 
   const avaliableMonths = getAvaliableMonths(incomes);
-  const currentDate = new Date()
+  const currentDate = todayInUtcMinus3()
   const actualMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`
 
   return (

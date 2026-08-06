@@ -3,12 +3,13 @@
 import { insertOperation, updateOperation } from "@/db/queries/operation";
 import { revalidatePath } from "next/cache";
 import { OperationActionState, OperationSchema } from "./definitions";
+import { toUtcMinus3Instant } from "@/lib/date";
 
 const validateZodSchema = (formData: FormData) =>
   OperationSchema.safeParse({
     name: formData.get("name"),
     description: formData.get("description"),
-    date: formData.get("date"),
+    date: toUtcMinus3Instant(new Date(formData.get("date") as string)),
     value: Number(formData.get("value")),
     parcelas: formData.get("parcelas") ? Number(formData.get("parcelas")) : 1,
     is_paid: formData.get("is_paid") === "true",
@@ -16,8 +17,8 @@ const validateZodSchema = (formData: FormData) =>
     category_id: Number(formData.get("category_id")),
     payment_method_id: Number(formData.get("payment_method_id")),
     period_id: formData.get("is_fixo") === "true" ? 3 : null,
-    start_date: formData.get("start_date") ? new Date(formData.get("start_date") as string) : null,
-    end_date: formData.get("end_date") ? new Date(formData.get("end_date") as string) : null,
+    start_date: formData.get("start_date") ? toUtcMinus3Instant(new Date(formData.get("start_date") as string)) : null,
+    end_date: formData.get("end_date") ? toUtcMinus3Instant(new Date(formData.get("end_date") as string)) : null,
   });
 
 export async function createSaida(

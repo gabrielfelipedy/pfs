@@ -8,7 +8,7 @@ import ErrorLoading from "@/components/error/ErrorLoading";
 import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
 import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import ScrollableTabsList from "@/components/shared/ScrollableTabsList";
-import { formatMonthYear } from "@/lib/date";
+import { formatMonthYear, todayInUtcMinus3, toUtcMinus3Instant } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
 import DailyExpenses from "./components/DailyExpenses";
 import WeeklyExpenses from "./components/WeeklyExpenses";
@@ -17,7 +17,6 @@ import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
 import ImportCsvDialog from "@/components/dialogs/ImportCsvDialog";
 import Heatmap from "@/components/charts/heatmap";
-import { startOfDay } from "date-fns";
 
 export const dynamic = "force-dynamic";
 
@@ -31,23 +30,23 @@ const emptyOperation: Operation = {
 
 function calculateYearlyExpenseMap(expenses: Operation[]): ChartData[] {
   const now = new Date();
-  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const end = toUtcMinus3Instant(now);
   const start = new Date(end);
-  start.setFullYear(start.getFullYear() - 1);
-  start.setDate(start.getDate() + 1);
+  start.setUTCFullYear(start.getUTCFullYear() - 1);
+  start.setUTCDate(start.getUTCDate() + 1);
 
   const expenseMap = new Map<string, number>();
 
-  let cursor = new Date(start);
+  const cursor = new Date(start);
   while (cursor <= end) {
     const key = cursor.toISOString().split("T")[0];
     expenseMap.set(key, 0);
-    cursor.setDate(cursor.getDate() + 1);
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
   }
 
   expenses.forEach((op) => {
     if (op.is_income) return;
-    const date = startOfDay(new Date(op.date ?? ""));
+    const date = new Date(op.date ?? "");
     const key = date.toISOString().split("T")[0];
     if (expenseMap.has(key)) {
       expenseMap.set(key, (expenseMap.get(key) ?? 0) + operationValue(op) / 100);
@@ -70,7 +69,7 @@ export default async function Saidas() {
   const expensesArray = new OperationArray(expenses)
 
   const avaliableMonths = getAvaliableMonths(expenses);
-  const currentDate = new Date()
+  const currentDate = todayInUtcMinus3()
   const actualMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`
 
   const heatmapData = calculateYearlyExpenseMap(expenses);

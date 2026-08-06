@@ -1,4 +1,3 @@
-import { startOfDay } from "date-fns";
 import { ChartData, Operation, OperationBalance } from "./definitions";
 import { operationValue } from "./parcelamento";
 
@@ -21,7 +20,7 @@ export const calculateBalanceEvolution = (operations: Operation[]) => {
   let total_incomes = 0;
 
   operations.forEach((operation) => {
-    const date = startOfDay(new Date(operation.date ?? ""));
+    const date = new Date(operation.date ?? "");
     const key = date.toISOString().split("T")[0];
 
     const value = operationValue(operation);
@@ -45,7 +44,7 @@ export const calculateOperationEvolution = (operations: Operation[]) => {
   const incomeMap = new Map<string, ChartData>();
 
   operations.reverse().forEach((operation) => {
-    const date = startOfDay(new Date(operation.date ?? ""));
+    const date = new Date(operation.date ?? "");
     const key = date.toISOString().split("T")[0];
 
     const current_value = incomeMap.get(key) ?? { date: key, value: 0 };
@@ -70,7 +69,7 @@ export const calculateCumulativeOperationEvolution = (
   let total = 0;
 
   operations.reverse().forEach((operation) => {
-    const date = startOfDay(new Date(operation.date ?? ""));
+    const date = new Date(operation.date ?? "");
     const key = date.toISOString().split("T")[0];
 
     const value = (operation.value ?? 0) / 100;
@@ -92,7 +91,7 @@ export const calculateIncomeEvolution = (operations: Operation[]) => {
   const incomeMap = new Map<string, ChartData>();
 
   operations.forEach((operation) => {
-    const date = startOfDay(new Date(operation.date ?? ""));
+    const date = new Date(operation.date ?? "");
     const key = date.toISOString().split("T")[0];
 
     const current_value = incomeMap.get(key) ?? { date: key, value: 0 };
@@ -119,7 +118,7 @@ export const calculateCumulativeIncomeEvolution = (operations: Operation[]) => {
   operations.reverse().forEach((operation) => {
     if (!operation.is_income) return;
 
-    const date = startOfDay(new Date(operation.date ?? ""));
+    const date = new Date(operation.date ?? "");
     const key = date.toISOString().split("T")[0];
     // const current_value = incomeMap.get(key) ?? { date: key, value: 0 };
     const value = operationValue(operation);
@@ -147,7 +146,7 @@ export const calculateIncomesAndExpensesEvolution = (
   >();
 
   operations.forEach((operation) => {
-    const date = startOfDay(new Date(operation.date ?? ""));
+    const date = new Date(operation.date ?? "");
     const key = date.toISOString().split("T")[0];
 
     const current_value = balanceMap.get(key) ?? {

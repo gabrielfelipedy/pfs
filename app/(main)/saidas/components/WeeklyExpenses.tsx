@@ -9,13 +9,15 @@ import { operationValue } from '@/lib/parcelamento';
 import { formatter } from '@/lib/utils';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { isSameWeek } from 'date-fns';
+import { toUtcMinus3Date, todayInUtcMinus3, formatDateBR } from '@/lib/date';
 import { TrendingDownIcon } from 'lucide-react';
 
 const filterWeeklyExpenses = (operations: Operation[]) => {
   return operations.filter(
     (operation) =>
       !operation.is_income &&
-      isSameWeek(new Date(operation.date ?? ""), new Date(), {
+      operation.date &&
+      isSameWeek(toUtcMinus3Date(operation.date), todayInUtcMinus3(), {
         weekStartsOn: 0,
       })
   );
@@ -27,7 +29,8 @@ const calculateWeeklyExpenses = (operations: Operation[]) => {
   operations.forEach((operation) => {
     if (
       !operation.is_income &&
-      isSameWeek(new Date(operation.date ?? ""), new Date(), {
+      operation.date &&
+      isSameWeek(toUtcMinus3Date(operation.date), todayInUtcMinus3(), {
         weekStartsOn: 0,
       })
     ) {
@@ -70,7 +73,7 @@ export default function WeeklyExpenses({ expenses }: Props) {
                         <div key={expense.id}>
                             <div className="grid grid-cols-3 w-full "><p className="text-sm">{expense.name}</p>
 
-                                <p className="text-sm text-center">{expense.date?.toLocaleDateString('pt-BR')}</p>
+                                <p className="text-sm text-center">{expense.date ? formatDateBR(expense.date) : ""}</p>
 
                                 <p className="text-sm text-end">{formatter.format(operationValue(expense) / 100)}</p></div>
 

@@ -26,6 +26,11 @@ import {
 
 import { toast } from "sonner";
 import { formatter } from "@/lib/utils";
+import {
+  convertLocalToUtc,
+  toUtcMinus3Date,
+  todayInUtcMinus3,
+} from "@/lib/date";
 import { Operation } from "@/lib/definitions";
 import { OperationActionState } from "@/actions/definitions";
 import { useRouter } from "next/navigation";
@@ -82,7 +87,7 @@ export default function FormDialog({
   // States used by calendar selector propover
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date>(
-    operation?.date ?? new Date()
+    operation?.date ? toUtcMinus3Date(operation.date) : todayInUtcMinus3()
   );
 
   const [pagoSelected, setPagoSelected] = useState(operation?.is_paid ?? true);
@@ -117,7 +122,7 @@ export default function FormDialog({
   useEffect(() => {
     if (dialogOpen && !prevDialogOpen.current && operation?.id) {
       setRawValor(operation.value ?? 0);
-      setDate(operation.date ?? new Date());
+      setDate(operation.date ? toUtcMinus3Date(operation.date) : todayInUtcMinus3());
       setPagoSelected(operation.is_paid ?? true);
       setFixoSelected((operation.period_id ?? undefined) === 3);
       setFixoStartInput(
@@ -203,7 +208,7 @@ export default function FormDialog({
 
       setTimeout(() => {
         setRawValor(0)
-        setDate(new Date())
+        setDate(todayInUtcMinus3())
         setPagoSelected(true)
         setFixoSelected(false)
         setFixoStartInput("")
@@ -382,8 +387,8 @@ export default function FormDialog({
                 name="date"
                 value={
                   fixoSelected && parsedStart
-                    ? new Date(parsedStart.year, parsedStart.month - 1, 1).toISOString()
-                    : date.toISOString()
+                    ? convertLocalToUtc(new Date(parsedStart.year, parsedStart.month - 1, 1)).toISOString()
+                    : convertLocalToUtc(date).toISOString()
                 }
               />
               {fixoSelected && (
@@ -393,7 +398,7 @@ export default function FormDialog({
                     name="start_date"
                     value={
                       parsedStart
-                        ? new Date(parsedStart.year, parsedStart.month - 1, 1).toISOString()
+                        ? convertLocalToUtc(new Date(parsedStart.year, parsedStart.month - 1, 1)).toISOString()
                         : ""
                     }
                   />
@@ -402,7 +407,7 @@ export default function FormDialog({
                     name="end_date"
                     value={
                       parsedEnd
-                        ? new Date(parsedEnd.year, parsedEnd.month - 1, 1).toISOString()
+                        ? convertLocalToUtc(new Date(parsedEnd.year, parsedEnd.month - 1, 1)).toISOString()
                         : ""
                     }
                   />

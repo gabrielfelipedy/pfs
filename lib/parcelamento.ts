@@ -1,7 +1,7 @@
 import { Operation } from "./definitions";
 
 export function monthToNumber(date: Date): number {
-  return date.getFullYear() * 12 + date.getMonth();
+  return date.getUTCFullYear() * 12 + date.getUTCMonth();
 }
 
 export function monthStrToNumber(month: string): number {
@@ -50,14 +50,16 @@ export function expandParcelamentosForMonth(
     .map((o) => {
       const originalDate = new Date(o.date);
       const startMonthIndex = monthToNumber(originalDate);
-      const day = Math.min(originalDate.getDate(), 28);
+      const day = Math.min(originalDate.getUTCDate(), 28);
 
       return {
         ...o,
         parcela_value: parcelaValue(o),
         parcela_atual: targetMonthIndex - startMonthIndex + 1,
         parcela_total: o.parcelas ?? 1,
-        date: new Date(targetYear, targetMonth - 1, day),
+        date: new Date(
+          Date.UTC(targetYear, targetMonth - 1, day) + 3 * 60 * 60 * 1000,
+        ),
       };
     });
 }

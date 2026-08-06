@@ -5,14 +5,69 @@ import {
   monthToNumber,
 } from "./parcelamento";
 
+export const UTC_MINUS_3_OFFSET_MS = 3 * 60 * 60 * 1000; // UTC-3 offset in milliseconds
+
+// Converts a date entered in the UTC-3 reference (a calendar day) to its UTC-0
+// representation: day D at 00:00 UTC-3 == 03:00 UTC on day D.
+export function convertLocalToUtc(date: Date): Date {
+  return new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) +
+      UTC_MINUS_3_OFFSET_MS
+  );
+}
+
+// Converts a stored UTC-0 instant to the UTC-3 wall-clock reference.
 export function convertUtcToLocal(date: Date): Date {
-  const UTC_MINUS_3_OFFSET_MS = 3 * 60 * 60 * 1000; // UTC-3 offset in milliseconds
   return new Date(date.getTime() - UTC_MINUS_3_OFFSET_MS);
 }
 
-export function convertLocalToUtc(date: Date): Date {
-  const UTC_MINUS_3_OFFSET_MS = 3 * 60 * 60 * 1000; // UTC-3 offset in milliseconds
-  return new Date(date.getTime() + UTC_MINUS_3_OFFSET_MS);
+// Snap any UTC instant to the canonical UTC-3 convention (03:00 UTC of the day
+// the instant falls on in the UTC-3 reference).
+export function toUtcMinus3Instant(date: Date): Date {
+  const local = convertUtcToLocal(date);
+  return new Date(
+    Date.UTC(local.getUTCFullYear(), local.getUTCMonth(), local.getUTCDate()) +
+      UTC_MINUS_3_OFFSET_MS
+  );
+}
+
+// Builds a local Date (browser midnight) representing the UTC-3 calendar day of
+// a stored UTC-0 instant. Used to feed date pickers regardless of browser TZ.
+export function toUtcMinus3Date(date: Date): Date {
+  const local = convertUtcToLocal(date);
+  return new Date(local.getUTCFullYear(), local.getUTCMonth(), local.getUTCDate());
+}
+
+// Local Date (browser midnight) representing "today" in the UTC-3 reference.
+export function todayInUtcMinus3(): Date {
+  const ref = convertUtcToLocal(new Date());
+  return new Date(ref.getUTCFullYear(), ref.getUTCMonth(), ref.getUTCDate());
+}
+
+// Formats a stored UTC-0 instant as a date in the UTC-3 reference, independent
+// of the browser/server timezone.
+export function formatDateBR(date: Date): string {
+  return convertUtcToLocal(date).toLocaleDateString("pt-BR", {
+    timeZone: "UTC",
+  });
+}
+
+export function formatDateBRMonthYear(date: Date): string {
+  return convertUtcToLocal(date).toLocaleDateString("pt-BR", {
+    timeZone: "UTC",
+    month: "2-digit",
+    year: "2-digit",
+  });
+}
+
+export function isTodayUTC(date: Date): boolean {
+  const now = todayInUtcMinus3();
+  const target = toUtcMinus3Date(date);
+  return (
+    target.getFullYear() === now.getFullYear() &&
+    target.getMonth() === now.getMonth() &&
+    target.getDate() === now.getDate()
+  );
 }
 
 export const getAvaliableMonths = (operations: Operation[]) => {
@@ -40,7 +95,7 @@ export const getAvaliableMonths = (operations: Operation[]) => {
       }
     } else if (operation.date) {
       const date = operation.date;
-      const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
+      const monthYear = `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}`;
       monthsSet.add(monthYear);
     }
   });
@@ -78,7 +133,7 @@ export const filterOperationsByMonth = (
     .filter((operation) => {
       if (operation.date) {
         const date = operation.date;
-        const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
+        const monthYear = `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}`;
         return monthYear === month && operation.parcelas === 1;
       }
       return false;
@@ -112,7 +167,7 @@ export const filterOperationsByMonthCharts = (
     .filter((operation) => {
       if (operation.date) {
         const date = operation.date;
-        const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
+        const monthYear = `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}`;
         return monthYear === month && operation.parcelas === 1;
       }
       return false;
@@ -126,7 +181,7 @@ export const filterOperationsByMonthCharts = (
     return startNum <= targetNum && (endNum === null || targetNum <= endNum);
   }).map((o) => ({
     ...o,
-    date: new Date(targetYear, targetMonth - 1, 1),
+    date: convertLocalToUtc(new Date(targetYear, targetMonth - 1, 1)),
   }));
 
   const parcelamentos = expandParcelamentosForMonth(operations, month);

@@ -9,7 +9,7 @@ import Line from "@/components/charts/line";
 import Bar from "@/components/charts/bar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBalanceEvolution, calculateIncomesAndExpensesEvolution  } from "@/lib/operation";
-import { filterOperationsByMonth, getAvaliableMonths, formatMonthYear, filterOperationsByMonthCharts } from "@/lib/date";
+import { filterOperationsByMonth, getAvaliableMonths, formatMonthYear, filterOperationsByMonthCharts, todayInUtcMinus3 } from "@/lib/date";
 import ScrollableTabsList from "@/components/shared/ScrollableTabsList";
 
 
@@ -43,7 +43,7 @@ export default async function Home() {
   //console.log(transformedData)
   const avaliableMonths = getAvaliableMonths(operations);
   //console.log(avaliableMonths)
-  const currentDate = new Date()
+  const currentDate = todayInUtcMinus3()
   const actualMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`
 
   return (

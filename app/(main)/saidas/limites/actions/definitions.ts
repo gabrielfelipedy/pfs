@@ -6,8 +6,8 @@ export const ExpenseLimitSchema = z.object({
   description: z.string().optional(),
   value: z.number().min(0, { message: "Valor must be a positive number" }),
   recursive: z.boolean(),
-  start_date: z.coerce.date(),
-  end_date: z.coerce.date(),
+  start_date: z.coerce.date().nullable().optional(),
+  end_date: z.coerce.date().nullable().optional(),
   category_id: z.preprocess((val) => {
     if (val === undefined || (typeof val === "number" && isNaN(val)))
       return null;

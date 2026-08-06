@@ -12,7 +12,6 @@ import {
   calculateOperationProportion,
   calculatePaymentMethodProportion,
 } from "@/lib/operation";
-import { startOfDay } from "date-fns";
 
 const calculateExpenseEvolution = (operations: Operation[]) => {
   //console.log(operations)
@@ -20,7 +19,7 @@ const calculateExpenseEvolution = (operations: Operation[]) => {
   const expenseMap = new Map<string, ChartData>();
 
   operations.forEach((operation) => {
-    const date = startOfDay(new Date(operation.date ?? ""));
+    const date = new Date(operation.date ?? "");
     const key = date.toISOString().split("T")[0];
 
     const current_value = expenseMap.get(key) ?? { date: key, value: 0 };
@@ -47,7 +46,7 @@ const calculateCumulativeExpenseEvolution = (operations: Operation[]): ChartData
   operations.forEach((operation) => {
     if (operation.is_income) return;
 
-    const date = startOfDay(new Date(operation.date ?? ""));
+    const date = new Date(operation.date ?? "");
     const key = date.toISOString().split("T")[0];
     // const current_value = expenseMap.get(key) ?? { date: key, value: 0 };
     const value = operationValue(operation);
