@@ -12,6 +12,7 @@ export interface Operation {
   value: number;
   parcelas: number;
   date: Date;
+  sort_order?: number;
 
   is_paid?: boolean | null;
   is_income?: boolean | null;

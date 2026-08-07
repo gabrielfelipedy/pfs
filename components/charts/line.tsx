@@ -18,9 +18,10 @@ interface Props {
   className?: string;
   data: ChartData[];
   chartColor?: string;
+  variant?: "area" | "line";
 }
 
-const Line = ({ title, description, className, data, chartColor }: Props) => {
+const Line = ({ title, description, className, data, chartColor, variant = "area" }: Props) => {
   //console.log(data)
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark" || theme === "dark";
@@ -77,7 +78,8 @@ const Line = ({ title, description, className, data, chartColor }: Props) => {
         show: false,
       },
       axisLabel: {
-        show: false
+        color: isDark ? "#ffffff" : "#333333",
+        formatter: (value: number) => formatter.format(value),
       },
     },
     series: [
@@ -85,10 +87,10 @@ const Line = ({ title, description, className, data, chartColor }: Props) => {
         data: result.total_value,
         type: "line",
         smooth: true,
-        areaStyle: {},
+        areaStyle: variant === "area" ? {} : undefined,
         showSymbol: false,
         lineStyle: {
-          width: 0, // This removes the line
+          width: variant === "line" ? 2 : 0,
         },
       },
     ],

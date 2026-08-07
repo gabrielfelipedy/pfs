@@ -97,6 +97,8 @@ export const operationTable = sqliteTable("operation", {
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
 
+  sort_order: integer().default(0).notNull(),
+
   start_date: integer("start_date", { mode: "timestamp" }),
   end_date: integer("end_date", { mode: "timestamp" }),
 

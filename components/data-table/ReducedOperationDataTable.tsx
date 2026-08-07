@@ -9,6 +9,7 @@ import { capitalizeFirstLetter, formatter } from "@/lib/utils";
 import { Pencil } from "lucide-react";
 import ConfirmDeleteDialog from "@/components/dialogs/confirmDeleteDialog";
 import DuplicateOperationButton from "@/components/dialogs/DuplicateOperationButton";
+import MoveOperationButton from "@/components/dialogs/MoveOperationButton";
 import FormDialog from "@/components/dialogs/FormDialog";
 import { Operation } from "@/lib/definitions";
 import { operationValue } from "@/lib/parcelamento";
@@ -17,6 +18,7 @@ import { updateIncome } from "@/actions/income-actions";
 import { Badge } from "../ui/badge";
 import { ClientDateTime } from "../shared/ClientDateTime";
 import { EmptyDemo } from "../empty/EmptyDemo";
+import { sameUtcMinus3Day } from "@/lib/reorder";
 
 export const columns: ColumnDef<Operation>[] = [
   {
@@ -156,9 +158,34 @@ export const columns: ColumnDef<Operation>[] = [
   {
     accessorKey: "actions",
     header: "Ações",
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
+      const op = row.original;
+      const rows = table.getRowModel().rows;
+      const prev = rows[row.index - 1]?.original;
+      const next = rows[row.index + 1]?.original;
+
+      const canReorder = (other: Operation | undefined) =>
+        !!other &&
+        op.parcelas === 1 &&
+        other.parcelas === 1 &&
+        !!op.id &&
+        !!other.id &&
+        sameUtcMinus3Day(op.date, other.date);
+
       return (
         <div className="flex gap-4">
+          <MoveOperationButton
+            operationId={op.id ?? 0}
+            neighborId={prev?.id ?? 0}
+            direction="up"
+            disabled={!canReorder(prev)}
+          />
+          <MoveOperationButton
+            operationId={op.id ?? 0}
+            neighborId={next?.id ?? 0}
+            direction="down"
+            disabled={!canReorder(next)}
+          />
           <FormDialog
             openDialogText={<Pencil />}
             buttonVariation="outline"

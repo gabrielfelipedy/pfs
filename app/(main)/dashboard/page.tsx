@@ -94,13 +94,33 @@ export default async function Home() {
             
 
             <div className="mt-8 flex flex-col gap-5">
-              <Line
-                title="Evolução do saldo"
-                description="Ao longo do mês atual"
-                data={calculateBalanceEvolution(
-                  filterOperationsByMonthCharts(operations, month)
-                )}
-              />
+              <Tabs defaultValue="area">
+                <TabsList>
+                  <TabsTrigger value="area">Gráfico de Área</TabsTrigger>
+                  <TabsTrigger value="line">Gráfico de Linha</TabsTrigger>
+                </TabsList>
+                <TabsContent value="area">
+                  <Line
+                    variant="area"
+                    title="Evolução do saldo"
+                    description="Ao longo do mês atual"
+                    data={calculateBalanceEvolution(
+                      filterOperationsByMonthCharts(operations, month)
+                    )}
+                  />
+                </TabsContent>
+
+                <TabsContent value="line">
+                  <Line
+                    variant="line"
+                    title="Evolução do saldo"
+                    description="Ao longo do mês atual"
+                    data={calculateBalanceEvolution(
+                      filterOperationsByMonthCharts(operations, month)
+                    )}
+                  />
+                </TabsContent>
+              </Tabs>
 
               <Tabs defaultValue="area">
                 <TabsList>

@@ -645,6 +645,20 @@
       "when": 1783640000000,
       "tag": "0091_data_utc_minus3_normalization",
       "breakpoints": true
+    },
+    {
+      "idx": 92,
+      "version": "6",
+      "when": 1786028406907,
+      "tag": "0092_slippery_gorilla_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 93,
+      "version": "7",
+      "when": 1786200000000,
+      "tag": "0093_normalize_operation_dates",
+      "breakpoints": true
     }
   ]
 }
