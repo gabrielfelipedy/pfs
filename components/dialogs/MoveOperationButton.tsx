@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { moveOperationAction } from "@/actions/operation-actions";
 import { OperationActionState } from "@/actions/definitions";
+import { useOperations } from "../operations/OperationsProvider";
 
 interface Props {
   operationId: number;
@@ -30,18 +30,18 @@ export default function MoveOperationButton({
     FormData
   >(moveOperationAction, undefined);
 
-  const router = useRouter();
+  const { refresh } = useOperations();
 
   useEffect(() => {
     if (state && state.success) {
       toast.success(state.message);
-      router.refresh();
+      refresh();
     } else {
       if (state && state.message) {
         toast.error(state.message);
       }
     }
-  }, [state, router]);
+  }, [state, refresh]);
 
   return (
     <form action={formAction}>

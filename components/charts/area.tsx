@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import ReactCharts from "echarts-for-react";
 import { formatter } from "@/lib/utils";
 import {
@@ -22,7 +23,7 @@ interface Props {
   }[];
 }
 
-const Area = ({ title, description, className, data }: Props) => {
+const AreaContent = ({ title, description, className, data }: Props) => {
   const days: string[] = [];
   const totalIncomes: number[] = [];
   const totalExpenses: number[] = [];
@@ -142,5 +143,11 @@ const Area = ({ title, description, className, data }: Props) => {
     </Card>
   );
 };
+
+const Area = (props: Props) => (
+  <Suspense fallback={null}>
+    <AreaContent {...props} />
+  </Suspense>
+);
 
 export default Area;

@@ -1,11 +1,12 @@
+"use client";
+
 import FormDialog from "../../../components/dialogs/FormDialog";
 import { createEntrada } from "@/actions/income-actions";
 import { Operation, OperationArray } from "@/lib/definitions";
 import MonthlyEntradas from "./monthlyEntradas";
 import MonthlyIncome from "./MonthlyIncome";
-import { getIncomes } from "@/db/queries/incomes";
-import { getExpenses } from "@/db/queries/expense";
 import ErrorLoading from "@/components/error/ErrorLoading";
+import { useOperations } from "@/components/operations/OperationsProvider";
 import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths, todayInUtcMinus3 } from "@/lib/date";
 import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { formatMonthYear } from "@/lib/date";
@@ -25,20 +26,14 @@ const emptyOperation: Operation = {
 };
 
 
-const Entradas = async () => {
-  let incomes: Operation[];
-  let expenses: Operation[];
+const Entradas = () => {
+  const operations = useOperations().operations;
+  const { error } = useOperations();
+  const incomes = operations.filter((op) => op.is_income === true);
 
-  try {
-    incomes = await getIncomes();
-    expenses = await getExpenses();
-  } catch (error) {
-    console.error(error)
-    return <ErrorLoading />;
-  }
+  if (error) return <ErrorLoading />;
 
   const incomesArray = new OperationArray(incomes)
-  const operations = [...incomes, ...expenses]
 
   const avaliableMonths = getAvaliableMonths(incomes);
   const currentDate = todayInUtcMinus3()
@@ -76,33 +71,31 @@ const Entradas = async () => {
               {(() => {
                 const filtered = filterOperationsByMonth(incomesArray.filterFixedOperations().getOperations(), month)
 
-
-                  if (filtered.length === 0) {
-                    return <EmptyDemo
-                      title="Sem Entradas Fixas"
-                      description="Você ainda não criou nenhuma entrada fixa. Comece criando sua primeira entrada"
-                      createButtonText="Criar Entrada Fixo"
-                      importButtonText="Importar de CSV"
-                      createButton={
-                        <FormDialog
-                          openDialogText="Criar Entrada Fixo"
-                          dialogTitle="Adicionar entrada"
-                          dialogDescription="Preencha as informações da entrada"
-                          buttonText="Adicionar"
-                          operation={emptyOperation}
-                          actionFunction={createEntrada}
-                        />
-                      }
-                      importButton={<ImportCsvDialog isIncome={true} />}
-                    />
-                  }
+                if (filtered.length === 0) {
+                  return <EmptyDemo
+                    title="Sem Entradas Fixas"
+                    description="Você ainda não criou nenhuma entrada fixa. Comece criando sua primeira entrada"
+                    createButtonText="Criar Entrada Fixo"
+                    importButtonText="Importar de CSV"
+                    createButton={
+                      <FormDialog
+                        openDialogText="Criar Entrada Fixo"
+                        dialogTitle="Adicionar entrada"
+                        dialogDescription="Preencha as informações da entrada"
+                        buttonText="Adicionar"
+                        operation={emptyOperation}
+                        actionFunction={createEntrada}
+                      />
+                    }
+                    importButton={<ImportCsvDialog isIncome={true} />}
+                  />
+                }
 
                 return <FixedExpensesDataTable operations={filtered} />
               })()}
             </div>
 
             <div className="mt-10">
-              {/* <CreateSaidaDialog /> */}
               <FormDialog
                 openDialogText="Adicionar entrada"
                 dialogTitle="Adicionar entrada"

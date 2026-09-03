@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBalancesSum } from "@/lib/utils";
 import { ChartData, Operation } from "@/lib/definitions";
 import { operationValue } from "@/lib/parcelamento";
+import { isAtualOperation } from "@/lib/operation";
 import {
   calculateOperationProportion,
   calculatePaymentMethodProportion,
@@ -65,51 +66,31 @@ const calculateCumulativeExpenseEvolution = (operations: Operation[]): ChartData
 interface Props {
   expenses: Operation[];
   className?: string;
+  month: string;
+  paidOnly?: boolean;
 }
 
-export default function MonthlySaidas  ({ expenses, className }: Props)  {
+export default function MonthlySaidas  ({ expenses, className, month, paidOnly = false }: Props)  {
 
+  const chartOperations = expenses.filter(
+    (op) => !paidOnly || isAtualOperation(op, month)
+  );
 
   // FOR BAR CHARTS
-  const expense_proportion = calculateOperationProportion(expenses);
+  const expense_proportion = calculateOperationProportion(chartOperations);
   const expense_proportion_total = calculateBalancesSum(expense_proportion);
 
-  const payment_method_proportion = calculatePaymentMethodProportion(expenses);
+  const payment_method_proportion = calculatePaymentMethodProportion(chartOperations);
   const payment_method_proportion_total = calculateBalancesSum(
     payment_method_proportion
   );
 
 
-  const expense_evolution = calculateExpenseEvolution(expenses)
-  const cumulative_expense_evolution = calculateCumulativeExpenseEvolution(expenses)
+  const expense_evolution = calculateExpenseEvolution(chartOperations)
+  const cumulative_expense_evolution = calculateCumulativeExpenseEvolution(chartOperations)
 
   return (
     <div className={`${className} flex flex-col gap-4 w-full justify-between`}>
-      <Tabs defaultValue="1">
-        <TabsList>
-          <TabsTrigger value="1">Cumulativo</TabsTrigger>
-          <TabsTrigger value="0">Não Cumulativo</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="1">
-          <Line
-        title="Evolução de gastos"
-        description="Ao longo do mês atual"
-        chartColor="#FF5454"
-        data={cumulative_expense_evolution}
-      />
-        </TabsContent>
-        <TabsContent value="0">
-          <Line
-        title="Evolução de gastos"
-        description="Ao longo do mês atual"
-        chartColor="#FF5454"
-        data={expense_evolution}
-      />
-        </TabsContent>
-      </Tabs>
-      
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Tabs defaultValue="pie">
           <TabsList>
@@ -175,6 +156,30 @@ export default function MonthlySaidas  ({ expenses, className }: Props)  {
           </TabsContent>
         </Tabs>
       </div>
+
+      <Tabs defaultValue="1">
+        <TabsList>
+          <TabsTrigger value="1">Cumulativo</TabsTrigger>
+          <TabsTrigger value="0">Não Cumulativo</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="1">
+          <Line
+        title="Evolução de gastos"
+        description="Ao longo do mês atual"
+        chartColor="#FF5454"
+        data={cumulative_expense_evolution}
+      />
+        </TabsContent>
+        <TabsContent value="0">
+          <Line
+        title="Evolução de gastos"
+        description="Ao longo do mês atual"
+        chartColor="#FF5454"
+        data={expense_evolution}
+      />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

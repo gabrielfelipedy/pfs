@@ -1,11 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import MonthlySaidas from "./components/monthlySaidas";
 import FormDialog from "../../../components/dialogs/FormDialog";
 import { createSaida } from "@/actions/expense-actions";
 import { ChartData, Operation, OperationArray } from "@/lib/definitions";
-import { getExpenses } from "@/db/queries/expense";
-import { getIncomes } from "@/db/queries/incomes";
 import { operationValue } from "@/lib/parcelamento";
 import ErrorLoading from "@/components/error/ErrorLoading";
+import { useExpenses, useOperations } from "@/components/operations/OperationsProvider";
 import { filterOperationsByMonth, filterOperationsByMonthCharts, getAvaliableMonths } from "@/lib/date";
 import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import ScrollableTabsList from "@/components/shared/ScrollableTabsList";
@@ -16,8 +18,6 @@ import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
 import ImportCsvDialog from "@/components/dialogs/ImportCsvDialog";
 import Heatmap from "@/components/charts/heatmap";
-
-export const dynamic = "force-dynamic";
 
 const emptyOperation: Operation = {
   name: '',
@@ -55,28 +55,21 @@ function calculateYearlyExpenseMap(expenses: Operation[]): ChartData[] {
   return Array.from(expenseMap.entries()).map(([date, value]) => ({ date, value }));
 }
 
-export default async function Saidas() {
-  let expenses: Operation[];
-  let incomes: Operation[];
+export default function Saidas() {
+  const { operations, error } = useOperations();
+  const expenses = useExpenses();
+  const [mode, setMode] = useState<"atual" | "previsto">("atual");
 
-  try {
-    expenses = await getExpenses();
-    incomes = await getIncomes();
-  } catch (error) {
-    console.error(error)
-    return <ErrorLoading />;
-  }
+  if (error) return <ErrorLoading />;
 
   const expensesArray = new OperationArray(expenses)
-  const operations = [...expenses, ...incomes]
+  const paidOnly = mode === "atual";
 
   const avaliableMonths = getAvaliableMonths(expenses);
   const currentDate = todayInUtcMinus3()
   const actualMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`
 
   const heatmapData = calculateYearlyExpenseMap(expenses);
-
-  //console.log(filterWeeklyExpenses(expenses).reverse());
 
   return (
     <>
@@ -100,12 +93,11 @@ export default async function Saidas() {
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
 
-            <ExpenseResumeCards operations={operations} expenses={expenses} month={month} className="mt-10" />
+            <ExpenseResumeCards operations={operations} expenses={expenses} month={month} mode={mode} onModeChange={setMode} className="mt-10" />
 
-            <MonthlySaidas expenses={filterOperationsByMonthCharts(expenses, month)} className="mt-10" />
+            <MonthlySaidas expenses={filterOperationsByMonthCharts(expenses, month)} month={month} paidOnly={paidOnly} className="mt-10" />
 
             <div className="mt-10">
-              {/* <CreateSaidaDialog /> */}
               <FormDialog
                 openDialogText="Adicionar Gasto"
                 dialogTitle="Adicionar Gasto"
@@ -120,35 +112,31 @@ export default async function Saidas() {
 
             <div className="mt-2">
               {(() => {
-
-                //console.log(expenses.filter((e) => e.period_id === 3))
-
                 const filtered = filterOperationsByMonth(expensesArray.filterFixedOperations().getOperations(), month)
 
-                  if (filtered.length === 0) {
-                    return <EmptyDemo
-                      title="Sem Gastos Fixos"
-                      description="Você ainda não criou nenhum gasto fixo. Comece criando seu primeiro gasto fixo"
-                      createButtonText="Criar Gasto Fixo"
-                      importButtonText="Importar de CSV"
-                      createButton={
-                        <FormDialog
-                          openDialogText="Criar Gasto Fixo"
-                          dialogTitle="Adicionar Gasto"
-                          dialogDescription="Preencha as informações do gasto"
-                          buttonText="Adicionar"
-                          operation={emptyOperation}
-                          actionFunction={createSaida}
-                        />
-                      }
-                      importButton={<ImportCsvDialog isIncome={false} />}
-                    />
-                  }
+                if (filtered.length === 0) {
+                  return <EmptyDemo
+                    title="Sem Gastos Fixos"
+                    description="Você ainda não criou nenhum gasto fixo. Comece criando seu primeiro gasto fixo"
+                    createButtonText="Criar Gasto Fixo"
+                    importButtonText="Importar de CSV"
+                    createButton={
+                      <FormDialog
+                        openDialogText="Criar Gasto Fixo"
+                        dialogTitle="Adicionar Gasto"
+                        dialogDescription="Preencha as informações do gasto"
+                        buttonText="Adicionar"
+                        operation={emptyOperation}
+                        actionFunction={createSaida}
+                      />
+                    }
+                    importButton={<ImportCsvDialog isIncome={false} />}
+                  />
+                }
 
                 return <FixedExpensesDataTable operations={filtered} />
               })()}
             </div>
-
 
             <h2 className="subtitle mt-10">Gastos variáveis</h2>
 
@@ -179,15 +167,6 @@ export default async function Saidas() {
                 return <ReducedOperationDataTable operations={variableOps} />;
               })()}
             </div>
-
-
-            {/* COMPRAS PARCELADAS
-
-            <h2 className="subtitle mt-10">Meus parcelamentos</h2>
-
-            <div className="mt-2">
-              <ReducedOperationDataTable operations={expensesArray.filterComprasParceladas().getOperations()} />
-            </div> */}
           </TabsContent>
         ))}
       </Tabs>

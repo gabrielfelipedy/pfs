@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
 import Papa from "papaparse";
 import { toast } from "sonner";
+import { useOperations } from "../operations/OperationsProvider";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -44,7 +44,7 @@ export default function ImportCsvDialog({ isIncome, children }: Props) {
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState<CsvImportResult | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
+  const { refresh } = useOperations();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -116,7 +116,7 @@ export default function ImportCsvDialog({ isIncome, children }: Props) {
 
       if (res.imported > 0) {
         toast.success(`${res.imported} de ${res.total} operações importadas`);
-        router.refresh();
+        refresh();
         if (res.errors.length === 0) {
           setTimeout(() => {
             setDialogOpen(false);

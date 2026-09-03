@@ -16,7 +16,7 @@ interface Props {
   className?: string;
 }
 
-const MonthlyEntradas = async ({ incomes, className }: Props) => {
+const MonthlyEntradas = ({ incomes, className }: Props) => {
   const income_proportion = calculateOperationProportion(incomes);
   const total = calculateBalancesSum(income_proportion);
 

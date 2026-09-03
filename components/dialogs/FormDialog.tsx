@@ -33,8 +33,8 @@ import {
 } from "@/lib/date";
 import { Operation } from "@/lib/definitions";
 import { OperationActionState } from "@/actions/definitions";
-import { useRouter } from "next/navigation";
 import CategorySelector from "../selectors/categorySelector";
+import { useOperations } from "../operations/OperationsProvider";
 import { Spinner } from "../ui/spinner";
 
 import PaymentMethodSelector from "../selectors/paymentMethodSelector";
@@ -154,7 +154,7 @@ export default function FormDialog({
     FormData
   >(actionFunction, undefined);
 
-  const router = useRouter();
+  const { refresh } = useOperations();
 
   // handles the success or erros afer action is performed
 
@@ -163,7 +163,7 @@ export default function FormDialog({
       console.log("Action successful, closing dialog.");
       toast.success(state.message);
 
-      router.refresh();
+      refresh();
 
       setTimeout(() => {
         setRawValor(0)
@@ -179,7 +179,7 @@ export default function FormDialog({
         toast.error(state.message || "Erro desconhecido. Verifique os campos.");
       }
     }
-  }, [state, router]);
+  }, [state, refresh]);
 
   return (
     <Dialog

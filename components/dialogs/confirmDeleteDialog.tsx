@@ -20,9 +20,9 @@ import {
 import { toast } from "sonner";
 import { deleteOperationAction } from "@/actions/operation-actions";
 import { OperationActionState } from "@/actions/definitions";
-import { useRouter } from "next/navigation";
 import { Spinner } from "../ui/spinner";
 import { Operation } from "@/lib/definitions";
+import { useOperations } from "../operations/OperationsProvider";
 import { formatter } from "@/lib/utils";
 
 interface Props {
@@ -37,14 +37,14 @@ export default function ConfirmDeleteDialog({ operation }: Props) {
     FormData
   >(deleteOperationAction, undefined);
 
-  const router = useRouter();
+  const { refresh } = useOperations();
 
   useEffect(() => {
     if (state && state.success) {
       console.log("Action successful, closing dialog.");
       toast.success(state.message);
 
-      router.refresh();
+      refresh();
 
       setTimeout(() => {
         setDialogOpen(false);
@@ -54,7 +54,7 @@ export default function ConfirmDeleteDialog({ operation }: Props) {
         toast.error(state.message);
       }
     }
-  }, [state, router]);
+  }, [state, refresh]);
 
   return (
     <AlertDialog key={operation.id} open={dialogOpen} onOpenChange={setDialogOpen}>

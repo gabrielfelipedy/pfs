@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import ReactCharts from "echarts-for-react";
 import { OperationBalance } from "@/lib/definitions";
 import { formatter } from "@/lib/utils";
@@ -20,7 +21,7 @@ interface Props {
   data: OperationBalance[];
 }
 
-const Pie = ({ title, description, className, totalValue, data }: Props) => {
+const PieContent = ({ title, description, className, totalValue, data }: Props) => {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark" || theme === "dark";
 
@@ -89,5 +90,11 @@ const Pie = ({ title, description, className, totalValue, data }: Props) => {
     </Card>
   );
 };
+
+const Pie = (props: Props) => (
+  <Suspense fallback={null}>
+    <PieContent {...props} />
+  </Suspense>
+);
 
 export default Pie;

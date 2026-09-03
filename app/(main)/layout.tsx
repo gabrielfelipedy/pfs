@@ -1,21 +1,31 @@
 import Navbar from "@/components/shared/Navbar";
 import { Toaster } from "@/components/ui/sonner";
+import { OperationsProvider } from "@/components/operations/OperationsProvider";
+import { getOperations } from "@/db/queries/operation";
+import ErrorLoading from "@/components/error/ErrorLoading";
 
-export default function MainLayout({
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  let operations;
+
+  try {
+    operations = await getOperations();
+  } catch (error) {
+    console.error(error);
+    return <ErrorLoading />;
+  }
+
   return (
-    <>
-
-
+    <OperationsProvider initialOperations={operations}>
       <Navbar />
 
-
-      <main >{children}
+      <main>
+        {children}
         <Toaster />
       </main>
-    </>
+    </OperationsProvider>
   );
 }

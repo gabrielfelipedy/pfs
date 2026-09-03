@@ -12,7 +12,7 @@ interface Props {
 }
 
 
-const Resume = async ({ operations, className, children }: Props) => {
+const Resume = ({ operations, className, children }: Props) => {
 
   const balance = operations.reduce(
     (sum, op) => sum + (op.is_income ? operationValue(op) : -operationValue(op)),

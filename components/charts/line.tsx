@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import ReactCharts from "echarts-for-react";
 import { ChartData } from "@/lib/definitions";
 import { formatter } from "@/lib/utils";
@@ -21,8 +22,7 @@ interface Props {
   variant?: "area" | "line";
 }
 
-const Line = ({ title, description, className, data, chartColor, variant = "area" }: Props) => {
-  //console.log(data)
+const LineContent = ({ title, description, className, data, chartColor, variant = "area" }: Props) => {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark" || theme === "dark";
 
@@ -107,5 +107,11 @@ const Line = ({ title, description, className, data, chartColor, variant = "area
     </Card>
   );
 };
+
+const Line = (props: Props) => (
+  <Suspense fallback={null}>
+    <LineContent {...props} />
+  </Suspense>
+);
 
 export default Line;

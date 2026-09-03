@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Operation } from "@/lib/definitions";
 import BalanceCard from "@/components/resume/balance-card";
@@ -13,15 +12,16 @@ interface Props {
   expenses: Operation[];
   month: string;
   className?: string;
+  mode: "atual" | "previsto";
+  onModeChange: (mode: "atual" | "previsto") => void;
 }
 
-export default function ExpenseResumeCards({ operations, expenses, month, className }: Props) {
-  const [mode, setMode] = useState<"atual" | "previsto">("atual");
+export default function ExpenseResumeCards({ operations, expenses, month, className, mode, onModeChange }: Props) {
   const paidOnly = mode === "atual";
 
   return (
     <div className={`${className} flex flex-col gap-4 w-full`}>
-      <Tabs defaultValue="atual" onValueChange={(v) => setMode(v as "atual" | "previsto")}>
+      <Tabs value={mode} onValueChange={(v) => onModeChange(v as "atual" | "previsto")}>
         <TabsList>
           <TabsTrigger value="atual">Atual</TabsTrigger>
           <TabsTrigger value="previsto">Previsto</TabsTrigger>
