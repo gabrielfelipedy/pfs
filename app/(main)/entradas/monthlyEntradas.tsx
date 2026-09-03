@@ -1,7 +1,10 @@
+"use client"
+
+import { useState } from "react";
 import Line from "@/components/charts/line";
 import Pie from "@/components/charts/pie";
-import Radar from "@/components/charts/radar";
 import TreeMap from "@/components/charts/treemap";
+import OperationsListDialog from "@/components/operations/OperationsListDialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBalancesSum } from "@/lib/utils";
 import { Operation } from "@/lib/definitions";
@@ -17,8 +20,20 @@ interface Props {
 }
 
 const MonthlyEntradas = ({ incomes, className }: Props) => {
+  const [drill, setDrill] = useState<{ title: string; operations: Operation[] } | null>(null);
   const income_proportion = calculateOperationProportion(incomes);
   const total = calculateBalancesSum(income_proportion);
+
+  const openCategoryDrill = (name: string | null) => {
+    if (name === "Total") return;
+    const key = name ?? "Sem categoria";
+    setDrill({
+      title: `Entradas em ${key}`,
+      operations: incomes.filter(
+        (op) => (op.category_name ?? "Sem categoria") === key
+      ),
+    });
+  };
 
   return (
     <div
@@ -50,7 +65,6 @@ const MonthlyEntradas = ({ incomes, className }: Props) => {
       <Tabs defaultValue="pie">
         <TabsList>
           <TabsTrigger value="pie">Gráfico de Pizza</TabsTrigger>
-          <TabsTrigger value="radar">Gráfico de Radar</TabsTrigger>
           <TabsTrigger value="tree">Gráfico de árvore</TabsTrigger>
         </TabsList>
         <TabsContent value="pie">
@@ -59,13 +73,7 @@ const MonthlyEntradas = ({ incomes, className }: Props) => {
             description="Ao longo do mês atual"
             totalValue={total}
             data={income_proportion}
-          />
-        </TabsContent>
-        <TabsContent value="radar">
-          <Radar
-            title="Evolução de entradas mensal"
-            description="Ao longo do mês atual"
-            data={income_proportion}
+            onClick={openCategoryDrill}
           />
         </TabsContent>
 
@@ -75,9 +83,17 @@ const MonthlyEntradas = ({ incomes, className }: Props) => {
             description="Ao longo do mês atual"
             totalValue={total}
             data={income_proportion}
+            onClick={openCategoryDrill}
           />
         </TabsContent>
       </Tabs>
+
+      <OperationsListDialog
+        open={!!drill}
+        onOpenChange={(open) => !open && setDrill(null)}
+        title={drill?.title ?? ""}
+        operations={drill?.operations ?? []}
+      />
     </div>
   );
 };

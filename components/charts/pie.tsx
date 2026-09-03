@@ -19,9 +19,10 @@ interface Props {
   className?: string;
   totalValue: number;
   data: OperationBalance[];
+  onClick?: (name: string | null) => void;
 }
 
-const PieContent = ({ title, description, className, totalValue, data }: Props) => {
+const PieContent = ({ title, description, className, totalValue, data, onClick }: Props) => {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark" || theme === "dark";
 
@@ -85,7 +86,12 @@ const PieContent = ({ title, description, className, totalValue, data }: Props) 
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
-        <ReactCharts option={option} />
+        <ReactCharts
+          option={option}
+          onEvents={{
+            click: (params: { name?: string | null }) => onClick?.(params?.name ?? null),
+          }}
+        />
       </CardContent>
     </Card>
   );

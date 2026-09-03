@@ -17,9 +17,10 @@ interface Props {
   className?: string;
   totalValue: number;
   data: OperationBalance[];
+  onClick?: (name: string | null) => void;
 }
 
-const TreeMap = ({ title, description, className, totalValue, data }: Props) => {
+const TreeMap = ({ title, description, className, totalValue, data, onClick }: Props) => {
 
   const result = {
     name: data.map((item) =>  item.name),
@@ -63,6 +64,9 @@ const TreeMap = ({ title, description, className, totalValue, data }: Props) => 
         <ReactCharts
           option={option}
           style={{ height: "300px", width: "100%" }}
+          onEvents={{
+            click: (params: { name?: string | null }) => onClick?.(params?.name ?? null),
+          }}
         />
       </CardContent>
     </Card>
