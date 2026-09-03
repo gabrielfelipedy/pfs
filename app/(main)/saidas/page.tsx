@@ -11,14 +11,11 @@ import { Tabs, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import ScrollableTabsList from "@/components/shared/ScrollableTabsList";
 import { formatMonthYear, todayInUtcMinus3, toUtcMinus3Instant } from "@/lib/date";
 import ReducedOperationDataTable from "@/components/data-table/ReducedOperationDataTable";
-import DailyExpenses from "./components/DailyExpenses";
-import WeeklyExpenses from "./components/WeeklyExpenses";
-import MonthlyExpenses from "./components/MonthlyExpenses";
+import ExpenseResumeCards from "./components/ExpenseResumeCards";
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTable";
 import ImportCsvDialog from "@/components/dialogs/ImportCsvDialog";
 import Heatmap from "@/components/charts/heatmap";
-import BalanceCard from "@/components/resume/balance-card";
 
 export const dynamic = "force-dynamic";
 
@@ -103,13 +100,7 @@ export default async function Saidas() {
         {avaliableMonths.map((month) => (
           <TabsContent key={month} value={month}>
 
-            <BalanceCard operations={operations} month={month} className="mt-2" />
-
-            <div className="mt-10 grid gap-3 grid-cols-1 lg:grid-cols-3 items-start">
-              <MonthlyExpenses expenses={expenses} month={month} />
-              <WeeklyExpenses expenses={expenses} />
-              <DailyExpenses expenses={expenses} />
-            </div>
+            <ExpenseResumeCards operations={operations} expenses={expenses} month={month} className="mt-10" />
 
             <MonthlySaidas expenses={filterOperationsByMonthCharts(expenses, month)} className="mt-10" />
 

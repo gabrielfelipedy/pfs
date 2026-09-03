@@ -1,7 +1,42 @@
 import { ChartData, Operation, OperationBalance } from "./definitions";
 import { operationValue } from "./parcelamento";
+import { todayInUtcMinus3, toUtcMinus3Date } from "./date";
 
 export const INVESTIMENTO_CATEGORY_ID = 6;
+
+const MONTHLY_PERIOD_ID = 3;
+
+export const isFixedOperation = (operation: Operation): boolean =>
+  operation.period_id === MONTHLY_PERIOD_ID;
+
+// Places a fixed operation's recurring pay-day (the day-of-month from its date)
+// into the target month, returning it as a UTC-3 instant.
+export function fixedOperationDateInMonth(
+  operation: Operation,
+  month: string
+): Date {
+  const [year, monthIndex] = month.split("-").map(Number);
+  const day = operation.date ? operation.date.getUTCDate() : 1;
+  return new Date(Date.UTC(year, monthIndex - 1, day) + 3 * 60 * 60 * 1000);
+}
+
+// Determines whether an operation counts as "Atual" (paid now):
+// - Fixed operations: included when their effective date is <= today.
+//   When `month` is provided, the pay-day is evaluated within that month;
+//   otherwise the operation's own date is used (for weekly/daily windows).
+// - Non-fixed operations: included when marked as paid.
+export function isAtualOperation(
+  operation: Operation,
+  month?: string
+): boolean {
+  if (isFixedOperation(operation)) {
+    const effectiveDate = month
+      ? fixedOperationDateInMonth(operation, month)
+      : new Date(operation.date ?? "");
+    return toUtcMinus3Date(effectiveDate) <= todayInUtcMinus3();
+  }
+  return operation.is_paid === true;
+}
 
 export const calculateIncomes = (operations: Operation[]) => {
   let total = 0;

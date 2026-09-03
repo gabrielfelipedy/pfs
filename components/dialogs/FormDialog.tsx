@@ -93,20 +93,18 @@ export default function FormDialog({
   const [pagoSelected, setPagoSelected] = useState(operation?.is_paid ?? true);
   const [fixoSelected, setFixoSelected] = useState((operation?.period_id ?? true) === 3);
 
-  const [fixoStartInput, setFixoStartInput] = useState<string>(
+  const [fixoStartDate, setFixoStartDate] = useState<Date | undefined>(
     operation.start_date
-      ? `${String(operation.start_date.getMonth() + 1).padStart(2, '0')}/${String(operation.start_date.getFullYear()).slice(-2)}`
+      ? toUtcMinus3Date(operation.start_date)
       : operation.date
-        ? `${String(operation.date.getMonth() + 1).padStart(2, '0')}/${String(operation.date.getFullYear()).slice(-2)}`
-        : ""
+        ? toUtcMinus3Date(operation.date)
+        : todayInUtcMinus3()
   );
-  const [fixoEndInput, setFixoEndInput] = useState<string>(
-    operation.end_date
-      ? `${String(operation.end_date.getMonth() + 1).padStart(2, '0')}/${String(operation.end_date.getFullYear()).slice(-2)}`
-      : ""
+  const [fixoEndDate, setFixoEndDate] = useState<Date | undefined>(
+    operation.end_date ? toUtcMinus3Date(operation.end_date) : undefined
   );
-  const [fixoStartError, setFixoStartError] = useState<string | null>(null);
-  const [fixoEndError, setFixoEndError] = useState<string | null>(null);
+  const [fixoStartOpen, setFixoStartOpen] = useState(false);
+  const [fixoEndOpen, setFixoEndOpen] = useState(false);
 
   // State to control dialog open/close
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -125,17 +123,15 @@ export default function FormDialog({
       setDate(operation.date ? toUtcMinus3Date(operation.date) : todayInUtcMinus3());
       setPagoSelected(operation.is_paid ?? true);
       setFixoSelected((operation.period_id ?? undefined) === 3);
-      setFixoStartInput(
+      setFixoStartDate(
         operation.start_date
-          ? `${String(operation.start_date.getMonth() + 1).padStart(2, '0')}/${String(operation.start_date.getFullYear()).slice(-2)}`
+          ? toUtcMinus3Date(operation.start_date)
           : operation.date
-            ? `${String(operation.date.getMonth() + 1).padStart(2, '0')}/${String(operation.date.getFullYear()).slice(-2)}`
-            : ""
+            ? toUtcMinus3Date(operation.date)
+            : todayInUtcMinus3()
       );
-      setFixoEndInput(
-        operation.end_date
-          ? `${String(operation.end_date.getMonth() + 1).padStart(2, '0')}/${String(operation.end_date.getFullYear()).slice(-2)}`
-          : ""
+      setFixoEndDate(
+        operation.end_date ? toUtcMinus3Date(operation.end_date) : undefined
       );
     }
     prevDialogOpen.current = dialogOpen;
@@ -149,43 +145,6 @@ export default function FormDialog({
     const input = e.currentTarget;
     const len = input.value.length;
     input.setSelectionRange(len, len);
-  };
-
-  const formatMonthInput = (value: string): string => {
-    const digits = value.replace(/\D/g, "").slice(0, 4);
-    if (digits.length <= 2) return digits;
-    return digits.slice(0, 2) + "/" + digits.slice(2);
-  };
-
-  const parseMonthInput = (value: string): { month: number; year: number } | null => {
-    const cleaned = value.replace(/\D/g, "");
-    if (cleaned.length !== 4) return null;
-    const month = parseInt(cleaned.slice(0, 2), 10);
-    const year = 2000 + parseInt(cleaned.slice(2, 4), 10);
-    if (month < 1 || month > 12) return null;
-    return { month, year };
-  };
-
-  const handleStartInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatMonthInput(e.target.value);
-    setFixoStartInput(formatted);
-    const parsed = parseMonthInput(formatted);
-    if (formatted.length === 5 && !parsed) {
-      setFixoStartError("Data inválida. Use MM/AA");
-    } else {
-      setFixoStartError(null);
-    }
-  };
-
-  const handleEndInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatMonthInput(e.target.value);
-    setFixoEndInput(formatted);
-    const parsed = parseMonthInput(formatted);
-    if (formatted.length === 5 && !parsed) {
-      setFixoEndError("Data inválida. Use MM/AA");
-    } else {
-      setFixoEndError(null);
-    }
   };
 
   //defines the action to be used based on whether operation is defined
@@ -211,10 +170,8 @@ export default function FormDialog({
         setDate(todayInUtcMinus3())
         setPagoSelected(true)
         setFixoSelected(false)
-        setFixoStartInput("")
-        setFixoEndInput("")
-        setFixoStartError(null)
-        setFixoEndError(null)
+        setFixoStartDate(todayInUtcMinus3())
+        setFixoEndDate(undefined)
         setDialogOpen(false);
       }, 0);
     } else {
@@ -223,9 +180,6 @@ export default function FormDialog({
       }
     }
   }, [state, router]);
-
-  const parsedStart = parseMonthInput(fixoStartInput);
-  const parsedEnd = fixoEndInput ? parseMonthInput(fixoEndInput) : null;
 
   return (
     <Dialog
@@ -319,28 +273,64 @@ export default function FormDialog({
               {fixoSelected ? (
                 <div className="grid grid-cols-2 gap-5">
                   <div className="flex flex-col gap-3">
-                    <Label>Mês de início</Label>
-                    <Input
-                      value={fixoStartInput}
-                      onChange={handleStartInputChange}
-                      placeholder="MM/AA"
-                      className={fixoStartError ? "border-red-500" : ""}
-                    />
-                    {fixoStartError && (
-                      <p className="text-sm text-red-500">{fixoStartError}</p>
-                    )}
+                    <Label>Data de início</Label>
+                    <Popover open={fixoStartOpen} onOpenChange={setFixoStartOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between font-normal"
+                        >
+                          {fixoStartDate ? <ClientDateTime date={fixoStartDate} /> : "Selecione"}
+
+                          <ChevronDownIcon />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-auto overflow-hidden p-0"
+                        align="start"
+                      >
+                        <Calendar
+                          mode="single"
+                          selected={fixoStartDate}
+                          captionLayout="dropdown"
+                          toYear={2030}
+                          onSelect={(date) => {
+                            setFixoStartDate(date ?? todayInUtcMinus3());
+                            setFixoStartOpen(false);
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
                   </div>
                   <div className="flex flex-col gap-3">
-                    <Label>Mês de fim (opcional)</Label>
-                    <Input
-                      value={fixoEndInput}
-                      onChange={handleEndInputChange}
-                      placeholder="MM/AA"
-                      className={fixoEndError ? "border-red-500" : ""}
-                    />
-                    {fixoEndError && (
-                      <p className="text-sm text-red-500">{fixoEndError}</p>
-                    )}
+                    <Label>Data de fim (opcional)</Label>
+                    <Popover open={fixoEndOpen} onOpenChange={setFixoEndOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-between font-normal"
+                        >
+                          {fixoEndDate ? <ClientDateTime date={fixoEndDate} /> : "Selecione"}
+
+                          <ChevronDownIcon />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-auto overflow-hidden p-0"
+                        align="start"
+                      >
+                        <Calendar
+                          mode="single"
+                          selected={fixoEndDate}
+                          captionLayout="dropdown"
+                          toYear={2030}
+                          onSelect={(date) => {
+                            setFixoEndDate(date);
+                            setFixoEndOpen(false);
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
                   </div>
                 </div>
               ) : (
@@ -386,8 +376,8 @@ export default function FormDialog({
                 type="hidden"
                 name="date"
                 value={
-                  fixoSelected && parsedStart
-                    ? convertLocalToUtc(new Date(parsedStart.year, parsedStart.month - 1, 1)).toISOString()
+                  fixoSelected && fixoStartDate
+                    ? convertLocalToUtc(fixoStartDate).toISOString()
                     : convertLocalToUtc(date).toISOString()
                 }
               />
@@ -397,8 +387,8 @@ export default function FormDialog({
                     type="hidden"
                     name="start_date"
                     value={
-                      parsedStart
-                        ? convertLocalToUtc(new Date(parsedStart.year, parsedStart.month - 1, 1)).toISOString()
+                      fixoStartDate
+                        ? convertLocalToUtc(fixoStartDate).toISOString()
                         : ""
                     }
                   />
@@ -406,8 +396,8 @@ export default function FormDialog({
                     type="hidden"
                     name="end_date"
                     value={
-                      parsedEnd
-                        ? convertLocalToUtc(new Date(parsedEnd.year, parsedEnd.month - 1, 1)).toISOString()
+                      fixoEndDate
+                        ? convertLocalToUtc(fixoEndDate).toISOString()
                         : ""
                     }
                   />

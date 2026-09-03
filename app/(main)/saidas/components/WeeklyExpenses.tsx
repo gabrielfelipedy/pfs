@@ -10,20 +10,22 @@ import { formatter } from '@/lib/utils';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { isSameWeek } from 'date-fns';
 import { toUtcMinus3Date, todayInUtcMinus3, formatDateBR } from '@/lib/date';
+import { isAtualOperation } from '@/lib/operation';
 import { TrendingDownIcon } from 'lucide-react';
 
-const filterWeeklyExpenses = (operations: Operation[]) => {
+const filterWeeklyExpenses = (operations: Operation[], paidOnly = false) => {
   return operations.filter(
     (operation) =>
       !operation.is_income &&
       operation.date &&
       isSameWeek(toUtcMinus3Date(operation.date), todayInUtcMinus3(), {
         weekStartsOn: 0,
-      })
+      }) &&
+      (!paidOnly || isAtualOperation(operation))
   );
 }
 
-const calculateWeeklyExpenses = (operations: Operation[]) => {
+const calculateWeeklyExpenses = (operations: Operation[], paidOnly = false) => {
   let total = 0;
 
   operations.forEach((operation) => {
@@ -32,7 +34,8 @@ const calculateWeeklyExpenses = (operations: Operation[]) => {
       operation.date &&
       isSameWeek(toUtcMinus3Date(operation.date), todayInUtcMinus3(), {
         weekStartsOn: 0,
-      })
+      }) &&
+      (!paidOnly || isAtualOperation(operation))
     ) {
       total += operationValue(operation);
     }
@@ -42,12 +45,13 @@ const calculateWeeklyExpenses = (operations: Operation[]) => {
 
 interface Props {
     expenses: Operation[];
+    paidOnly?: boolean;
 }
 
-export default function WeeklyExpenses({ expenses }: Props) {
+export default function WeeklyExpenses({ expenses, paidOnly = false }: Props) {
 
-    const total_weekly_expenses = calculateWeeklyExpenses(expenses)
-    const weekly_expenses = filterWeeklyExpenses(expenses)
+    const total_weekly_expenses = calculateWeeklyExpenses(expenses, paidOnly)
+    const weekly_expenses = filterWeeklyExpenses(expenses, paidOnly)
 
     return (
         <Dialog>

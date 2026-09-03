@@ -181,7 +181,10 @@ export const filterOperationsByMonthCharts = (
     return startNum <= targetNum && (endNum === null || targetNum <= endNum);
   }).map((o) => ({
     ...o,
-    date: convertLocalToUtc(new Date(targetYear, targetMonth - 1, 1)),
+    date: new Date(
+      Date.UTC(targetYear, targetMonth - 1, o.date ? o.date.getUTCDate() : 1) +
+        UTC_MINUS_3_OFFSET_MS
+    ),
   }));
 
   const parcelamentos = expandParcelamentosForMonth(operations, month);

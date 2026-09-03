@@ -9,20 +9,23 @@ import { operationValue } from '@/lib/parcelamento';
 import { formatter } from '@/lib/utils';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { isTodayUTC, formatDateBR } from '@/lib/date';
+import { isAtualOperation } from '@/lib/operation';
 import { TrendingDownIcon } from 'lucide-react';
 
-const filterDailyExpenses = (operations: Operation[]) => {
+const filterDailyExpenses = (operations: Operation[], paidOnly = false) => {
     return operations.filter(
         (operation) =>
-            !operation.is_income && operation.date && isTodayUTC(operation.date))
+            !operation.is_income && operation.date && isTodayUTC(operation.date) &&
+            (!paidOnly || isAtualOperation(operation)))
 
 }
 
-const calculateDailyExpenses = (operations: Operation[]) => {
+const calculateDailyExpenses = (operations: Operation[], paidOnly = false) => {
     let total = 0;
 
     operations.forEach((operation) => {
-        if (!operation.is_income && operation.date && isTodayUTC(operation.date)) {
+        if (!operation.is_income && operation.date && isTodayUTC(operation.date) &&
+            (!paidOnly || isAtualOperation(operation))) {
             total += operationValue(operation);
         }
     });
@@ -31,12 +34,13 @@ const calculateDailyExpenses = (operations: Operation[]) => {
 
 interface Props {
     expenses: Operation[];
+    paidOnly?: boolean;
 }
 
-export default function DailyExpenses({ expenses }: Props) {
+export default function DailyExpenses({ expenses, paidOnly = false }: Props) {
 
-    const total_daily_expenses = calculateDailyExpenses(expenses)
-    const daily_expenses = filterDailyExpenses(expenses)
+    const total_daily_expenses = calculateDailyExpenses(expenses, paidOnly)
+    const daily_expenses = filterDailyExpenses(expenses, paidOnly)
 
     return (
         <Dialog>

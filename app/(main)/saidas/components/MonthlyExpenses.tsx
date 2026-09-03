@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { Operation } from '@/lib/definitions';
 import { filterOperationsByMonth, formatDateBR } from '@/lib/date';
 import { operationValue } from '@/lib/parcelamento';
+import { isAtualOperation } from '@/lib/operation';
 import { formatter } from '@/lib/utils';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { TrendingDownIcon } from 'lucide-react';
@@ -14,11 +15,13 @@ import { TrendingDownIcon } from 'lucide-react';
 interface Props {
     expenses: Operation[];
     month: string;
+    paidOnly?: boolean;
 }
 
-export default function MonthlyExpenses({ expenses, month }: Props) {
+export default function MonthlyExpenses({ expenses, month, paidOnly = false }: Props) {
 
-    const filteredExpenses = filterOperationsByMonth(expenses, month);
+    const filteredExpenses = filterOperationsByMonth(expenses, month)
+        .filter((op) => !paidOnly || isAtualOperation(op, month));
     const total = filteredExpenses.reduce((sum, op) => sum + operationValue(op), 0);
 
     return (

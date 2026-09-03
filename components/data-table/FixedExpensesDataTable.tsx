@@ -45,7 +45,7 @@ export const columns: ColumnDef<Operation>[] = [
     ),
     cell: ({ row }) => {
       const startDate = row.original.start_date ?? row.original.date;
-      return <ClientDateTime date={startDate} format="monthYear" />;
+      return <ClientDateTime date={startDate} />;
     },
   },
   {
@@ -62,7 +62,7 @@ export const columns: ColumnDef<Operation>[] = [
     cell: ({ row }) => {
       const endDate = row.original.end_date;
       if (!endDate) return <span>&mdash;</span>;
-      return <ClientDateTime date={endDate} format="monthYear" />;
+      return <ClientDateTime date={endDate} />;
     },
   },
   {
