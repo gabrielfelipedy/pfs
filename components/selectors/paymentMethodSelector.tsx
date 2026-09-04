@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 
 import { PaymentMethod } from "@/lib/definitions";
 import { fetchPaymentMethodsAction } from "@/actions/selectors";
-;
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Props {
   payment_method_id: number | undefined;
@@ -15,8 +20,8 @@ const PaymentMethodSelector = ({ payment_method_id }: Props) => {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [selectedValue, setSelectedValue] = useState<number | undefined>(
-    payment_method_id
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(
+    payment_method_id?.toString()
   );
 
   useEffect(() => {
@@ -27,33 +32,38 @@ const PaymentMethodSelector = ({ payment_method_id }: Props) => {
         const data = await fetchPaymentMethodsAction();
         setPaymentMethods(data);
 
-        if (payment_method_id) setSelectedValue(payment_method_id);
-      } catch (error) {
+        if (payment_method_id) setSelectedValue(payment_method_id.toString());
+      } catch {
         console.error("Error loading payment methods");
       } finally {
         setLoading(false);
-        //console.log(categories)
+        //console.log(paymentMethods)
       }
     }
     load();
   }, [payment_method_id]);
 
   return (
-    <NativeSelect
+    <Select
       name="payment_method_id"
       value={selectedValue}
-      onChange={(e) => setSelectedValue(Number(e.target.value))}
+      onValueChange={setSelectedValue}
       disabled={loading}
     >
-      <NativeSelectOption value={undefined}>
-        {loading ? "Carregando..." : "Sem método de pagamento"}
-      </NativeSelectOption>
-      {paymentMethods.map((cat) => (
-        <NativeSelectOption key={cat.id} value={cat.id}>
-          {cat.name}
-        </NativeSelectOption>
-      ))}
-    </NativeSelect>
+      <SelectTrigger className="w-full">
+        <SelectValue
+          placeholder={loading ? "Carregando..." : "Sem método de pagamento"}
+        />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="none">Sem método de pagamento</SelectItem>
+        {paymentMethods.map((paymentMethod) => (
+          <SelectItem key={paymentMethod.id} value={String(paymentMethod.id)}>
+            {paymentMethod.name}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 };
 

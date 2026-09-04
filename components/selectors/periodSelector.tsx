@@ -1,35 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { NativeSelect, NativeSelectOption } from "../ui/native-select";
 
 import { Period } from "@/lib/definitions";
 
-import { getPeriods } from "@/db/queries/period";
 import { fetchPeriodsAction } from "@/actions/selectors";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Props {
   period_id: number | undefined;
 }
 
 const PeriodSelector = ({ period_id }: Props) => {
-  /* let categories;
-
-    try {
-        categories = is_income ? await getIncomeCategories() : await getExpenseCategories()
-    }
-    catch(error)
-    {
-        return <ErrorLoading />
-    }
-
-    console.log(categories) */
-
   const [periods, setPeriods] = useState<Period[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [selectedValue, setSelectedValue] = useState<number | undefined>(
-    period_id
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(
+    period_id?.toString()
   );
 
   useEffect(() => {
@@ -40,33 +33,36 @@ const PeriodSelector = ({ period_id }: Props) => {
         const data = await fetchPeriodsAction();
         setPeriods(data);
 
-        if (period_id) setSelectedValue(period_id);
-      } catch (error) {
-        console.error("Error loading categories");
+        if (period_id) setSelectedValue(period_id.toString());
+      } catch {
+        console.error("Error loading periods");
       } finally {
         setLoading(false);
-        //console.log(categories)
+        //console.log(periods)
       }
     }
     load();
   }, [period_id]);
 
   return (
-    <NativeSelect
+    <Select
       name="period_id"
       value={selectedValue}
-      onChange={(e) => setSelectedValue(Number(e.target.value))}
+      onValueChange={setSelectedValue}
       disabled={loading}
     >
-      <NativeSelectOption value={undefined}>
-        {loading ? "Carregando..." : "Sem período"}
-      </NativeSelectOption>
-      {periods.map((period) => (
-        <NativeSelectOption key={period.id} value={period.id}>
-          {period.name}
-        </NativeSelectOption>
-      ))}
-    </NativeSelect>
+      <SelectTrigger className="w-full">
+        <SelectValue placeholder={loading ? "Carregando..." : "Sem período"} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="none">Sem período</SelectItem>
+        {periods.map((period) => (
+          <SelectItem key={period.id} value={String(period.id)}>
+            {period.name}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 };
 
