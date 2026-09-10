@@ -136,7 +136,7 @@ test("(category_id) category_id cannot be negative", () => {
   expect(validation.success).toBeFalsy();
 });
 
-test("(category_id) category_id cannot be zero", () => {
+test("(category_id) category_id converts zero to null", () => {
   const validation = OperationSchema.safeParse({
     name: "Nome teste",
     description: null,
@@ -149,7 +149,10 @@ test("(category_id) category_id cannot be zero", () => {
     period_id: 3,
   });
 
-  expect(validation.success).toBeFalsy();
+  expect(validation.success).toBeTruthy();
+  if (validation.success) {
+    expect(validation.data.category_id).toBeNull();
+  }
 });
 
 test("(category_id) category_id can be null", () => {
@@ -199,7 +202,7 @@ test("(payment_method_id) payment_method_id cannot be negative", () => {
   expect(validation.success).toBeFalsy();
 });
 
-test("(payment_method_id) payment_method_id cannot be zero", () => {
+test("(payment_method_id) payment_method_id converts zero to null", () => {
   const validation = OperationSchema.safeParse({
     name: "Nome teste",
     description: null,
@@ -212,7 +215,10 @@ test("(payment_method_id) payment_method_id cannot be zero", () => {
     period_id: 3,
   });
 
-  expect(validation.success).toBeFalsy();
+  expect(validation.success).toBeTruthy();
+  if (validation.success) {
+    expect(validation.data.payment_method_id).toBeNull();
+  }
 });
 
 test("(payment_method_id) payment_method_id can be null", () => {

@@ -12,15 +12,17 @@ export const OperationSchema = z.object({
 
   is_paid: z.boolean(),
   is_income: z.boolean(),
-  category_id: z.preprocess((val) => {
-    if (val === undefined || (typeof val === "number" && isNaN(val)))
-      return null;
+  category_id: z
+    .preprocess((val) => {
+      if (val === undefined || val === 0 || val === "" || (typeof val === "number" && isNaN(val)))
+        return null;
 
-    return val;
-  }, z.number().int().positive({ message: "Category ID tem que ser um número positivo" }).nullable()),
+      return val;
+    }, z.number().int().positive({ message: "Category ID tem que ser um número positivo" }).nullable())
+    .optional(),
   payment_method_id: z
     .preprocess((val) => {
-      if (val === undefined || (typeof val === "number" && isNaN(val)))
+      if (val === undefined || val === 0 || val === "" || (typeof val === "number" && isNaN(val)))
         return null;
 
       return val;
