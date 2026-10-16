@@ -7,96 +7,48 @@ import TreeMap from "@/components/charts/treemap";
 import OperationsListDialog from "@/components/operations/OperationsListDialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateBalancesSum } from "@/lib/utils";
-import { ChartData, Operation } from "@/lib/definitions";
-import { operationValue } from "@/lib/parcelamento";
-import { isAtualOperation } from "@/lib/operation";
+import { Operation } from "@/lib/definitions";
 import {
+  isAtualOperation,
   calculateOperationProportion,
   calculatePaymentMethodProportion,
+  calculateDailyEvolution,
+  calculateCumulativeDailyEvolution,
 } from "@/lib/operation";
-
-const calculateExpenseEvolution = (operations: Operation[]) => {
-  //console.log(operations)
-
-  const expenseMap = new Map<string, ChartData>();
-
-  operations.forEach((operation) => {
-    const date = new Date(operation.date ?? "");
-    const key = date.toISOString().split("T")[0];
-
-    const current_value = expenseMap.get(key) ?? { date: key, value: 0 };
-    const value = operationValue(operation);
-
-    if (!operation.is_income) {
-      expenseMap.set(key, {
-        date: key,
-        value: current_value.value + value / 100,
-      });
-    }
-  });
-
-  //console.log(Array.from(expenseMap.values()));
-  return Array.from(expenseMap.values());
-};
-
-const calculateCumulativeExpenseEvolution = (operations: Operation[]): ChartData[] => {
-  //console.log(operations)
-
-  const expenseMap = new Map<string, ChartData>();
-  let total = 0;
-
-  operations.forEach((operation) => {
-    if (operation.is_income) return;
-
-    const date = new Date(operation.date ?? "");
-    const key = date.toISOString().split("T")[0];
-    // const current_value = expenseMap.get(key) ?? { date: key, value: 0 };
-    const value = operationValue(operation);
-
-    total += value / 100;
-
-    expenseMap.set(key, {
-      date: key,
-      value: total,
-    });
-  });
-
-  return Array.from(expenseMap.values());
-}
+import { OperationTabConfig } from "./tabConfig";
 
 interface Props {
-  expenses: Operation[];
+  operations: Operation[];
   className?: string;
   month: string;
   paidOnly?: boolean;
+  config: OperationTabConfig;
 }
 
-export default function MonthlySaidas  ({ expenses, className, month, paidOnly = false }: Props)  {
+export default function MonthlyOperationsCharts({ operations, className, month, paidOnly = false, config }: Props) {
 
   const [drill, setDrill] = useState<{ title: string; operations: Operation[] } | null>(null);
 
-  const chartOperations = expenses.filter(
+  const chartOperations = operations.filter(
     (op) => !paidOnly || isAtualOperation(op, month)
   );
 
-  // FOR BAR CHARTS
-  const expense_proportion = calculateOperationProportion(chartOperations);
-  const expense_proportion_total = calculateBalancesSum(expense_proportion);
+  const operation_proportion = calculateOperationProportion([...chartOperations]);
+  const operation_proportion_total = calculateBalancesSum(operation_proportion);
 
-  const payment_method_proportion = calculatePaymentMethodProportion(chartOperations);
+  const payment_method_proportion = calculatePaymentMethodProportion([...chartOperations]);
   const payment_method_proportion_total = calculateBalancesSum(
     payment_method_proportion
   );
 
-
-  const expense_evolution = calculateExpenseEvolution(chartOperations)
-  const cumulative_expense_evolution = calculateCumulativeExpenseEvolution(chartOperations)
+  const evolution = calculateDailyEvolution(chartOperations);
+  const cumulative_evolution = calculateCumulativeDailyEvolution(chartOperations);
 
   const openCategoryDrill = (name: string | null) => {
     if (name === "Total") return;
     const key = name ?? "Sem categoria";
     setDrill({
-      title: `Gastos em ${key}`,
+      title: `${config.charts.categoryDrillPrefix} ${key}`,
       operations: chartOperations.filter(
         (op) => (op.category_name ?? "Sem categoria") === key
       ),
@@ -107,7 +59,7 @@ export default function MonthlySaidas  ({ expenses, className, month, paidOnly =
     if (name === "Total") return;
     const key = name ?? "Sem método de pagamento";
     setDrill({
-      title: `Gastos por ${key}`,
+      title: `${config.charts.paymentMethodDrillPrefix} ${key}`,
       operations: chartOperations.filter(
         (op) => (op.payment_method_name ?? "Sem método de pagamento") === key
       ),
@@ -125,19 +77,19 @@ export default function MonthlySaidas  ({ expenses, className, month, paidOnly =
 
           <TabsContent value="pie">
             <Pie
-              title="Gastos por categoria"
+              title={config.charts.categoryTitle}
               description="Ao longo do mês atual"
-              totalValue={expense_proportion_total}
-              data={expense_proportion}
+              totalValue={operation_proportion_total}
+              data={operation_proportion}
               onClick={openCategoryDrill}
             />
           </TabsContent>
           <TabsContent value="tree">
             <TreeMap
-              title="Gastos por categoria"
+              title={config.charts.categoryTitle}
               description="Ao longo do mês atual"
-              totalValue={expense_proportion_total}
-              data={expense_proportion}
+              totalValue={operation_proportion_total}
+              data={operation_proportion}
               onClick={openCategoryDrill}
             />
           </TabsContent>
@@ -151,7 +103,7 @@ export default function MonthlySaidas  ({ expenses, className, month, paidOnly =
 
           <TabsContent value="pie">
             <Pie
-              title="Gastos por método de pagamento"
+              title={config.charts.paymentMethodTitle}
               description="Ao longo do mês atual"
               totalValue={payment_method_proportion_total}
               data={payment_method_proportion}
@@ -160,7 +112,7 @@ export default function MonthlySaidas  ({ expenses, className, month, paidOnly =
           </TabsContent>
           <TabsContent value="tree">
             <TreeMap
-              title="Gastos por  método de pagamento"
+              title={config.charts.paymentMethodTitle}
               description="Ao longo do mês atual"
               totalValue={payment_method_proportion_total}
               data={payment_method_proportion}
@@ -178,19 +130,19 @@ export default function MonthlySaidas  ({ expenses, className, month, paidOnly =
 
         <TabsContent value="1">
           <Line
-        title="Evolução de gastos"
-        description="Ao longo do mês atual"
-        chartColor="#FF5454"
-        data={cumulative_expense_evolution}
-      />
+            title={config.charts.evolutionTitle}
+            description="Ao longo do mês atual"
+            chartColor={config.charts.lineChartColor}
+            data={cumulative_evolution}
+          />
         </TabsContent>
         <TabsContent value="0">
           <Line
-        title="Evolução de gastos"
-        description="Ao longo do mês atual"
-        chartColor="#FF5454"
-        data={expense_evolution}
-      />
+            title={config.charts.evolutionTitle}
+            description="Ao longo do mês atual"
+            chartColor={config.charts.lineChartColor}
+            data={evolution}
+          />
         </TabsContent>
       </Tabs>
 

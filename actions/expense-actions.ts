@@ -1,6 +1,6 @@
 "use server";
 
-import { insertOperation, updateOperation } from "@/db/queries/operation";
+import { insertOperation } from "@/db/queries/operation";
 import { revalidatePath } from "next/cache";
 import { OperationActionState, OperationSchema } from "./definitions";
 import { toUtcMinus3Instant } from "@/lib/date";
@@ -50,47 +50,8 @@ export async function createSaida(
   }
 
   revalidatePath("/dashboard");
-  revalidatePath("/saidas");
-  revalidatePath("/saidas/limites");
+  revalidatePath("/operations");
+  revalidatePath("/operations/limites");
 
   return { success: true, message: "Saída criada com sucesso" };
-}
-
-// **************** UPDATE ***************
-
-export async function updateSaida(
-  prevState: OperationActionState | undefined,
-  formData: FormData
-): Promise<OperationActionState> {
-  const id = formData.get("id");
-
-  const validationResult = validateZodSchema(formData);
-
-  if (!validationResult.success) {
-    return {
-      success: false,
-      message: "Erro de validação. Verifique os campos.",
-      errors: validationResult.error.flatten().fieldErrors,
-    };
-  }
-
-  console.log(validationResult.data);
-  const result = await updateOperation(Number(id), validationResult.data);
-
-  if (!result) {
-    return {
-      success: false,
-      errors: {
-        name: ["Erro ao atualizar saída"],
-      },
-
-      message: "Erro ao atualizar saída",
-    };
-  }
-
-  revalidatePath("/dashboard");
-  revalidatePath("/saidas");
-  revalidatePath("/saidas/limites");
-
-  return { success: true, message: "Saída atualizada com sucesso" };
 }

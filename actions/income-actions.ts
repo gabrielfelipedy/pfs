@@ -1,6 +1,6 @@
 "use server";
 
-import { insertOperation, updateOperation } from "@/db/queries/operation";
+import { insertOperation } from "@/db/queries/operation";
 import { revalidatePath } from "next/cache";
 import { OperationActionState, OperationSchema } from "./definitions";
 import { toUtcMinus3Instant } from "@/lib/date";
@@ -61,48 +61,7 @@ export async function createEntrada(prevState: OperationActionState | undefined,
   }
 
   revalidatePath('/dashboard')
-  revalidatePath('/entradas')
+  revalidatePath('/operations')
 
   return { success: true, message: "Entrada registrada com sucesso" };
-}
-
-
-// **************** UPDATE ***************
-
-
-export async function updateIncome(prevState: OperationActionState | undefined, formData: FormData): Promise<OperationActionState> {
-
-  const id = formData.get("id");
- 
-  const validationResult = validateZodSchema(formData)
-  //console.log(dateFromForm)
-
-  if (!validationResult.success) {
-    //console.log(dateFromForm)
-    return {
-      success: false,
-      message: "Erro de validação. Verifique os campos.",
-      errors: validationResult.error.flatten().fieldErrors,
-    };
-  }
-
-  //console.log(validationResult.data);
-  const result = await updateOperation(Number(id), validationResult.data)
-
-  if(!result){
-
-    return {
-      success: false,
-      errors: {
-        name: ["Erro ao atualizar entrada"],
-      },
-
-      message: 'Erro ao atualizar entrada'
-    };
-  }
-
-  revalidatePath('/dashboard')
-  revalidatePath('/entradas')
-
-  return { success: true, message: 'Entrada atualizada com sucesso' };
 }

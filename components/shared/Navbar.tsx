@@ -16,15 +16,11 @@ const navLinks = [
     name: "Dashboard",
   },
   {
-    href: "/entradas",
-    name: "Entradas",
+    href: "/operations",
+    name: "Operações",
   },
   {
-    href: "/saidas",
-    name: "Saídas",
-  },
-  {
-    href: "/saidas/limites",
+    href: "/operations/limites",
     name: "Limites de gastos",
   },
   {

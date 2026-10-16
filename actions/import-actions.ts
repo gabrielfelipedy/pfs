@@ -175,9 +175,8 @@ export async function importOperationsFromCsvAction(
 
   if (imported > 0) {
     revalidatePath("/dashboard");
-    revalidatePath("/saidas");
-    revalidatePath("/saidas/limites");
-    revalidatePath("/entradas");
+    revalidatePath("/operations");
+    revalidatePath("/operations/limites");
   }
 
   return {

@@ -170,6 +170,46 @@ export const calculateCumulativeIncomeEvolution = (operations: Operation[]) => {
   return Array.from(incomeMap.values());
 };
 
+// Generic daily evolution: sums operationValue per calendar day (UTC-3 key).
+// Expects a pre-filtered list (e.g. only incomes or only expenses); does not
+// mutate the input and does not filter by is_income.
+export const calculateDailyEvolution = (operations: Operation[]): ChartData[] => {
+  const dayMap = new Map<string, ChartData>();
+
+  operations.forEach((operation) => {
+    const date = new Date(operation.date ?? "");
+    const key = date.toISOString().split("T")[0];
+
+    const current_value = dayMap.get(key) ?? { date: key, value: 0 };
+
+    dayMap.set(key, {
+      date: key,
+      value: current_value.value + operationValue(operation) / 100,
+    });
+  });
+
+  return Array.from(dayMap.values());
+};
+
+// Generic cumulative daily evolution. Same contract as calculateDailyEvolution.
+export const calculateCumulativeDailyEvolution = (
+  operations: Operation[]
+): ChartData[] => {
+  const dayMap = new Map<string, ChartData>();
+  let total = 0;
+
+  operations.forEach((operation) => {
+    const date = new Date(operation.date ?? "");
+    const key = date.toISOString().split("T")[0];
+
+    total += operationValue(operation) / 100;
+
+    dayMap.set(key, { date: key, value: total });
+  });
+
+  return Array.from(dayMap.values());
+};
+
 export const calculateIncomesAndExpensesEvolution = (
   operations: Operation[]
 ) => {

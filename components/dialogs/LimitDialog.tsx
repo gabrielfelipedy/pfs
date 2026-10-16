@@ -24,7 +24,7 @@ import { ExpenseLimit } from "@/lib/definitions";
 import { OperationActionState } from "@/actions/definitions";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../ui/spinner";
-import { ExpenseLimitActionState } from "@/app/(main)/saidas/limites/actions/definitions";
+import { ExpenseLimitActionState } from "@/app/(main)/operations/limites/actions/definitions";
 import CategorySelector from "../selectors/categorySelector";
 import PeriodSelector from "../selectors/periodSelector";
 

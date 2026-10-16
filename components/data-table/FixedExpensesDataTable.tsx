@@ -10,8 +10,7 @@ import ConfirmDeleteDialog from "@/components/dialogs/confirmDeleteDialog";
 import FormDialog from "@/components/dialogs/FormDialog";
 import { Operation } from "@/lib/definitions";
 import { operationValue } from "@/lib/parcelamento";
-import { updateSaida } from "@/actions/expense-actions";
-import { updateIncome } from "@/actions/income-actions";
+import { updateOperationAction } from "@/actions/operation-actions";
 import { Badge } from "../ui/badge";
 import { ClientDateTime } from "../shared/ClientDateTime";
 
@@ -129,7 +128,7 @@ export const columns: ColumnDef<Operation>[] = [
           dialogDescription={`Atualize as informações ${row.original.is_income ? "da Entrada" : "do Gasto"}`}
           buttonText="Atualizar"
           operation={row.original}
-          actionFunction={row.original.is_income ? updateIncome : updateSaida}
+          actionFunction={updateOperationAction}
         />
         <ConfirmDeleteDialog operation={row.original} />
       </div>

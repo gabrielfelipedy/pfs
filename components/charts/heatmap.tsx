@@ -6,6 +6,7 @@ import { formatter } from "@/lib/utils";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "../ui/card";
@@ -18,26 +19,43 @@ interface Props {
   description: string;
   className?: string;
   data: ChartData[];
+  valueLabel: string;
+  colorRange: { light: string[]; dark: string[] };
 }
 
-const Heatmap = ({ title, description, className, data }: Props) => {
+const Heatmap = ({
+  title,
+  description,
+  className,
+  data,
+  valueLabel,
+  colorRange,
+}: Props) => {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark" || theme === "dark";
 
   const { startStr, endStr, maxValue } = useMemo(() => {
-    const today = todayInUtcMinus3();
-    const end = new Date(
-      Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())
-    );
-    const start = new Date(end);
-    start.setUTCFullYear(start.getUTCFullYear() - 1);
-    start.setUTCDate(start.getUTCDate() + 1);
-
     const max = data.reduce((m, d) => Math.max(m, d.value), 0);
 
+    if (data.length === 0) {
+      const today = todayInUtcMinus3();
+      const end = new Date(
+        Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())
+      );
+      const start = new Date(end);
+      start.setUTCFullYear(start.getUTCFullYear() - 1);
+      start.setUTCDate(start.getUTCDate() + 1);
+
+      return {
+        startStr: start.toISOString().split("T")[0],
+        endStr: end.toISOString().split("T")[0],
+        maxValue: max,
+      };
+    }
+
     return {
-      startStr: start.toISOString().split("T")[0],
-      endStr: end.toISOString().split("T")[0],
+      startStr: data[0].date,
+      endStr: data[data.length - 1].date,
       maxValue: max,
     };
   }, [data]);
@@ -61,7 +79,7 @@ const Heatmap = ({ title, description, className, data }: Props) => {
           year: "numeric",
           timeZone: "UTC",
         });
-        return `<strong>${formattedDate}</strong><br/>Gastos: ${formatter.format(value)}`;
+        return `<strong>${formattedDate}</strong><br/>${valueLabel}: ${formatter.format(value)}`;
       },
     },
     visualMap: {
@@ -69,9 +87,7 @@ const Heatmap = ({ title, description, className, data }: Props) => {
       min: 1,
       max: maxValue || 1,
       inRange: {
-        color: isDark
-          ? ["#2b1020", "#7a1a1a", "#b53030", "#e83030", "#ff4040"]
-          : ["#fee2e2", "#f5a3a3", "#e84040", "#c02020", "#a01010"],
+        color: colorRange[isDark ? "dark" : "light"],
       },
     },
     calendar: {
@@ -124,6 +140,7 @@ const Heatmap = ({ title, description, className, data }: Props) => {
     <Card className={`${className} w-full pb-6`}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
         <ReactCharts option={option} style={{ height: 180 }} />

@@ -43,7 +43,7 @@ export async function createExpenseLimit(
     };
   }
 
-  revalidatePath("/saidas/limites");
+  revalidatePath("/operations/limites");
 
   return { success: true, message: "Limite de gastos criado com sucesso" };
 }
@@ -88,7 +88,7 @@ export async function updateExpenseLimit(
     };
   }
 
-  revalidatePath('/saidas/limites')
+  revalidatePath('/operations/limites')
 
   return { success: true, message: "Limite de gastos atualizado com sucesso" };
 }
@@ -124,7 +124,7 @@ export async function deleteLimitAction(
     };
   }
 
-  revalidatePath("/saidas/limites");
+  revalidatePath("/operations/limites");
 
   return { success: true, message: "Limite deletado com sucesso" };
 }

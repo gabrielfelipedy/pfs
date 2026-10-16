@@ -21,8 +21,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../ui/spinner";
 import { ExpenseLimit } from "@/lib/definitions";
-import { ExpenseLimitActionState } from "@/app/(main)/saidas/limites/actions/definitions";
-import { deleteLimitAction } from "@/app/(main)/saidas/limites/actions/limits";
+import { ExpenseLimitActionState } from "@/app/(main)/operations/limites/actions/definitions";
+import { deleteLimitAction } from "@/app/(main)/operations/limites/actions/limits";
 import { formatter } from "@/lib/utils";
 
 interface Props {

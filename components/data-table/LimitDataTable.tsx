@@ -10,7 +10,7 @@ import { Pencil } from "lucide-react";
 import ConfirmDeleteDialog from "@/components/dialogs/confirmDeleteDialog";
 import { ExpenseLimit } from "@/lib/definitions";
 import { Badge } from "../ui/badge";
-import { updateExpenseLimit } from "@/app/(main)/saidas/limites/actions/limits";
+import { updateExpenseLimit } from "@/app/(main)/operations/limites/actions/limits";
 import LimitDialog from "../dialogs/LimitDialog";
 import ConfirmDeleteLimitDialog from "../dialogs/confirmDeleteLimitDialog";
 
