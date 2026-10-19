@@ -22,7 +22,7 @@ export default async function MainLayout({
     <OperationsProvider initialOperations={operations}>
       <Navbar />
 
-      <main>
+      <main className="px-6 md:px-20 mt-40 pb-40">
         {children}
         <Toaster />
       </main>

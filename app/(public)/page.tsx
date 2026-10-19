@@ -1,21 +1,19 @@
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
+import HeroSection from "@/components/marketing/HeroSection";
+import FeaturesSection from "@/components/marketing/FeaturesSection";
+import HowItWorksSection from "@/components/marketing/HowItWorksSection";
+import CtaSection from "@/components/marketing/CtaSection";
+import SiteFooter from "@/components/marketing/SiteFooter";
 
-const page = () => {
+const Page = () => {
   return (
-    <div className='flex flex-col items-center'>
-      <h1 className='title text-center w-100'>Insights inteligentes sobre o seu dinheiro!</h1>
+    <>
+      <HeroSection />
+      <FeaturesSection />
+      <HowItWorksSection />
+      <CtaSection />
+      <SiteFooter />
+    </>
+  );
+};
 
-
-      <div className='flex flex-col gap-4 mt-20'>
-        <Button variant="secondary" disabled={true} className='w-100'>Criar conta</Button>
-        <Link href="/login">
-        <Button 
-        variant="secondary" className='w-100'>Fazer login</Button>
-        </Link>
-      </div>
-    </div>
-  )
-}
-
-export default page
+export default Page;

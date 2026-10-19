@@ -147,6 +147,10 @@
     @apply text-[2rem] md:text-[3rem] font-bold;
   }
 
+  .font-display {
+    font-family: "Montserrat", sans-serif;
+  }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }

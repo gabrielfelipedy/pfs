@@ -21,15 +21,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="px-6 md:px-20 mt-40">
-
-            {children}
-          </main>
+          <main>{children}</main>
         </ThemeProvider>
-
-        <footer>
-          <div className="w-full h-40"></div>
-        </footer>
       </body>
     </html>
   );

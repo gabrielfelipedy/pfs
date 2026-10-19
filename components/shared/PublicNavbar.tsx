@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ModeToggle } from "../theme/mode-toggler";
 import { Button } from "../ui/button";
-import { Menu, Settings, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 interface Props {
   linksClassName?: string;
@@ -16,12 +16,12 @@ const navLinks = [
     name: "Início",
   },
   {
-    href: "/",
-    name: "Como funciona",
+    href: "/#recursos",
+    name: "Recursos",
   },
   {
-    href: "/",
-    name: "Sobre",
+    href: "/#como-funciona",
+    name: "Como funciona",
   },
 ];
 
@@ -38,17 +38,22 @@ export default function PublicNavbar ({ linksClassName }: Props) {
   }, [isOpen]);
 
   return (
-    <nav className="fixed z-50 w-full top-0 left-0 flex justify-between items-center h-22.5 px-6 md:px-20 bg-background">
+    <nav className="fixed z-50 w-full top-0 left-0 flex justify-between items-center h-22.5 px-6 md:px-20 bg-background border-b">
 
       <Link href="/" onClick={() => setIsOpen(false)}>
-        <h1 className="font-bold text-[2rem]">pfs</h1>
+        <p className="font-bold text-[2rem]" translate="no">pfs</p>
       </Link>
 
 
       <div className="lg:hidden flex items-center">
-        <div onClick={() => setIsOpen(!isOpen)}>
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-expanded={isOpen}
+          aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
+        >
           {isOpen ? <X size={35} /> : <Menu size={35} />}
-        </div>
+        </button>
       </div>
 
       <div
@@ -65,14 +70,12 @@ export default function PublicNavbar ({ linksClassName }: Props) {
         ))}
       </div>
 
-      <div className="lg:flex gap-6 hidden">
+      <div className="lg:flex items-center gap-4 hidden">
         <ModeToggle />
 
-        <Link href="/settings" className="flex items-center">
-
-          <Settings size={23} />
-
-        </Link>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/login">Entrar</Link>
+        </Button>
       </div>
 
       {isOpen && (
@@ -91,15 +94,14 @@ export default function PublicNavbar ({ linksClassName }: Props) {
             ))}
           </div>
 
-          <div className="flex justify-between">
+          <div className="flex items-center justify-between">
             <ModeToggle />
 
-            <Link href="/settings"
-              onClick={() => setIsOpen(false)}>
-              <Button variant="outline" size="icon">
-                <Settings />
-              </Button>
-            </Link>
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/login" onClick={() => setIsOpen(false)}>
+                Entrar
+              </Link>
+            </Button>
           </div>
 
         </div>
