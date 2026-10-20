@@ -53,7 +53,7 @@ export async function login(
     return {
       success: false,
       errors: {
-        username: ["Error on login"],
+        username: ["Erro ao verificar o usuário. Tente novamente mais tarde."],
       },
     };
   }
@@ -64,14 +64,14 @@ export async function login(
     return {
       success: false,
       errors: {
-        username: ["Invalid username or password"],
+        username: ["Usuário ou senha inválidos"],
       },
     };
   }
 
   await createSession(username);
   redirect("/dashboard");
-  return { success: true, message: "Login Sucessfully" };
+  return { success: true, message: "Login realizado com sucesso" };
 }
 
 export async function logout() {}
