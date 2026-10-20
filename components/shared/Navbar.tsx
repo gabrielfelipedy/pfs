@@ -4,10 +4,19 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { ModeToggle } from "../theme/mode-toggler";
 import { Button } from "../ui/button";
-import { Menu, Settings, X } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Menu, X } from "lucide-react";
+import { logout } from "@/app/(public)/(auth)/login/actions";
 
 interface Props {
   linksClassName?: string;
+  username: string;
 }
 
 const navLinks = [
@@ -29,7 +38,7 @@ const navLinks = [
   },
 ];
 
-const Navbar = ({ linksClassName }: Props) => {
+const Navbar = ({ linksClassName, username }: Props) => {
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -45,14 +54,19 @@ const Navbar = ({ linksClassName }: Props) => {
     <nav className="fixed top-0 left-0 z-50 w-full flex justify-between items-center h-22.5 px-6 md:px-20 bg-background">
 
       <Link href="/dashboard">
-        <h1 className="font-bold text-[2rem]">pfs</h1>
+        <p translate="no" className="font-bold text-[2rem]">pfs</p>
       </Link>
 
 
       <div className="lg:hidden flex items-center">
-        <div onClick={() => setIsOpen(!isOpen)}>
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-expanded={isOpen}
+          aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
+        >
           {isOpen ? <X size={35} /> : <Menu size={35} />}
-        </div>
+        </button>
       </div>
 
       <div
@@ -69,14 +83,35 @@ const Navbar = ({ linksClassName }: Props) => {
         ))}
       </div>
 
-      <div className="lg:flex gap-6 hidden">
+      <div className="lg:flex items-center gap-4 hidden">
         <ModeToggle />
 
-        <Link href="/settings" className="flex items-center">
-
-          <Settings size={23} />
-
-        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              aria-label="Menu do usuário"
+              aria-haspopup="menu"
+              className="flex size-9 items-center justify-center rounded-full bg-primary/15 font-display font-bold uppercase text-primary transition-colors hover:bg-primary/25"
+            >
+              <span aria-hidden="true">{username.charAt(0)}</span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem asChild>
+              <Link href="/profile">Perfil</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/settings">Configurações</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <form action={logout}>
+                <button type="submit">Sair</button>
+              </form>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {isOpen && (
@@ -93,17 +128,30 @@ const Navbar = ({ linksClassName }: Props) => {
                 {item.name}
               </Link>
             ))}
+            <Link
+              href="/profile"
+              onClick={() => setIsOpen(false)}
+              className="text-lg font-medium text-gray-600 dark:text-gray-300"
+            >
+              Perfil
+            </Link>
+            <Link
+              href="/settings"
+              onClick={() => setIsOpen(false)}
+              className="text-lg font-medium text-gray-600 dark:text-gray-300"
+            >
+              Configurações
+            </Link>
           </div>
 
-          <div className="flex justify-between">
+          <div className="flex items-center justify-between">
             <ModeToggle />
 
-            <Link href="/settings"
-              onClick={() => setIsOpen(false)}>
-              <Button variant="outline" size="icon">
-                <Settings />
+            <form action={logout}>
+              <Button type="submit" variant="outline" size="sm">
+                Sair
               </Button>
-            </Link>
+            </form>
           </div>
 
         </div>

@@ -19,11 +19,7 @@ export default async function page() {
 
   return (
     <div>
-      <h1 className='text-[2rem] font-bold'>Perfil</h1>
-      <h1 className='text-sm text-black/60 dark:text-white/70 '>ALTERAR NOME DE USUÁRIO</h1>
-      <h1 className='text-sm text-black/60 dark:text-white/70 '>ALTERAR SENHA</h1>
-
-      <h1 className='text-[2rem] font-bold'>Categorias</h1>
+      <h1 className='text-[2.2rem] md:text-[3rem] font-bold'>Categorias</h1>
 
       <p className='text-sm mt-6'>CATEGORIAS DE ENTRADAS</p>
       <CategoryDataTable categories={filterIncomeCategories(categories)} />

@@ -54,12 +54,12 @@ export async function verifySession()
     const cookie = (await cookies()).get('session')?.value
     const session = await decrypt(cookie)
 
-    if(!session?.username)
+    if(typeof session?.username !== "string")
     {
         redirect('/login')
     }
 
-    return { username: session.username}
+    return { username: session.username }
 }
 
 export async function deleteSession()

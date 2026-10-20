@@ -1,6 +1,6 @@
 "use server";
 
-import { createSession } from "@/lib/session";
+import { createSession, deleteSession } from "@/lib/session";
 import { LoginFormSchema } from "../../../../lib/definitions";
 import { redirect } from "next/navigation";
 import * as bcrypt from "bcrypt";
@@ -74,4 +74,6 @@ export async function login(
   return { success: true, message: "Login realizado com sucesso" };
 }
 
-export async function logout() {}
+export async function logout() {
+  await deleteSession();
+}

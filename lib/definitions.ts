@@ -178,3 +178,20 @@ export const LoginFormSchema = z.object({
     .string()
     .min(8, { message: "A senha deve ter pelo menos 8 caracteres" }),
 });
+
+export const ChangeUsernameSchema = z.object({
+  username: z
+    .string()
+    .trim()
+    .min(3, { message: "O usuário deve ter pelo menos 3 caracteres" })
+    .max(50, { message: "O usuário deve ter no máximo 50 caracteres" }),
+});
+
+export const ChangePasswordSchema = z.object({
+  currentPassword: z
+    .string()
+    .min(1, { message: "Informe a senha atual" }),
+  newPassword: z
+    .string()
+    .min(8, { message: "A nova senha deve ter pelo menos 8 caracteres" }),
+});
