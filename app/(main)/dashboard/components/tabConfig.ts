@@ -1,7 +1,11 @@
 import { createSaida } from "@/actions/expense-actions";
 import { createEntrada } from "@/actions/income-actions";
 
-export type OperationTab = "saidas" | "entradas";
+export type OperationTab = "saidas" | "entradas" | "saldo";
+
+export type TypeOperationTab = Exclude<OperationTab, "saldo">;
+
+export type ResumeTabConfig = Pick<OperationTabConfig, "resume" | "isIncome">;
 
 export interface OperationTabConfig {
   isIncome: boolean;
@@ -65,7 +69,7 @@ export interface OperationTabConfig {
   importButtonText: string;
 }
 
-export const operationsTabConfig: Record<OperationTab, OperationTabConfig> = {
+export const operationsTabConfig: Record<TypeOperationTab, OperationTabConfig> = {
   saidas: {
     isIncome: false,
     title: "Saídas",
@@ -194,5 +198,34 @@ export const operationsTabConfig: Record<OperationTab, OperationTabConfig> = {
       },
     },
     importButtonText: "Importar de CSV",
+  },
+};
+
+export const saldoTabConfig: ResumeTabConfig & {
+  heatmap: OperationTabConfig["heatmap"];
+} = {
+  isIncome: true,
+  heatmap: {
+    title: "Movimentação",
+    description: "Total movimentado ao longo do ano",
+    valueLabel: "Movimentação",
+    colorRange: {
+      light: ["#dbeafe", "#93c5fd", "#3b82f6", "#2563eb", "#1d4ed8"],
+      dark: ["#0c1a33", "#1e3a5f", "#2563eb", "#3b82f6", "#60a5fa"],
+    },
+  },
+  resume: {
+    monthly: {
+      title: "Movimentação mensal",
+      subtext: "Total de entradas e saídas no mês",
+    },
+    weekly: {
+      title: "Movimentação semanal",
+      subtext: "Total de entradas e saídas",
+    },
+    daily: {
+      title: "Movimentação diária",
+      subtext: "Total de entradas e saídas",
+    },
   },
 };

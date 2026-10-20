@@ -11,13 +11,13 @@ import { isAtualOperation } from '@/lib/operation';
 import { formatter } from '@/lib/utils';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
-import { OperationTabConfig } from './tabConfig';
+import { ResumeTabConfig } from './tabConfig';
 
 interface Props {
     operations: Operation[];
     month: string;
     paidOnly?: boolean;
-    config: OperationTabConfig;
+    config: ResumeTabConfig;
 }
 
 export default function MonthlyOperationsCard({ operations, month, paidOnly = false, config }: Props) {

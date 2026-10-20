@@ -12,7 +12,7 @@ import { isSameWeek } from 'date-fns';
 import { toUtcMinus3Date, todayInUtcMinus3, formatDateBR } from '@/lib/date';
 import { isAtualOperation } from '@/lib/operation';
 import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
-import { OperationTabConfig } from './tabConfig';
+import { ResumeTabConfig } from './tabConfig';
 
 const filterWeeklyOperations = (operations: Operation[], paidOnly = false) => {
     return operations.filter(
@@ -45,7 +45,7 @@ const calculateWeeklyOperations = (operations: Operation[], paidOnly = false) =>
 interface Props {
     operations: Operation[];
     paidOnly?: boolean;
-    config: OperationTabConfig;
+    config: ResumeTabConfig;
 }
 
 export default function WeeklyOperationsCard({ operations, paidOnly = false, config }: Props) {

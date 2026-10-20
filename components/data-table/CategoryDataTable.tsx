@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 import { Pencil } from "lucide-react";
 import { Category, ExpenseLimit } from "@/lib/definitions";
 import { Badge } from "../ui/badge";
-import { updateExpenseLimit } from "@/app/(main)/operations/limites/actions/limits";
+import { updateExpenseLimit } from "@/app/(main)/dashboard/limites/actions/limits";
 import LimitDialog from "../dialogs/LimitDialog";
 import ConfirmDeleteLimitDialog from "../dialogs/confirmDeleteLimitDialog";
 

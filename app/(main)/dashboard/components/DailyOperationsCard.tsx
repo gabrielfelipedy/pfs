@@ -11,7 +11,7 @@ import { DialogTitle } from '@radix-ui/react-dialog';
 import { isTodayUTC, formatDateBR } from '@/lib/date';
 import { isAtualOperation } from '@/lib/operation';
 import { TrendingDownIcon, TrendingUpIcon } from 'lucide-react';
-import { OperationTabConfig } from './tabConfig';
+import { ResumeTabConfig } from './tabConfig';
 
 const filterDailyOperations = (operations: Operation[], paidOnly = false) => {
     return operations.filter(
@@ -36,7 +36,7 @@ const calculateDailyOperations = (operations: Operation[], paidOnly = false) => 
 interface Props {
     operations: Operation[];
     paidOnly?: boolean;
-    config: OperationTabConfig;
+    config: ResumeTabConfig;
 }
 
 export default function DailyOperationsCard({ operations, paidOnly = false, config }: Props) {

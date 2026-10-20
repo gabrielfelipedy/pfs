@@ -50,8 +50,7 @@ export async function createSaida(
   }
 
   revalidatePath("/dashboard");
-  revalidatePath("/operations");
-  revalidatePath("/operations/limites");
+  revalidatePath("/dashboard/limites");
 
   return { success: true, message: "Saída criada com sucesso" };
 }

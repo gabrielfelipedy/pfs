@@ -73,7 +73,6 @@ export async function duplicateOperationAction(
   }
 
   revalidatePath("/dashboard");
-  revalidatePath("/operations");
 
   return { success: true, message: "Transação duplicada com sucesso" };
 }
@@ -125,8 +124,7 @@ export async function updateOperationAction(
   }
 
   revalidatePath("/dashboard");
-  revalidatePath("/operations");
-  revalidatePath("/operations/limites");
+  revalidatePath("/dashboard/limites");
 
   return { success: true, message: "Transação atualizada com sucesso" };
 }
@@ -162,7 +160,6 @@ export async function deleteOperationAction(
   }
 
   revalidatePath("/dashboard");
-  revalidatePath("/operations");
 
   return { success: true, message: "Saída deletada com sucesso" };
 }
@@ -211,7 +208,6 @@ export async function moveOperationAction(
   });
 
   revalidatePath("/dashboard");
-  revalidatePath("/operations");
 
   return { success: true, message: "Ordem atualizada com sucesso" };
 }

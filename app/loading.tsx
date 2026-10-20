@@ -1,4 +1,4 @@
-// app/operations/loading.tsx
+// app/dashboard/loading.tsx
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {

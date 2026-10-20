@@ -6,7 +6,7 @@ import BalanceCard from "@/components/resume/balance-card";
 import MonthlyOperationsCard from "./MonthlyOperationsCard";
 import WeeklyOperationsCard from "./WeeklyOperationsCard";
 import DailyOperationsCard from "./DailyOperationsCard";
-import { OperationTabConfig } from "./tabConfig";
+import { ResumeTabConfig } from "./tabConfig";
 
 interface Props {
   operations: Operation[];
@@ -15,7 +15,7 @@ interface Props {
   className?: string;
   mode: "atual" | "previsto";
   onModeChange: (mode: "atual" | "previsto") => void;
-  config: OperationTabConfig;
+  config: ResumeTabConfig;
 }
 
 export default function OperationsResumeCards({ operations, filtered, month, className, mode, onModeChange, config }: Props) {

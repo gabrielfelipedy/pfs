@@ -25,11 +25,7 @@ const navLinks = [
     name: "Dashboard",
   },
   {
-    href: "/operations",
-    name: "Operações",
-  },
-  {
-    href: "/operations/limites",
+    href: "/dashboard/limites",
     name: "Limites de gastos",
   },
   {

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { formatter } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import LimitDialog from "../dialogs/LimitDialog";
-import { updateExpenseLimit } from "@/app/(main)/operations/limites/actions/limits";
+import { updateExpenseLimit } from "@/app/(main)/dashboard/limites/actions/limits";
 import { Pencil } from "lucide-react";
 import { ExpenseLimit } from "@/lib/definitions";
 import ConfirmDeleteDialog from "../dialogs/confirmDeleteDialog";

@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function SaidasRedirect() {
-  redirect("/operations?tab=saidas");
+  redirect("/dashboard?tab=saidas");
 }

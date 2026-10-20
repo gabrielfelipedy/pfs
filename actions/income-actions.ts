@@ -61,7 +61,6 @@ export async function createEntrada(prevState: OperationActionState | undefined,
   }
 
   revalidatePath('/dashboard')
-  revalidatePath('/operations')
 
   return { success: true, message: "Entrada registrada com sucesso" };
 }
