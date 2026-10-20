@@ -22,6 +22,7 @@ import FixedExpensesDataTable from "@/components/data-table/FixedExpensesDataTab
 import { EmptyDemo } from "@/components/empty/EmptyDemo";
 import ImportCsvDialog from "@/components/dialogs/ImportCsvDialog";
 import Heatmap from "@/components/charts/heatmap";
+import BalanceHeader from "./BalanceHeader";
 import OperationsResumeCards from "./OperationsResumeCards";
 import MonthlyOperationsCharts from "./MonthlyOperationsCharts";
 import SaldoCharts from "./SaldoCharts";
@@ -124,7 +125,7 @@ export default function OperationsPageContent({ initialTab }: Props) {
 
   return (
     <>
-      <h1 className="text-[2.2rem] md:text-[3rem] font-bold mt-10">Dashboard</h1>
+      <BalanceHeader operations={operations} month={month} paidOnly={paidOnly} />
 
       <Tabs className="mt-4" value={tab} onValueChange={handleTabChange}>
         <TabsList>
@@ -155,7 +156,6 @@ export default function OperationsPageContent({ initialTab }: Props) {
           <TabsContent key={m} value={m}>
 
             <OperationsResumeCards
-              operations={operations}
               filtered={filtered}
               month={m}
               mode={mode}
