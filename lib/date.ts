@@ -106,7 +106,7 @@ export const getAvaliableMonths = (operations: Operation[]) => {
   //console.log(array)
 
   if (array.length > 12) {
-    return array.slice(0, 12);
+    return array.slice(-12);
   }
 
   while (array.length < 12) {
